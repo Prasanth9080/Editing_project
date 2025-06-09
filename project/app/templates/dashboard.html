@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h2>Welcome, {{ request.user.username }}</h2>
+<p>You are logged in.</p>
+<p><strong>JWT Token:</strong> <span id="token"></span></p>
+
+<a href="{% url 'logout' %}" onclick="logoutUser()"><button>Logout</button></a>
+
+{% if users %}
+<h3>All Users (Main User View)</h3>
+<table border="1" cellpadding="10">
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Joined</th>
+        <th>Last Login</th>
+        <th>Actions</th>
+    </tr>
+    {% for user in users %}
+    <tr>
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.phone_number }}</td>
+        <td>{{ user.date_joined }}</td>
+        <td>{{ user.last_login }}</td>
+        <td>
+            <a href="{% url 'user_edit' user.id %}">Edit</a> |
+            <a href="{% url 'user_delete' user.id %}">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p><strong>Your Email:</strong> {{ request.user.email }}</p>
+<p><strong>Your Phone:</strong> {{ request.user.phone_number }}</p>
+<p><strong>Account Created:</strong> {{ request.user.date_joined }}</p>
+{% endif %}
+
+<script>
+    function logoutUser() {
+        localStorage.removeItem("auth_token");
+    }
+
+    const token = '{{ request.session.access_token|default_if_none:"" }}';
+    if (token) {
+        localStorage.setItem("auth_token", token);
+        document.getElementById("token").innerText = token;
+    }
+</script>
+
+{% endblock %}

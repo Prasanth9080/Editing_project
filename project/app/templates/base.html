@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}JWT Auth{% endblock %}</title>
+    <style>
+        body {
+            font-family: Arial;
+            max-width: 600px;
+            margin: auto;
+            padding: 2em;
+        }
+
+        form input,
+        button {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+        }
+
+        .message {
+            background: #f0f0f0;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    {% for message in messages %}
+    <div class="message">{{ message }}</div>
+    {% endfor %}
+
+    {% block content %}{% endblock %}
+</body>
+
+</html>

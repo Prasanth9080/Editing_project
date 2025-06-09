@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #343a40;
+            padding-top: 20px;
+            min-height: 100vh;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .sidebar.collapsed {
+            width: 80px;
+        }
+
+        .sidebar a {
+            color: white;
+            padding: 15px;
+            display: block;
+            text-decoration: none;
+            font-size: 18px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: opacity 0.3s;
+        }
+
+        .sidebar.collapsed a {
+            font-size: 0;
+            padding: 15px 10px;
+        }
+
+        .sidebar h3.sidebar-title {
+            color: white;
+            text-align: center;
+            transition: opacity 0.3s;
+        }
+
+        .sidebar.collapsed .sidebar-title {
+            opacity: 0;
+        }
+
+        #toggleSidebar {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+        }
+
+        .container {
+            flex: 1;
+            transition: margin-left 0.3s;
+        }
+
+        .main-content {
+            padding: 30px;
+            background-color: #f4f4f4;
+        }
+
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid black;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 12px;
+            border: none;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .main-container {
+            flex: 1;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+
+<body>
+
+    {% include 'sidebar.html' %}
+
+    <!-- Main Content -->
+    <div class="main-container" id="mainContainer">
+        {% include 'navbar.html' %}
+
+        <div>
+            <h2>Welcome, {{ request.user.username }}</h2>
+            <p>You are logged in.</p>
+            <p><strong>JWT Token:</strong> <span id="token"></span></p>
+        </div>
+
+
+
+        <div class="main-content">
+            <h1 class="text-center">Submit your Details</h1>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <label>Name:</label>
+                <input type="text" name="name" required>
+
+                <label>Mobile Number:</label>
+                <input type="text" name="mobile_number" pattern="\d{10}" maxlength="10" title="Enter exactly 10 digits"
+                    required>
+
+                <label>Aadhar Number:</label>
+                <input type="text" name="aadhar_number" id="aadhar_number" maxlength="14" required
+                    pattern="\d{4}\s\d{4}\s\d{4}" title="Enter 12 digits in 4-4-4 format (e.g. 1234 5678 9012)">
+
+                <label>Aadhar Image:</label>
+                <input type="file" name="aadhar_image" accept="image/*" required>
+
+                <label>PAN Number:</label>
+                <input type="text" name="pan_number" required>
+
+                <label>PAN Image:</label>
+                <input type="file" name="pan_image" accept="image/*" required>
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+
+
+    </div>
+
+
+    <script>
+
+        const token = '{{ request.session.access_token|default_if_none:"" }}';
+        if (token) {
+            localStorage.setItem("auth_token", token);
+            document.getElementById("token").innerText = token;
+        }
+    </script>
+
+</body>
+
+</html>
