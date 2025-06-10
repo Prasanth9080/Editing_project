@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}JWT Auth{% endblock %}</title>
+    <style>
+        body {
+            font-family: Arial;
+            max-width: 600px;
+            margin: auto;
+            padding: 2em;
+        }
+
+        form input,
+        button {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+        }
+
+        .message {
+            background: #f0f0f0;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+
+        .sidebar {
+            width: 250px;
+            background-color: #343a40;
+            padding-top: 20px;
+            min-height: 100vh;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .sidebar.collapsed {
+            width: 80px;
+        }
+
+        .sidebar a {
+            color: white;
+            padding: 15px;
+            display: block;
+            text-decoration: none;
+            font-size: 18px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: opacity 0.3s;
+        }
+
+        .sidebar.collapsed a {
+            font-size: 0;
+            padding: 15px 10px;
+        }
+
+        .sidebar h3.sidebar-title {
+            color: white;
+            text-align: center;
+            transition: opacity 0.3s;
+        }
+
+        .sidebar.collapsed .sidebar-title {
+            opacity: 0;
+        }
+
+        #toggleSidebar {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+        }
+
+        .container {
+            flex: 1;
+            transition: margin-left 0.3s;
+        }
+
+        .main-content {
+            padding: 30px;
+            background-color: #f4f4f4;
+        }
+
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid black;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 12px;
+            border: none;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .main-container {
+            flex: 1;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'sidebar.html' %}
+
+    <div class="main-container" id="mainContainer">
+        {% include 'navbar.html' %}
+
+        {% for message in messages %}
+        <div class="message">{{ message }}</div>
+        {% endfor %}
+
+        {% block content %}{% endblock %}
+
+    </div>
+
+
+</body>
+
+</html>

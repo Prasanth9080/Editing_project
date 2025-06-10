@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}Signup{% endblock %}
+
+{% block content %}
+<h2>Signup</h2>
+<form method="post" onsubmit="return validatePhone()">
+    {% csrf_token %}
+    <input type="text" name="username" placeholder="Enter your Name" required>
+    <input type="email" name="email" placeholder="Enter your Email" required>
+    <input type="tel" name="phone_number" id="phone_number" placeholder="Enter 10-digit phone number" maxlength="10"
+        pattern="\d{10}" required>
+    <button type="submit">Sign Up</button>
+</form>
+<p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+
+
+
+
+<script>
+    const phoneInput = document.getElementById('phone_number');
+    phoneInput.addEventListener('input', function () {
+        this.value = this.value.replace(/\D/g, '').slice(0, 10);
+    });
+
+    function validatePhone() {
+        const phone = phoneInput.value;
+        if (!/^\d{10}$/.test(phone)) {
+            alert("Please enter a valid 10-digit phone number.");
+            return false;
+        }
+        return true;
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Edit KYC{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Edit KYC</h2>
+    <form method="post" enctype="multipart/form-data" class="card card-body">
+        {% csrf_token %}
+        <label>Name:</label>
+        <input type="text" name="name" value="{{ kyc.name }}" class="form-control" required>
+
+        <label>Mobile Number:</label>
+        <input type="text" name="mobile_number" value="{{ kyc.mobile_number }}" class="form-control" required>
+
+        <label>Aadhar Number:</label>
+        <input type="text" name="aadhar_number" value="{{ kyc.aadhar_number }}" class="form-control" required>
+
+        <label>PAN Number:</label>
+        <input type="text" name="pan_number" value="{{ kyc.pan_number }}" class="form-control" required>
+
+        <label>Aadhar Image:</label>
+        <input type="file" name="aadhar_image" class="form-control">
+
+        <label>PAN Image:</label>
+        <input type="file" name="pan_image" class="form-control">
+
+        <button type="submit" class="btn btn-success mt-3">Update</button>
+    </form>
+</div>
+{% endblock %}

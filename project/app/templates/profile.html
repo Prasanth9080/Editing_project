@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Profile Page{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Welcome, {{ request.user.username }}</h2>
+    <hr>
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-info">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+
+    <div id="profileDisplay">
+        <p><strong>Name:</strong> {{ user_obj.username }}</p>
+        <p><strong>Email:</strong> {{ user_obj.email }}</p>
+        <p><strong>Phone:</strong> {{ user_obj.phone_number }}</p>
+        <button class="btn btn-primary" onclick="toggleEdit()">Edit</button>
+    </div>
+
+    <form method="post" style="display: none;" id="editForm">
+        {% csrf_token %}
+        <label>Name:</label>
+        <input type="text" name="username" value="{{ user_obj.username }}" class="form-control" required>
+
+        <label>Email:</label>
+        <input type="email" name="email" value="{{ user_obj.email }}" class="form-control" required>
+
+        <label>Phone Number:</label>
+        <input type="text" name="phone_number" value="{{ user_obj.phone_number }}" class="form-control">
+
+        <button type="submit" class="btn btn-success mt-2">Update</button>
+        <button type="button" class="btn btn-secondary mt-2" onclick="toggleEdit()">Cancel</button>
+    </form>
+</div>
+
+<script>
+    function toggleEdit() {
+        const form = document.getElementById("editForm");
+        const display = document.getElementById("profileDisplay");
+        form.style.display = form.style.display === "none" ? "block" : "none";
+        display.style.display = display.style.display === "none" ? "block" : "none";
+    }
+</script>
+{% endblock %}

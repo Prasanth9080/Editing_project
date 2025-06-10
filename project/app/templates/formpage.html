@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}KYC Submission{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Welcome, {{ request.user.username }}</h2>
+    <!-- <p><strong>JWT Token:</strong> <span id="token">{{ request.session.access_token }}</span></p> -->
+
+    <hr>
+
+    <button class="btn btn-primary mb-3" style="width: 100px; " onclick="toggleForm()">Add New</button>
+
+    <!-- Add New Form -->
+    <div id="kycForm" style="display: none;">
+        <form method="post" enctype="multipart/form-data" class="card card-body mb-4">
+            {% csrf_token %}
+            {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+
+            <label>Name:</label>
+            <input type="text" name="name" class="form-control" required>
+
+            <label>Mobile Number:</label>
+            <input type="text" name="mobile_number" class="form-control" pattern="\d{10}" maxlength="10" required>
+
+            <label>Aadhar Number:</label>
+            <input type="text" name="aadhar_number" class="form-control" maxlength="14" pattern="\d{4}\s\d{4}\s\d{4}"
+                title="Enter 12 digits in 4-4-4 format" required>
+
+            <label>Aadhar Image:</label>
+            <input type="file" name="aadhar_image" accept="image/*" class="form-control" required>
+
+            <label>PAN Number:</label>
+            <input type="text" name="pan_number" class="form-control" required>
+
+            <label>PAN Image:</label>
+            <input type="file" name="pan_image" accept="image/*" class="form-control" required>
+
+            <button type="submit" class="btn btn-success mt-3">Submit</button>
+        </form>
+    </div>
+
+    <!-- Table of KYC Data -->
+    <h3>Submitted KYC Details</h3>
+    {% if kyc_list %}
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>S.No</th>
+                <th>Name</th>
+                <th>Mobile</th>
+                <th>Aadhar</th>
+                <th>PAN</th>
+                <th>Aadhar Image</th>
+                <th>PAN Image</th>
+                <th>Date/Time</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for kyc in kyc_list %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ kyc.name }}</td>
+                <td>{{ kyc.mobile_number }}</td>
+                <td>{{ kyc.aadhar_number }}</td>
+                <td>{{ kyc.pan_number }}</td>
+                <td><img src="{{ kyc.aadhar_image.url }}" width="100"></td>
+                <td><img src="{{ kyc.pan_image.url }}" width="100"></td>
+                <td>{{ kyc.created_at }}</td>
+                <td>
+                    <a href="{% url 'edit_kyc' kyc.id %}" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="{% url 'delete_kyc' kyc.id %}" class="btn btn-danger btn-sm"
+                        onclick="return confirm('Are you sure?')">Delete</a>
+                </td>
+            </tr>
+
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No KYC data found.</p>
+    {% endif %}
+</div>
+
+<!-- Script -->
+<script>
+    function toggleForm() {
+        const form = document.getElementById('kycForm');
+        form.style.display = (form.style.display === 'none') ? 'block' : 'none';
+    }
+
+    // Save token to localStorage
+    const token = '{{ request.session.access_token|default_if_none:"" }}';
+    if (token) {
+        localStorage.setItem("auth_token", token);
+    }
+</script>
+{% endblock %}
