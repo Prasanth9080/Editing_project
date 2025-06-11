@@ -2,8 +2,10 @@
 {% block title %}Signup{% endblock %}
 
 {% block content %}
-<h2>Signup</h2>
-<form method="post" onsubmit="return validatePhone()">
+<div class="container col-lg-6 mt-5">
+    <h2 class="text-center">Signup</h2>
+
+    <form method="post" onsubmit="return validatePhone()">
     {% csrf_token %}
     <input type="text" name="username" placeholder="Enter your Name" required>
     <input type="email" name="email" placeholder="Enter your Email" required>
@@ -11,7 +13,11 @@
         pattern="\d{10}" required>
     <button type="submit">Sign Up</button>
 </form>
-<p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+
+<div class="mt-4">
+    <p>already have an account? <a href="{% url 'login' %}">Login here</a></p>
+</div>
+</div>
 
 
 

@@ -3,36 +3,35 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Ensure mobile responsiveness -->
     <title>{% block title %}JWT Auth{% endblock %}</title>
     <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
         body {
-            font-family: Arial;
-            max-width: 600px;
-            margin: auto;
-            padding: 2em;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
         }
 
-        form input,
-        button {
-            padding: 10px;
-            margin: 10px 0;
-            width: 100%;
+        .wrapper {
+            display: flex;
+            flex: 1;
+            flex-direction: row;
+            min-height: 100vh;
         }
-
-        .message {
-            background: #f0f0f0;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-
 
         .sidebar {
             width: 250px;
             background-color: #343a40;
             padding-top: 20px;
-            min-height: 100vh;
             transition: width 0.3s ease;
-            position: relative;
         }
 
         .sidebar.collapsed {
@@ -48,7 +47,6 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            transition: opacity 0.3s;
         }
 
         .sidebar.collapsed a {
@@ -66,28 +64,30 @@
             opacity: 0;
         }
 
-        #toggleSidebar {
+        /* #toggleSidebar {
             position: absolute;
             top: 10px;
             left: 10px;
             z-index: 1000;
-        }
+        } */
 
-        .container {
+        .main-container {
             flex: 1;
-            transition: margin-left 0.3s;
-        }
-
-        .main-content {
-            padding: 30px;
             background-color: #f4f4f4;
         }
 
-        form {
-            background: white;
+        .main-content {
+            background-color: #fff;
             padding: 20px;
             border-radius: 6px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        form input,
+        button {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
         }
 
         label {
@@ -117,31 +117,67 @@
             background-color: #2980b9;
         }
 
-        .main-container {
-            flex: 1;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
+        .message {
+            background: #f0f0f0;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        
+
+        /* Responsive layout */
+        @media (max-width: 768px) {
+            .wrapper {
+                /* flex-direction: column; */
+            }
+
+            .sidebar {
+                width: 100%;
+                position: relative;
+                padding-top: 10px;
+            }
+
+            .sidebar.collapsed {
+                width: 100%;
+            }
+
+            .sidebar a {
+                font-size: 16px;
+                text-align: center;
+            }
+
+            .main-container {
+                padding: 10px;
+            }
+
+            #toggleSidebar {
+                top: 10px;
+                left: 10px;
+                position: absolute;
+            }
         }
     </style>
 </head>
 
 <body>
-    {% include 'sidebar.html' %}
 
-    <div class="main-container" id="mainContainer">
-        {% include 'navbar.html' %}
+    <div class="wrapper">
+        {% include 'sidebar.html' %}
 
-        {% for message in messages %}
-        <div class="message">{{ message }}</div>
-        {% endfor %}
+        <div class="main-container">
+            {% include 'navbar.html' %}
 
-        {% block content %}{% endblock %}
+            {% for message in messages %}
+            <div class="message">{{ message }}</div>
+            {% endfor %}
 
+            {% block content %}{% endblock %}
+        </div>
     </div>
-
-
+<script>
+    
+</script>
 </body>
 
 </html>
+

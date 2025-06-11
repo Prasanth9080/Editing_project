@@ -33,7 +33,6 @@
             display: block;
             text-decoration: none;
             font-size: 18px;
-            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             transition: opacity 0.3s;
@@ -53,7 +52,7 @@
         }
 
         #toggleSidebar {
-            position: absolute;
+            /* position: absolute; */
             top: 10px;
             left: 10px;
             z-index: 1000;
@@ -73,46 +72,94 @@
         .sidebar.collapsed+.container .main-content {
             margin-left: 80px;
         }
+        
+        #sidebarIcon {
+            font-size: 25px;
+            padding: 5px;
+        }
+
+        @media (max-width: 991px) {
+  .sidebar {
+    width: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
+  }
+
+  .sidebar.collapsed {
+    width: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
+  }
+}
+
     </style>
 </head>
 
 <body>
     <div class="sidebar" id="sidebar">
-        <div class="d-flex text-center">
-            <div class="col-lg-6">
-                <h3 class="text-center text-white sidebar-title">Phoenix</h3>
-            </div>
-            <div class="col-lg-6"><button id="toggleSidebar" class="btn btn-sm btn-light mb-3 ms-2">☰</button></div>
+        <!-- <button id="toggleSidebar" class="btn btn-sm btn-light">☰</button> -->
+         <button id="toggleSidebar" class="btn btn-sm btn-light">
+  <span id="sidebarIcon">&larr;</span>
+</button>
+        <div class="px-3 mt-4">
+            <h3 class="sidebar-title">Phoenix</h3>
         </div>
-        <a href="{% url 'formpage' %}"
-            class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">Dashboard</a>
-        <a href="{% url 'profile' %}"
-            class="{% if request.resolver_match.url_name == 'profile' %}active{% endif %}">Profile</a>
-    </div>
+    <a href="{% url 'formpage' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">Dashboard</a>
+    <a href="{% url 'profile' %}" class="{% if request.resolver_match.url_name == 'profile' %}active{% endif %}">Profile</a>
+  </div>
 
-    <!-- Script -->
-    <script>
-        // Toggle Sidebar
-        document.addEventListener("DOMContentLoaded", function () {
-            const sidebar = document.getElementById("sidebar");
-            const toggleBtn = document.getElementById("toggleSidebar");
+<!-- <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const sidebar = document.getElementById("sidebar");
+    const toggleBtn = document.getElementById("toggleSidebar");
+    const icon = document.getElementById("sidebarIcon");
 
-            toggleBtn.addEventListener("click", () => {
-                sidebar.classList.toggle("collapsed");
-            });
-        });
+    toggleBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("collapsed");
 
-        // Auto-format Aadhar number
-        const aadharInput = document.getElementById('aadhar_number');
-        aadharInput.addEventListener('input', function (e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length > 12) value = value.slice(0, 12);
-            const formatted = value.replace(/(\d{4})(\d{0,4})(\d{0,4})/, function (_, p1, p2, p3) {
-                return [p1, p2, p3].filter(Boolean).join(' ');
-            });
-            e.target.value = formatted;
-        });
-    </script>
+      // Change the icon
+      if (sidebar.classList.contains("collapsed")) {
+        icon.innerHTML = "&rarr;";  
+      } else {
+        icon.innerHTML = "&larr;";
+      }
+    });
+  });
+</script> -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const sidebar = document.getElementById("sidebar");
+    const toggleBtn = document.getElementById("toggleSidebar");
+    const icon = document.getElementById("sidebarIcon");
+
+    function updateIcon() {
+      if (sidebar.classList.contains("collapsed")) {
+        icon.innerHTML = "&rarr;"; // Right arrow
+      } else {
+        icon.innerHTML = "&larr;"; // Left arrow
+      }
+    }
+
+    function autoCollapse() {
+      if (window.innerWidth < 991) {
+        sidebar.classList.add("collapsed");
+      } else {
+        sidebar.classList.remove("collapsed");
+      }
+      updateIcon();
+    }
+
+    toggleBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("collapsed");
+      updateIcon();
+    });
+
+    // Auto collapse on load and resize
+    autoCollapse();
+    window.addEventListener("resize", autoCollapse);
+  });
+</script>
+
 </body>
 
 </html>

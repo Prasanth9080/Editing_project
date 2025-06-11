@@ -4,61 +4,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Navbar</title>
 
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         .navbar {
             background-color: skyblue;
-            color: black;
+            color: white;
             padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-
-        .navbar .nav-links a {
-            color: black;
-            text-decoration: none;
-            margin-left: 15px;
-            font-size: 18px;
-        }
-
-        .navbar .nav-links a:hover {
-            text-decoration: underline;
+            flex-wrap: wrap;
         }
 
         .brand {
-            font-size: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .nav-toggle {
+            display: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: black;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .nav-links button {
+            background-color: rgb(87, 162, 192);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .nav-links button:hover {
+            background-color: orange;
         }
 
         .nav-links i {
-            font-size: 35px;
-            color: white;
+            font-size: 26px;
+            color: black;
+        }
+
+        .nav-links i:hover {
+            color: orange;
+        }
+
+        @media (max-width: 768px) {
+            .nav-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links a, .nav-links button {
+                width: 100%;
+                text-align: left;
+                padding: 10px 0;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <!-- navbar.html -->
     <div class="navbar">
         <span class="brand">Editing-project</span>
-        <div class="nav-links">
+
+        <span class="nav-toggle" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </span>
+
+        <div class="nav-links" id="navLinks">
             <a href="{% url 'formpage' %}">Home</a>
             <a href="{% url 'profile' %}">Profile</a>
-            <a href="{% url 'logout' %}" onclick="logoutUser()"><button>Logout</button></a>
-
+            <a href="{% url 'login' %}" onclick="logoutUser()"><button>Logout</button></a>
             <a href="{% url 'profile' %}" title="Profile">
                 <i class="fas fa-user-circle"></i>
             </a>
         </div>
     </div>
 
-
     <script>
+        function toggleMenu() {
+            const navLinks = document.getElementById("navLinks");
+            navLinks.classList.toggle("active");
+        }
+
         function logoutUser() {
             localStorage.removeItem("auth_token");
         }
