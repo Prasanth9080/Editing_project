@@ -12,13 +12,21 @@ otp_storage = {}
 def generate_otp():
     return ''.join(random.choices(string.ascii_letters + string.digits, k=7))
 
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth.models import BaseUserManager
+from rest_framework_simplejwt.tokens import RefreshToken
+
+from .models import User  # your custom user model
+
 def signup_view(request):
     if request.method == 'POST':
         name = request.POST.get('username')
         phone = request.POST.get('phone_number')
         email = request.POST.get('email')
 
-        # Server-side phone validation
+        # Server-side validation
         if len(phone) != 10 or not phone.isdigit():
             messages.error(request, "Enter a valid 10-digit phone number")
             return redirect('signup')
@@ -31,23 +39,28 @@ def signup_view(request):
             messages.error(request, "Email already registered")
             return redirect('signup')
 
+        # Generate random password using BaseUserManager
+        # random_password = BaseUserManager().make_random_password()
+
         # Create user
         user = User.objects.create_user(
             username=name,
-            phone_number=phone,
             email=email,
-            password=User.objects.make_random_password()
+            phone_number=phone,
+            # password=random_password
         )
 
-        # JWT generation
+        # Generate JWT token
         refresh = RefreshToken.for_user(user)
         user.jwt_token = str(refresh.access_token)
         user.save()
 
-        messages.success(request, "Signup successful")
+        messages.success(request, "Signup successful! Please login.")
         return redirect('login')
 
     return render(request, 'signup.html')
+
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -64,7 +77,7 @@ def login_view(request):
             messages.success(request, "OTP sent")
             return redirect('verify_otp')
         except User.DoesNotExist:
-            messages.error(request, "Please enter valid number")
+            messages.error(request, "Please SignUp your number")
     return render(request, 'login.html')
 
 def verify_otp_view(request):
@@ -199,13 +212,13 @@ from .models import KycDetails, User
 def form_page(request):
     user = request.user
 
-    # For main users, show all records; for normal users, only show their own non-hidden records
+    # Show records: main user = all, others = only their visible records
     if user.is_main_user:
         kyc_list = KycDetails.objects.all()
     else:
         kyc_list = KycDetails.objects.filter(user=user, is_hidden=False)
 
-    # Create new KYC entry
+    # Handle form submission
     if request.method == "POST":
         name = request.POST.get('name')
         mobile = request.POST.get('mobile_number')
@@ -236,7 +249,7 @@ def form_page(request):
 def edit_kyc(request, kyc_id):
     kyc = get_object_or_404(KycDetails, id=kyc_id)
 
-    # Only allow main users or the owner to edit the record
+    # Authorization check
     if not (request.user.is_main_user or request.user == kyc.user):
         messages.error(request, "You are not authorized to edit this entry.")
         return redirect("formpage")
@@ -263,22 +276,23 @@ def edit_kyc(request, kyc_id):
 def delete_kyc(request, kyc_id):
     kyc = get_object_or_404(KycDetails, id=kyc_id)
 
-    # Only allow main users or the owner to "delete"
+    # Authorization check
     if not (request.user.is_main_user or request.user == kyc.user):
         messages.error(request, "You are not authorized to delete this entry.")
         return redirect("formpage")
 
     if request.user.is_main_user:
-        # Main users perform a hard delete
+        # Hard delete
         kyc.delete()
-        messages.success(request, "KYC permanently delete successfully.")
+        messages.success(request, "KYC permanently deleted.")
     else:
-        # Normal users perform a soft delete (hide the record)
+        # Soft delete
         kyc.is_hidden = True
         kyc.save()
         messages.success(request, "KYC record deleted successfully.")
 
     return redirect("formpage")
+
 
 
 ################################################################
@@ -320,3 +334,4 @@ def profile_view(request):
         return redirect('profile')
 
     return render(request, 'profile.html', {'user_obj': user})
+

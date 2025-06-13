@@ -1,40 +1,179 @@
-{% extends 'base.html' %}
-{% block title %}Signup{% endblock %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Signup</title>
 
-{% block content %}
-<div class="container col-lg-6 mt-5">
-    <h2 class="text-center">Signup</h2>
+  <!-- Toastify CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
 
-    <form method="post" onsubmit="return validatePhone()">
-    {% csrf_token %}
-    <input type="text" name="username" placeholder="Enter your Name" required>
-    <input type="email" name="email" placeholder="Enter your Email" required>
-    <input type="tel" name="phone_number" id="phone_number" placeholder="Enter 10-digit phone number" maxlength="10"
-        pattern="\d{10}" required>
-    <button type="submit">Sign Up</button>
-</form>
-
-<div class="mt-4">
-    <p>already have an account? <a href="{% url 'login' %}">Login here</a></p>
-</div>
-</div>
-
-
-
-
-<script>
-    const phoneInput = document.getElementById('phone_number');
-    phoneInput.addEventListener('input', function () {
-        this.value = this.value.replace(/\D/g, '').slice(0, 10);
-    });
-
-    function validatePhone() {
-        const phone = phoneInput.value;
-        if (!/^\d{10}$/.test(phone)) {
-            alert("Please enter a valid 10-digit phone number.");
-            return false;
-        }
-        return true;
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
     }
+
+    body, html {
+      height: 100%;
+      background-color: #f0f2f5;
+    }
+
+    .wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 20px;
+    }
+
+    .signup-container {
+      width: 100%;
+      max-width: 500px;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 28px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    input {
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+      width: 100%;
+    }
+
+    button {
+      padding: 12px;
+      font-size: 16px;
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    .mt-4 {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .mt-4 a {
+      color: #3498db;
+      text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+      h2 { font-size: 24px; }
+      .signup-container { padding: 20px; }
+      input, button { font-size: 15px; }
+    }
+
+    @media (max-width: 480px) {
+      h2 { font-size: 20px; }
+      input, button { font-size: 14px; padding: 10px; }
+    }
+
+    @media (max-width: 360px) {
+      .signup-container { padding: 15px; }
+      h2 { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="signup-container">
+    <h2>Signup</h2>
+    <form method="post" onsubmit="return validatePhone()">
+      {% csrf_token %}
+      <input type="text" name="username" placeholder="Enter your Name" required>
+      <input type="email" name="email" placeholder="Enter your Email" required>
+      <input type="tel" name="phone_number" id="phone_number" placeholder="Enter 10-digit phone number"
+             maxlength="10" pattern="\d{10}" required>
+      <button type="submit">Sign Up</button>
+    </form>
+
+    <div class="mt-4">
+      <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Message Container -->
+<div id="toast-messages">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="toast" data-message="{{ message|escapejs }}" data-tag="{{ message.tags }}"></div>
+    {% endfor %}
+  {% endif %}
+</div>
+
+<!-- Toastify JS -->
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+<!-- JS Validation -->
+<script>
+  const phoneInput = document.getElementById('phone_number');
+  phoneInput.addEventListener('input', function () {
+    this.value = this.value.replace(/\D/g, '').slice(0, 10);
+  });
+
+  function validatePhone() {
+    const phone = phoneInput.value;
+    if (!/^\d{10}$/.test(phone)) {
+      alert("Please enter a valid 10-digit phone number.");
+      return false;
+    }
+    return true;
+  }
+
+  // Show Toastify Messages
+  document.addEventListener("DOMContentLoaded", function () {
+    const toasts = document.querySelectorAll('#toast-messages .toast');
+    toasts.forEach(function (toast) {
+      const message = toast.getAttribute('data-message');
+      const tag = toast.getAttribute('data-tag');
+
+      let bgColor = "#17a2b8"; // info
+      if (tag.includes("success")) {
+        bgColor = "#28a745"; // green
+      } else if (tag.includes("error")) {
+        bgColor = "#dc3545"; // red
+      }
+
+      Toastify({
+        text: message,
+        duration: 4000,
+        close: false,
+        gravity: "top",
+        position: "right",
+        backgroundColor: bgColor,
+        stopOnFocus: true
+      }).showToast();
+    });
+  });
 </script>
-{% endblock %}
+
+</body>
+</html>
