@@ -1,7 +1,5 @@
-
-
 from django.contrib import admin
-from .models import User,KycDetails
+from .models import User,KycDetailsNew,BondImage
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -9,15 +7,18 @@ class UserAdmin(admin.ModelAdmin):
     list_filter = ('is_main_user',)
     search_fields = ('username', 'phone_number', 'email')
 
-@admin.register(KycDetails)
+@admin.register(KycDetailsNew)
 class KycDetailsAdmin(admin.ModelAdmin):
-    list_display = ("name","mobile_number","aadhar_number","aadhar_image","pan_number","pan_image","created_at")
+    list_display = ("name","age","mobile_number","aadhar_number","aadhar_image","pan_image","address","fathername","profession","contactSH","nameSH","investmentamt","passportphoto","bond")
 
-
+@admin.register(BondImage)
+class BondImageAdmin(admin.ModelAdmin):
+    list_display = ['id', 'kyc', 'image']
+    search_fields = ['kyc__name']
 
 # from django.contrib import admin
 # from django.contrib.auth.admin import UserAdmin
-# from .models import User, KycDetails
+# from .models import User, KycDetailsNew
 
 # class CustomUserAdmin(UserAdmin):
 #     fieldsets = UserAdmin.fieldsets + (
@@ -25,4 +26,4 @@ class KycDetailsAdmin(admin.ModelAdmin):
 #     )
 
 # admin.site.register(User, CustomUserAdmin)
-# admin.site.register(KycDetails)
+# admin.site.register(KycDetailsNew)

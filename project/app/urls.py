@@ -14,4 +14,8 @@ urlpatterns = [
     path('delete/<int:kyc_id>/', views.delete_kyc, name='delete_kyc'),
 
     path('profile/', views.profile_view, name='profile'),
+
+    # download excel
+    path('download-kyc/', views.download_kyc_excel, name='download_kyc_excel'),
+    path('download/pdf/', views.download_kyc_pdf, name='download_kyc_pdf'),
 ]

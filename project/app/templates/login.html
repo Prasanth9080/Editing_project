@@ -6,167 +6,152 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login</title>
 
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
   <!-- Bootstrap & Toastify CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
   <style>
     * {
-      box-sizing: border-box;
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: 'Poppins', sans-serif;
     }
 
     body, html {
       height: 100%;
       margin: 0;
       padding: 0;
-      background: linear-gradient(to right, #dde6f5, #f5f9ff); /* Full background color gradient */
+      background: linear-gradient(135deg, #c3dafe, #f5e0ff);
+      background-repeat: no-repeat;
+      background-size: cover;
     }
 
-    .full-height {
-      height: 100vh;
-    }
-
-    .left-image-wrapper {
+    .container-fluid {
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 100%;
-      background-color: #e0ebf7;
     }
 
-    .left-image-wrapper img {
-      max-width: 80%;
-      height: auto;
+    .login-wrapper {
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      max-width: 950px;
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      overflow: hidden;
     }
 
-    .right-login-wrapper {
+    .left-image {
+      flex: 1;
+      min-width: 300px;
+      background: linear-gradient(to bottom right, #dbeafe, #e0f2fe);
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 100%;
+      padding: 20px;
     }
 
-    .login-container {
-      background: #ffffff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.1);
+    .left-image img {
       width: 100%;
       max-width: 400px;
+      height: auto;
+      filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.1));
     }
 
-    h2 {
+    .login-form {
+      flex: 1;
+      min-width: 300px;
+      padding: 50px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .login-form h2 {
+      font-weight: 600;
+      font-size: 30px;
+      margin-bottom: 25px;
       text-align: center;
-      margin-bottom: 20px;
-      font-size: 28px;
+      color: #1e3a8a;
     }
 
-    input[type="tel"] {
+    .form-control {
       padding: 12px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      margin-bottom: 15px;
-      width: 100%;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
     }
 
-    button {
-      padding: 12px;
-      font-size: 16px;
-      background-color: #3498db;
-      color: white;
+    .btn-login {
+      background: linear-gradient(to right, #6366f1, #3b82f6);
       border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background-color 0.3s;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 10px;
+      transition: background 0.3s ease;
+      color: white;
     }
 
-    button:hover {
-      background-color: #2980b9;
+    .btn-login:hover {
+      background: linear-gradient(to right, #4338ca, #2563eb);
     }
 
     .signup-link {
-      font-size: 14px;
+      margin-top: 20px;
       text-align: center;
-      margin-top: 10px;
+      font-size: 14px;
     }
 
     .signup-link a {
-      color: #3498db;
+      color: #3b82f6;
       text-decoration: none;
+      font-weight: 500;
     }
 
-    .left-image-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  background-color: #e0ebf7;
-}
-.left-image-wrapper img {
-  max-width: 80%;
-  height: auto;
-}
-
-
-    /* Responsive Design */
     @media (max-width: 768px) {
-      .left-image-wrapper {
-        display: none; /* Hide image on small screens */
+      .login-wrapper {
+        flex-direction: column;
       }
 
-      .right-login-wrapper {
-        height: auto;
+      .left-image {
+        display: none;
+      }
+
+      .login-form {
         padding: 40px 20px;
-      }
-
-      h2 {
-        font-size: 24px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      h2 {
-        font-size: 20px;
-      }
-
-      input, button {
-        font-size: 14px;
-        padding: 10px;
-      }
-
-      .login-container {
-        padding: 20px;
       }
     }
   </style>
 </head>
 <body>
 
-<div class="container-fluid full-height">
-  <div class="row h-100">
-    
-    <!-- Left: Centered Image -->
-    {% load static %}
-    <div class="col-md-6 left-image-wrapper">
-      <img src="{% static '/images/login-img.jpg' %}" alt="Login Illustration">
+<div class="container-fluid">
+  <div class="login-wrapper">
+
+    <!-- Left Image -->
+    <div class="left-image">
+      <img src="{% static 'images/login-img.jpg' %}" alt="Login Image">
     </div>
 
-    <!-- Right: Centered Login Form -->
-    <div class="col-md-6 right-login-wrapper">
-      <div class="login-container">
-        <h2>Login</h2>
-        <form method="post" onsubmit="return validatePhone()">
-          {% csrf_token %}
-          <input type="tel" name="phone_number" id="phone_number" placeholder="Enter 10 digit phone number" maxlength="10" pattern="\d{10}" required>
-          <div class="d-grid gap-2">
-              <button type="submit" class="btn bg-info text-white">Send OTP</button>
-          </div>
-        </form>
-        <p class="signup-link">
-          Don't have an account? <a href="{% url 'signup' %}">Signup here</a>
-        </p>
+    <!-- Login Form -->
+    <div class="login-form">
+      <h2>Login your account</h2>
+      <form method="post" onsubmit="return validatePhone()">
+        {% csrf_token %}
+        <div class="mb-3">
+          <input type="tel" name="phone_number" id="phone_number" class="form-control" placeholder="Enter 10-digit phone number" maxlength="10" pattern="\d{10}" required>
+        </div>
+        <div class="d-grid">
+          <button type="submit" class="btn btn-login">Send OTP</button>
+        </div>
+      </form>
+      <div class="signup-link">
+        Don't have an account? <a href="{% url 'signup' %}">Sign Up</a>
       </div>
     </div>
 
@@ -176,7 +161,7 @@
 <!-- Toastify JS -->
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
-<!-- Django Messages -->
+<!-- Django Messages Toast -->
 <div id="toast-messages">
   {% if messages %}
     {% for message in messages %}
@@ -192,9 +177,9 @@
       const message = toast.getAttribute('data-message');
       const tag = toast.getAttribute('data-tag');
 
-      let bgColor = "#17a2b8";
-      if (tag.includes("success")) bgColor = "#28a745";
-      else if (tag.includes("error")) bgColor = "#dc3545";
+      let bgColor = "#3b82f6";
+      if (tag.includes("success")) bgColor = "#10b981";
+      else if (tag.includes("error")) bgColor = "#ef4444";
 
       Toastify({
         text: message,
@@ -216,5 +201,6 @@
     return true;
   }
 </script>
+
 </body>
 </html>

@@ -9,6 +9,9 @@
         <label>Name:</label>
         <input type="text" name="name" value="{{ kyc.name }}" class="form-control" required>
 
+        <label>Father Name:</label>
+        <input type="text" name="fathername" value="{{ kyc.fathername }}" class="form-control" required>
+
         <label>Mobile Number:</label>
         <input type="text" name="mobile_number" value="{{ kyc.mobile_number }}" class="form-control" required>
 
@@ -19,12 +22,37 @@
         <input type="text" name="pan_number" value="{{ kyc.pan_number }}" class="form-control" required>
 
         <label>Aadhar Image:</label>
-        <input type="file" name="aadhar_image" class="form-control">
+        <input type="file" name="aadhar_image" value="{{ kyc.aadhar_image }}" class="form-control">
 
         <label>PAN Image:</label>
-        <input type="file" name="pan_image" class="form-control">
+        <input type="file" name="pan_image" value="{{ kyc.pan_image }}" class="form-control">
+
+        <label>Address:</label>
+        <input type="text" name="address" value="{{ kyc.address }}" class="form-control" required>
+
+        <label>Date of Birth:</label>
+        <input type="date" name="dob" value="{{ kyc.dob }}" class="form-control" required>
+
+        <label>Profession:</label>
+        <input type="text" name="profession" value="{{ kyc.profession }}" class="form-control" required>
+
+        <label>Contact SH or NH</label>
+        <input type="text" name="contactSH" value="{{ kyc.contactSH }}" class="form-control" required>
+
+        <label>Name SH or NH</label>
+        <input type="text" name="nameSH" value="{{ kyc.nameSH }}" class="form-control" required>
+
+        <label>Investment Amount</label>
+        <input type="text" name="investmentamt" value="{{ kyc.investmentamt }}" class="form-control" required>
+
+        <label>Passport Photo</label>
+        <input type="file" name="passportphoto" value="{{ kyc.passportphoto }}" class="form-control" required>
+
+        <label>Bond Photo</label>
+        <input type="file" name="bond" value="{{ kyc.bond }}" class="form-control" required>
 
         <button type="submit" class="btn btn-success mt-3">Update</button>
     </form>
 </div>
 {% endblock %}
+

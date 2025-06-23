@@ -1,5 +1,5 @@
 # views.py
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -120,7 +120,7 @@ def logout_view(request):
 ############# for formpage functionalities  deleted for for all user
 
 # from django.shortcuts import render, redirect, get_object_or_404
-# from .models import KycDetails, User
+# from .models import KycDetailsNew, User
 # from django.contrib.auth.decorators import login_required
 # from django.contrib import messages
 
@@ -130,9 +130,9 @@ def logout_view(request):
 
 #     # Show all data to main user, or only their own data
 #     if user.is_main_user:
-#         kyc_list = KycDetails.objects.all()
+#         kyc_list = KycDetailsNew.objects.all()
 #     else:
-#         kyc_list = KycDetails.objects.filter(user=user)
+#         kyc_list = KycDetailsNew.objects.filter(user=user)
 
 #     if request.method == "POST":
 #         name = request.POST.get('name')
@@ -145,7 +145,7 @@ def logout_view(request):
 #         if not all([name, mobile, aadhar, pan, aadhar_img, pan_img]):
 #             messages.error(request, "All fields are required.")
 #         else:
-#             KycDetails.objects.create(
+#             KycDetailsNew.objects.create(
 #                 user=user,
 #                 name=name,
 #                 mobile_number=mobile,
@@ -162,7 +162,7 @@ def logout_view(request):
 
 # @login_required
 # def edit_kyc(request, kyc_id):
-#     kyc = get_object_or_404(KycDetails, id=kyc_id)
+#     kyc = get_object_or_404(KycDetailsNew, id=kyc_id)
 
 #     if not (request.user.is_main_user or request.user == kyc.user):
 #         messages.error(request, "You are not authorized.")
@@ -188,7 +188,7 @@ def logout_view(request):
 
 # @login_required
 # def delete_kyc(request, kyc_id):
-#     kyc = get_object_or_404(KycDetails, id=kyc_id)
+#     kyc = get_object_or_404(KycDetailsNew, id=kyc_id)
 
 #     if not (request.user.is_main_user or request.user == kyc.user):
 #         messages.error(request, "You are not authorized.")
@@ -203,42 +203,68 @@ def logout_view(request):
 ################ delete option only acccess in main user
 ################ otherwise normal user delete the record only delete(hide) the paricular role
 
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import KycDetails, User
+from .models import KycDetailsNew, User, BondImage
 
 @login_required
 def form_page(request):
     user = request.user
 
-    # Show records: main user = all, others = only their visible records
-    if user.is_main_user:
-        kyc_list = KycDetails.objects.all()
+    # Main user sees all records; others see only their own visible records
+    if hasattr(user, 'is_main_user') and user.is_main_user:
+        kyc_list = KycDetailsNew.objects.all()
     else:
-        kyc_list = KycDetails.objects.filter(user=user, is_hidden=False)
+        kyc_list = KycDetailsNew.objects.filter(user=user, is_hidden=False)
 
-    # Handle form submission
     if request.method == "POST":
         name = request.POST.get('name')
+        age = request.POST.get('age')
+        fathername = request.POST.get('fathername')
         mobile = request.POST.get('mobile_number')
         aadhar = request.POST.get('aadhar_number')
-        pan = request.POST.get('pan_number')
         aadhar_img = request.FILES.get('aadhar_image')
         pan_img = request.FILES.get('pan_image')
+        address = request.POST.get('address')
+        profession = request.POST.get('profession')
+        contactSH = request.POST.get('contactSH')
+        nameSH = request.POST.get('nameSH')
+        investmentamt = request.POST.get('investmentamt')
+        passportphoto = request.FILES.get('passportphoto')
+        bonds = request.FILES.getlist('bonds')  # handles multiple files
 
-        if not all([name, mobile, aadhar, pan, aadhar_img, pan_img]):
-            messages.error(request, "All fields are required.")
+        if not all([name, mobile, aadhar, aadhar_img, pan_img, address]):
+            messages.error(request, "All required fields must be filled.")
         else:
-            KycDetails.objects.create(
+            try:
+                investmentamt = int(investmentamt) if investmentamt else None
+            except ValueError:
+                messages.error(request, "Investment amount must be a number.")
+                return redirect("formpage")
+
+            # Create the KYC record
+            kyc = KycDetailsNew.objects.create(
                 user=user,
                 name=name,
+                age=age,
+                fathername=fathername,
                 mobile_number=mobile,
                 aadhar_number=aadhar,
-                pan_number=pan,
                 aadhar_image=aadhar_img,
-                pan_image=pan_img
+                pan_image=pan_img,
+                address=address,
+                profession=profession,
+                contactSH=contactSH,
+                nameSH=nameSH,
+                investmentamt=investmentamt,
+                passportphoto=passportphoto,
             )
+
+            # Save each bond image
+            for bond_img in bonds:
+                BondImage.objects.create(kyc=kyc, image=bond_img)
+
             messages.success(request, "KYC submitted successfully.")
             return redirect("formpage")
 
@@ -247,23 +273,51 @@ def form_page(request):
 
 @login_required
 def edit_kyc(request, kyc_id):
-    kyc = get_object_or_404(KycDetails, id=kyc_id)
+    kyc = get_object_or_404(KycDetailsNew, id=kyc_id)
 
     # Authorization check
     if not (request.user.is_main_user or request.user == kyc.user):
         messages.error(request, "You are not authorized to edit this entry.")
         return redirect("formpage")
-
+    
     if request.method == "POST":
-        kyc.name = request.POST.get('name')
-        kyc.mobile_number = request.POST.get('mobile_number')
-        kyc.aadhar_number = request.POST.get('aadhar_number')
-        kyc.pan_number = request.POST.get('pan_number')
+        name = request.POST.get('name')
+        age = request.POST.get('age')
+        fathername = request.POST.get('fathername')
+        mobile_number = request.POST.get('mobile_number')
+        aadhar_number = request.POST.get('aadhar_number')
+        address = request.POST.get('address')
+        profession = request.POST.get('profession')
+        contactSH = request.POST.get('contactSH')
+        nameSH = request.POST.get('nameSH')
+        investmentamt = request.POST.get('investmentamt')
 
+        # Validate required fields (you can add dob if it's required)
+        if not all([name, fathername, mobile_number, aadhar_number, address, profession]):
+            messages.error(request, "All fields are required.")
+            return render(request, "edit_kyc.html", {"kyc": kyc})
+        
+        # Assign values
+        kyc.name = name
+        kyc.age = age
+        kyc.fathername = fathername
+        kyc.mobile_number = mobile_number
+        kyc.aadhar_number = aadhar_number
+        kyc.address = address
+        kyc.profession = profession
+        kyc.contactSH = contactSH
+        kyc.nameSH = nameSH
+        kyc.investmentamt = investmentamt
+
+        # File uploads must be handled from request.FILES
         if request.FILES.get('aadhar_image'):
             kyc.aadhar_image = request.FILES['aadhar_image']
         if request.FILES.get('pan_image'):
             kyc.pan_image = request.FILES['pan_image']
+        if request.FILES.get('passportphoto'):
+            kyc.passportphoto = request.FILES['passportphoto']
+        if request.FILES.get('bond'):
+            kyc.bond = request.FILES['bond']
 
         kyc.save()
         messages.success(request, "KYC updated successfully.")
@@ -274,7 +328,7 @@ def edit_kyc(request, kyc_id):
 
 @login_required
 def delete_kyc(request, kyc_id):
-    kyc = get_object_or_404(KycDetails, id=kyc_id)
+    kyc = get_object_or_404(KycDetailsNew, id=kyc_id)
 
     # Authorization check
     if not (request.user.is_main_user or request.user == kyc.user):
@@ -292,6 +346,131 @@ def delete_kyc(request, kyc_id):
         messages.success(request, "KYC record deleted successfully.")
 
     return redirect("formpage")
+
+
+# Download Excel Sheet
+
+import openpyxl
+from django.http import HttpResponse
+from .models import KycDetailsNew
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def download_kyc_excel(request):
+    workbook = openpyxl.Workbook()
+    sheet = workbook.active
+    sheet.title = "KYC Details"
+
+    # Headers
+    headers = [
+        'S.No', 'Name','age', 'Father Name', 'Mobile Number', 'Aadhar Number', 'Address','Profession', 'Contact SH/NH', 'Name SH/NH',
+        'Investment Amount'
+    ]
+    sheet.append(headers)
+
+    # Filter data based on logged-in user
+    if request.user.is_superuser or getattr(request.user, "is_main_user", False):
+        kyc_list = KycDetailsNew.objects.all()
+    else:
+        kyc_list = KycDetailsNew.objects.filter(user=request.user)
+
+    # Data rows
+    for idx, kyc in enumerate(kyc_list, start=1):
+        sheet.append([
+            idx,
+            kyc.name,
+            kyc.age,
+            kyc.fathername,
+            kyc.mobile_number,
+            kyc.aadhar_number,
+            kyc.address,
+            kyc.profession,
+            kyc.contactSH,
+            kyc.nameSH,
+            kyc.investmentamt
+        ])
+
+    # Response
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
+    response['Content-Disposition'] = 'attachment; filename=kyc_details.xlsx'
+    workbook.save(response)
+    return response
+
+# Download pdf sheet
+
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
+from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from .models import KycDetailsNew
+
+@login_required
+def download_kyc_pdf(request):
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="kyc_details.pdf"'
+
+    c = canvas.Canvas(response, pagesize=A4)
+    width, height = A4
+
+    c.setFont("Helvetica-Bold", 14)
+    c.drawString(200, height - 40, "KYC Details Report")
+
+    # Table setup
+    c.setFont("Helvetica-Bold", 10)
+    x_list = [40, 80, 180, 270, 400, 510]  # X positions of columns
+    y = height - 70
+    row_height = 20
+
+    headers = ['S.No', 'Name', 'Mobile', 'Aadhar', 'Address', 'Profession']
+    for i, header in enumerate(headers):
+        c.drawString(x_list[i] + 2, y, header)
+
+    # Draw header line
+    c.line(x_list[0], y - 2, x_list[-1] + 100, y - 2)
+    y -= row_height
+
+    c.setFont("Helvetica", 10)
+    kyc_list = KycDetailsNew.objects.all()
+
+    for idx, kyc in enumerate(kyc_list, start=1):
+        if y < 50:  # New page if too low
+            c.showPage()
+            c.setFont("Helvetica-Bold", 10)
+            y = height - 50
+            for i, header in enumerate(headers):
+                c.drawString(x_list[i] + 2, y, header)
+            c.line(x_list[0], y - 2, x_list[-1] + 100, y - 2)
+            y -= row_height
+            c.setFont("Helvetica", 10)
+
+        values = [
+            str(idx),
+            kyc.name[:20],
+            kyc.mobile_number,
+            kyc.aadhar_number,
+            kyc.address[:25],
+            kyc.profession[:20]
+        ]
+        for i, value in enumerate(values):
+            c.drawString(x_list[i] + 2, y, value)
+
+        # Draw horizontal line
+        c.line(x_list[0], y - 2, x_list[-1] + 100, y - 2)
+
+        y -= row_height
+
+    # Draw vertical lines (column borders)
+    bottom_y = y + row_height
+    top_y = height - 70 + 5
+    for x in x_list:
+        c.line(x, bottom_y, x, top_y)
+    # Last right border
+    c.line(x_list[-1] + 100, bottom_y, x_list[-1] + 100, top_y)
+
+    c.save()
+    return response
 
 
 

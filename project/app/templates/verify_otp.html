@@ -10,11 +10,15 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
 
   <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
     body {
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
-      background-color: #f8f9fa;
+      background: linear-gradient(to right, #dbeafe, #f0e9ff);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -22,17 +26,20 @@
     }
 
     .otp-container {
-      background: #ffffff;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
       width: 100%;
-      max-width: 400px;
+      max-width: 420px;
     }
 
     h2 {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
+      font-size: 26px;
+      color: #3730a3;
     }
 
     form {
@@ -41,39 +48,48 @@
     }
 
     input[type="text"] {
-      padding: 12px;
+      padding: 14px;
       font-size: 16px;
       border: 1px solid #ccc;
-      border-radius: 6px;
-      margin-bottom: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      background-color: #f9fafb;
+      transition: border-color 0.3s;
+    }
+
+    input[type="text"]:focus {
+      border-color: #6366f1;
+      outline: none;
     }
 
     button {
-      padding: 12px;
+      padding: 14px;
       font-size: 16px;
-      background-color: #3498db;
+      background: linear-gradient(to right, #6366f1, #7c3aed);
       color: white;
       border: none;
-      border-radius: 6px;
+      border-radius: 10px;
       cursor: pointer;
+      transition: background 0.3s ease;
     }
 
     button:hover {
-      background-color: #2980b9;
+      background: linear-gradient(to right, #4338ca, #6d28d9);
     }
 
     @media (max-width: 480px) {
       .otp-container {
-        padding: 20px;
-        margin: 15px
+        padding: 25px;
+        margin: 15px;
       }
 
       h2 {
-        font-size: 20px;
+        font-size: 22px;
       }
 
       input, button {
         font-size: 14px;
+        padding: 12px;
       }
     }
   </style>

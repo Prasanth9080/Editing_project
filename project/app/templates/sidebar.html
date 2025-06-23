@@ -38,6 +38,11 @@
             transition: opacity 0.3s;
         }
 
+        .sidebar a:hover {
+          background-color: #555454;
+          color: white;
+        }
+
         .sidebar.collapsed a {
             font-size: 0;
             padding: 15px 10px;
@@ -102,30 +107,13 @@
   <span id="sidebarIcon">&larr;</span>
 </button>
         <div class="px-3 mt-4">
-            <h3 class="sidebar-title">Phoenix</h3>
+            <!-- <h3 class="sidebar-title">Phoenix</h3> -->
         </div>
     <a href="{% url 'formpage' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">Dashboard</a>
     <a href="{% url 'profile' %}" class="{% if request.resolver_match.url_name == 'profile' %}active{% endif %}">Profile</a>
   </div>
 
-<!-- <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const sidebar = document.getElementById("sidebar");
-    const toggleBtn = document.getElementById("toggleSidebar");
-    const icon = document.getElementById("sidebarIcon");
 
-    toggleBtn.addEventListener("click", () => {
-      sidebar.classList.toggle("collapsed");
-
-      // Change the icon
-      if (sidebar.classList.contains("collapsed")) {
-        icon.innerHTML = "&rarr;";  
-      } else {
-        icon.innerHTML = "&larr;";
-      }
-    });
-  });
-</script> -->
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const sidebar = document.getElementById("sidebar");
