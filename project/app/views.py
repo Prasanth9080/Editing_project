@@ -218,6 +218,20 @@ def form_page(request):
     else:
         kyc_list = KycDetailsNew.objects.filter(user=user, is_hidden=False)
 
+    # ✅ Show all KYC entries to superuser, main user, or sub-main user
+    if user.is_superuser or getattr(user, "is_main_user", False) or getattr(user, "is_sub_mainuser", False):
+        kyc_list = KycDetailsNew.objects.filter(is_hidden=False)
+    else:
+        # ✅ Normal users see only their own visible records
+        kyc_list = KycDetailsNew.objects.filter(user=user, is_hidden=False)
+
+    # if user.is_superuser or getattr(user, "is_main_user", False):
+    #     kyc_list = KycDetailsNew.objects.all()
+    # elif getattr(user, "is_sub_mainuser", False):
+    #     kyc_list = KycDetailsNew.objects.filter(user=user)
+    # else:
+    #     kyc_list = KycDetailsNew.objects.filter(user=user)
+
     if request.method == "POST":
         name = request.POST.get('name')
         age = request.POST.get('age')
@@ -268,8 +282,14 @@ def form_page(request):
             messages.success(request, "KYC submitted successfully.")
             return redirect("formpage")
 
-    return render(request, "formpage.html", {"kyc_list": kyc_list})
+    return render(request, "formpage.html", {"kyc_list": kyc_list,
+     "is_sub_mainuser": getattr(user, 'is_sub_mainuser', False)})
 
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .models import KycDetailsNew, BondImage
 
 @login_required
 def edit_kyc(request, kyc_id):
@@ -279,7 +299,7 @@ def edit_kyc(request, kyc_id):
     if not (request.user.is_main_user or request.user == kyc.user):
         messages.error(request, "You are not authorized to edit this entry.")
         return redirect("formpage")
-    
+
     if request.method == "POST":
         name = request.POST.get('name')
         age = request.POST.get('age')
@@ -292,12 +312,12 @@ def edit_kyc(request, kyc_id):
         nameSH = request.POST.get('nameSH')
         investmentamt = request.POST.get('investmentamt')
 
-        # Validate required fields (you can add dob if it's required)
+        # Validate required fields
         if not all([name, fathername, mobile_number, aadhar_number, address, profession]):
             messages.error(request, "All fields are required.")
             return render(request, "edit_kyc.html", {"kyc": kyc})
-        
-        # Assign values
+
+        # Assign new values
         kyc.name = name
         kyc.age = age
         kyc.fathername = fathername
@@ -309,21 +329,33 @@ def edit_kyc(request, kyc_id):
         kyc.nameSH = nameSH
         kyc.investmentamt = investmentamt
 
-        # File uploads must be handled from request.FILES
+        # File updates
         if request.FILES.get('aadhar_image'):
             kyc.aadhar_image = request.FILES['aadhar_image']
         if request.FILES.get('pan_image'):
             kyc.pan_image = request.FILES['pan_image']
         if request.FILES.get('passportphoto'):
             kyc.passportphoto = request.FILES['passportphoto']
-        if request.FILES.get('bond'):
-            kyc.bond = request.FILES['bond']
+
+        # Handle bond image deletion
+        delete_bond_ids = request.POST.getlist('delete_bonds')
+        for bond_id in delete_bond_ids:
+            bond = BondImage.objects.filter(id=bond_id, kyc=kyc).first()
+            if bond:
+                bond.image.delete(save=False)  # deletes file from storage
+                bond.delete()
+
+        # Handle new bond image uploads
+        new_bonds = request.FILES.getlist('bonds')
+        for bond_img in new_bonds:
+            BondImage.objects.create(kyc=kyc, image=bond_img)
 
         kyc.save()
         messages.success(request, "KYC updated successfully.")
         return redirect("formpage")
 
     return render(request, "edit_kyc.html", {"kyc": kyc})
+
 
 
 @login_required
@@ -348,6 +380,7 @@ def delete_kyc(request, kyc_id):
     return redirect("formpage")
 
 
+
 # Download Excel Sheet
 
 import openpyxl
@@ -363,18 +396,22 @@ def download_kyc_excel(request):
 
     # Headers
     headers = [
-        'S.No', 'Name','age', 'Father Name', 'Mobile Number', 'Aadhar Number', 'Address','Profession', 'Contact SH/NH', 'Name SH/NH',
-        'Investment Amount'
+        'S.No', 'Name', 'Age', 'Father Name', 'Mobile Number', 'Aadhar Number',
+        'Address', 'Profession', 'Contact SH/NH', 'Name SH/NH', 'Investment Amount'
     ]
     sheet.append(headers)
 
-    # Filter data based on logged-in user
-    if request.user.is_superuser or getattr(request.user, "is_main_user", False):
+    # Get the same data as shown in the frontend table
+    user = request.user
+    if user.is_superuser or getattr(user, "is_main_user", False):
         kyc_list = KycDetailsNew.objects.all()
+    elif getattr(user, "is_sub_mainuser", False):
+        # assuming sub_mainuser sees child users' data
+        kyc_list = KycDetailsNew.objects.filter(user__parent=user)
     else:
-        kyc_list = KycDetailsNew.objects.filter(user=request.user)
+        kyc_list = KycDetailsNew.objects.filter(user=user)
 
-    # Data rows
+    # Add rows to Excel
     for idx, kyc in enumerate(kyc_list, start=1):
         sheet.append([
             idx,
@@ -390,7 +427,7 @@ def download_kyc_excel(request):
             kyc.investmentamt
         ])
 
-    # Response
+    # Return Excel file as HTTP response
     response = HttpResponse(
         content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     )
@@ -398,10 +435,13 @@ def download_kyc_excel(request):
     workbook.save(response)
     return response
 
+
 # Download pdf sheet
 
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
+from reportlab.lib import colors
+from reportlab.lib.units import mm
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import KycDetailsNew
@@ -409,68 +449,77 @@ from .models import KycDetailsNew
 @login_required
 def download_kyc_pdf(request):
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="kyc_details.pdf"'
+    response['Content-Disposition'] = 'attachment; filename="kyc_report.pdf"'
 
     c = canvas.Canvas(response, pagesize=A4)
-    width, height = A4
+    W, H = A4
+    margin = 20 * mm
+    card_width = W - 2 * margin
+    card_height = 60 * mm
+    x0 = margin
+    y = H - margin
 
-    c.setFont("Helvetica-Bold", 14)
-    c.drawString(200, height - 40, "KYC Details Report")
+    # Title
+    c.setFont("Helvetica-Bold", 18)
+    c.drawCentredString(W / 2, y, "KYC Report")
+    y -= 15 * mm
 
-    # Table setup
-    c.setFont("Helvetica-Bold", 10)
-    x_list = [40, 80, 180, 270, 400, 510]  # X positions of columns
-    y = height - 70
-    row_height = 20
+    # ✅ Filter only what's visible in the table
+    user = request.user
+    if user.is_superuser or getattr(user, "is_main_user", False):
+        kyc_list = KycDetailsNew.objects.all()
+    else:
+        kyc_list = KycDetailsNew.objects.filter(user=user)
 
-    headers = ['S.No', 'Name', 'Mobile', 'Aadhar', 'Address', 'Profession']
-    for i, header in enumerate(headers):
-        c.drawString(x_list[i] + 2, y, header)
-
-    # Draw header line
-    c.line(x_list[0], y - 2, x_list[-1] + 100, y - 2)
-    y -= row_height
-
-    c.setFont("Helvetica", 10)
-    kyc_list = KycDetailsNew.objects.all()
-
-    for idx, kyc in enumerate(kyc_list, start=1):
-        if y < 50:  # New page if too low
+    for idx, kyc in enumerate(kyc_list, 1):
+        if y - card_height < margin:
             c.showPage()
-            c.setFont("Helvetica-Bold", 10)
-            y = height - 50
-            for i, header in enumerate(headers):
-                c.drawString(x_list[i] + 2, y, header)
-            c.line(x_list[0], y - 2, x_list[-1] + 100, y - 2)
-            y -= row_height
-            c.setFont("Helvetica", 10)
+            y = H - margin
+            c.setFont("Helvetica-Bold", 18)
+            c.drawCentredString(W / 2, y, "KYC Report")
+            y -= 15 * mm
 
-        values = [
-            str(idx),
-            kyc.name[:20],
-            kyc.mobile_number,
-            kyc.aadhar_number,
-            kyc.address[:25],
-            kyc.profession[:20]
+        # Card border
+        c.setLineWidth(1)
+        c.roundRect(x0, y - card_height, card_width, card_height, 5 * mm, stroke=1, fill=0)
+
+        # Header band
+        header_h = 10 * mm
+        c.setFillColor(colors.lightgrey)
+        c.roundRect(x0, y - header_h, card_width, header_h, 5 * mm, stroke=0, fill=1)
+        c.setFillColor(colors.black)
+        c.setFont("Helvetica-Bold", 12)
+        c.drawString(x0 + 5 * mm, y - header_h + 2 * mm, f"KYC #{idx}")
+
+        # Two-column field layout
+        labels = [
+            ("Name", kyc.name),
+            ("Father's Name", kyc.fathername or "—"),
+            ("Mobile", kyc.mobile_number),
+            ("Aadhar", kyc.aadhar_number),
+            ("Address", kyc.address),
+            ("Profession", kyc.profession or "—"),
+            ("Contact SH", kyc.contactSH or "—"),
+            ("Name SH", kyc.nameSH or "—"),
+            ("Investment", str(kyc.investmentamt) if kyc.investmentamt else "—"),
         ]
-        for i, value in enumerate(values):
-            c.drawString(x_list[i] + 2, y, value)
 
-        # Draw horizontal line
-        c.line(x_list[0], y - 2, x_list[-1] + 100, y - 2)
+        col_x = [x0 + 5 * mm, x0 + card_width / 2 + 5 * mm]
+        c.setFont("Helvetica", 10)
+        line_h = 6 * mm
+        start_y = y - header_h - 5 * mm
 
-        y -= row_height
+        for i, (label, val) in enumerate(labels):
+            col = i % 2
+            row = i // 2
+            text_y = start_y - row * line_h
+            c.drawString(col_x[col], text_y, f"{label}: {val}")
 
-    # Draw vertical lines (column borders)
-    bottom_y = y + row_height
-    top_y = height - 70 + 5
-    for x in x_list:
-        c.line(x, bottom_y, x, top_y)
-    # Last right border
-    c.line(x_list[-1] + 100, bottom_y, x_list[-1] + 100, top_y)
+        y -= card_height + 5 * mm
 
     c.save()
     return response
+
 
 
 

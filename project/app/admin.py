@@ -4,12 +4,12 @@ from .models import User,KycDetailsNew,BondImage
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ('username', 'email', 'phone_number','is_main_user', 'date_joined', 'last_login', 'jwt_token')
-    list_filter = ('is_main_user',)
+    list_filter = ('is_main_user','is_sub_mainuser') 
     search_fields = ('username', 'phone_number', 'email')
 
 @admin.register(KycDetailsNew)
 class KycDetailsAdmin(admin.ModelAdmin):
-    list_display = ("name","age","mobile_number","aadhar_number","aadhar_image","pan_image","address","fathername","profession","contactSH","nameSH","investmentamt","passportphoto","bond")
+    list_display = ("name","age","mobile_number","aadhar_number","aadhar_image","pan_image","address","fathername","profession","contactSH","nameSH","investmentamt","passportphoto")
 
 @admin.register(BondImage)
 class BondImageAdmin(admin.ModelAdmin):

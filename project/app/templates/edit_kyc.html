@@ -3,56 +3,151 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h2>Edit KYC</h2>
-    <form method="post" enctype="multipart/form-data" class="card card-body">
-        {% csrf_token %}
-        <label>Name:</label>
-        <input type="text" name="name" value="{{ kyc.name }}" class="form-control" required>
+    <h2 class="mb-4">Edit KYC</h2>
 
-        <label>Father Name:</label>
-        <input type="text" name="fathername" value="{{ kyc.fathername }}" class="form-control" required>
+    <div class="card p-4 shadow">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row g-3">
 
-        <label>Mobile Number:</label>
-        <input type="text" name="mobile_number" value="{{ kyc.mobile_number }}" class="form-control" required>
+                <div class="col-md-6">
+                    <label>Name:</label>
+                    <input type="text" name="name" value="{{ kyc.name }}" class="form-control" required>
+                </div>
 
-        <label>Aadhar Number:</label>
-        <input type="text" name="aadhar_number" value="{{ kyc.aadhar_number }}" class="form-control" required>
+                <div class="col-md-6">
+                    <label>Father Name:</label>
+                    <input type="text" name="fathername" value="{{ kyc.fathername }}" class="form-control" required>
+                </div>
 
-        <label>PAN Number:</label>
-        <input type="text" name="pan_number" value="{{ kyc.pan_number }}" class="form-control" required>
+                <div class="col-md-6">
+                    <label>Mobile Number:</label>
+                    <input type="text" name="mobile_number" value="{{ kyc.mobile_number }}" class="form-control" required>
+                </div>
 
-        <label>Aadhar Image:</label>
-        <input type="file" name="aadhar_image" value="{{ kyc.aadhar_image }}" class="form-control">
+                <div class="col-md-6">
+                    <label>Aadhar Number:</label>
+                    <input type="text" name="aadhar_number" value="{{ kyc.aadhar_number }}" class="form-control" required>
+                </div>
 
-        <label>PAN Image:</label>
-        <input type="file" name="pan_image" value="{{ kyc.pan_image }}" class="form-control">
+                <div class="col-md-6">
+                    <label>Aadhar Front Image:</label><br>
+                    {% if kyc.aadhar_image %}
+                        <img src="{{ kyc.aadhar_image.url }}" width="100" class="mb-2 img-thumbnail">
+                    {% endif %}
+                    <input type="file" name="aadhar_image" class="form-control">
+                </div>
 
-        <label>Address:</label>
-        <input type="text" name="address" value="{{ kyc.address }}" class="form-control" required>
+                <div class="col-md-6">
+                    <label>Aadhar Back Image:</label><br>
+                    {% if kyc.pan_image %}
+                        <img src="{{ kyc.pan_image.url }}" width="100" class="mb-2 img-thumbnail">
+                    {% endif %}
+                    <input type="file" name="pan_image" class="form-control">
+                </div>
 
-        <label>Date of Birth:</label>
-        <input type="date" name="dob" value="{{ kyc.dob }}" class="form-control" required>
+                <div class="col-md-6">
+                    <label>Address:</label>
+                    <input type="text" name="address" value="{{ kyc.address }}" class="form-control" required>
+                </div>
 
-        <label>Profession:</label>
-        <input type="text" name="profession" value="{{ kyc.profession }}" class="form-control" required>
+                <div class="col-md-6">
+                    <label>Profession:</label>
+                    <input type="text" name="profession" value="{{ kyc.profession }}" class="form-control" required>
+                </div>
 
-        <label>Contact SH or NH</label>
-        <input type="text" name="contactSH" value="{{ kyc.contactSH }}" class="form-control" required>
+                <div class="col-md-6">
+                    <label>Contact SH or NH:</label>
+                    <input type="text" name="contactSH" value="{{ kyc.contactSH }}" class="form-control" required>
+                </div>
 
-        <label>Name SH or NH</label>
-        <input type="text" name="nameSH" value="{{ kyc.nameSH }}" class="form-control" required>
+                <div class="col-md-6">
+                    <label>Name SH or NH:</label>
+                    <input type="text" name="nameSH" value="{{ kyc.nameSH }}" class="form-control" required>
+                </div>
 
-        <label>Investment Amount</label>
-        <input type="text" name="investmentamt" value="{{ kyc.investmentamt }}" class="form-control" required>
+                <div class="col-md-6">
+                    <label>Investment Amount:</label>
+                    <input type="number" name="investmentamt" value="{{ kyc.investmentamt }}" class="form-control" required>
+                </div>
 
-        <label>Passport Photo</label>
-        <input type="file" name="passportphoto" value="{{ kyc.passportphoto }}" class="form-control" required>
+                <div class="col-md-6">
+                    <label>Passport Photo:</label><br>
+                    {% if kyc.passportphoto %}
+                        <img src="{{ kyc.passportphoto.url }}" width="100" class="mb-2 img-thumbnail">
+                    {% endif %}
+                    <input type="file" name="passportphoto" class="form-control">
+                </div>
 
-        <label>Bond Photo</label>
-        <input type="file" name="bond" value="{{ kyc.bond }}" class="form-control" required>
-
-        <button type="submit" class="btn btn-success mt-3">Update</button>
-    </form>
+                <!-- Show existing bond images -->
+<div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+    <label>Existing Bond Images:</label><br>
+    {% for bond in kyc.bonds.all %}
+        <div class="d-inline-block me-3 text-center">
+            <img src="{{ bond.image.url }}" width="80" class="img-thumbnail mb-1">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="delete_bonds" value="{{ bond.id }}" id="del{{ bond.id }}">
+                <label class="form-check-label small" for="del{{ bond.id }}">Remove</label>
+            </div>
+        </div>
+    {% empty %}
+        <p class="text-muted">No bond images uploaded.</p>
+    {% endfor %}
 </div>
-{% endblock %}
 
+
+<!-- Upload new bond images -->
+<div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+    <label for="bondImages">Add New Bond Images</label>
+    <div id="bondInputs">
+        <input type="file" name="bonds" accept="image/*" class="form-control mb-2">
+    </div>
+    <button type="button" class="btn btn-sm btn-success" onclick="addBondInput()">+ Add Bond Image</button>
+</div>
+
+
+<!-- Replace passport photo -->
+<div class="mb-3">
+    <label>Passport Photo:</label><br>
+    {% if kyc.passportphoto %}
+        <img src="{{ kyc.passportphoto.url }}" width="100" class="img-thumbnail mb-2"><br>
+    {% endif %}
+    <input type="file" name="passportphoto" class="form-control">
+</div>
+
+            </div>
+
+            <div class="mt-4 text-end">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- JS to add more bond inputs -->
+<script>
+function addBondInput() {
+    const container = document.getElementById('bondInputs');
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.name = 'bonds';
+    input.accept = 'image/*';
+    input.className = 'form-control mb-2';
+    container.appendChild(input);
+}
+</script>
+
+
+<!-- JS to add more bond inputs -->
+<script>
+function addBondInput() {
+    const container = document.getElementById('bondInputs');
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.name = 'bonds';
+    input.accept = 'image/*';
+    input.className = 'form-control mb-2';
+    container.appendChild(input);
+}
+</script>
+{% endblock %}

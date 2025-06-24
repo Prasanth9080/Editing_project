@@ -6,6 +6,7 @@ class User(AbstractUser):
     phone_number = models.CharField(max_length=15, unique=True)
     jwt_token = models.CharField(max_length=500, blank=True, null=True)
     is_main_user = models.BooleanField(default=False)  # 🔐 Add this
+    is_sub_mainuser = models.BooleanField(default=False)
 
     def __str__(self):
         return self.username
@@ -32,7 +33,6 @@ class KycDetailsNew(models.Model):
     nameSH = models.CharField(max_length=100, blank=True)
     investmentamt = models.IntegerField(null=True, blank=True)
     passportphoto = models.ImageField(upload_to='kyc/passport_photo/')
-    bond = models.ImageField(upload_to='kyc/passport_photo/')
 
     def __str__(self):
         return self.name
