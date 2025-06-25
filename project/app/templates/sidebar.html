@@ -111,6 +111,20 @@
         </div>
     <a href="{% url 'formpage' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">Dashboard</a>
     <a href="{% url 'profile' %}" class="{% if request.resolver_match.url_name == 'profile' %}active{% endif %}">Profile</a>
+
+    <div class="px-3 mt-4">
+    <h5 class="text-white">Users</h5>
+    <ul class="list-unstyled text-white">
+        {% for user in users %}
+            <li style="font-size: 14px;">
+                <i class="fas fa-user"></i> {{ user.username }}
+            </li>
+        {% empty %}
+            <li>Sidebar</li>
+        {% endfor %}
+    </ul>
+    </div>
+
   </div>
 
 

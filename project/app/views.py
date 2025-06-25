@@ -212,6 +212,15 @@ from .models import KycDetailsNew, User, BondImage
 def form_page(request):
     user = request.user
 
+    # Show users only if the logged-in user is main or sub main
+    users = []
+    if getattr(user, "is_main_user", False) or getattr(user, "is_sub_mainuser", False):
+        users = User.objects.filter(
+            is_superuser=False,
+            is_main_user=False,
+            is_sub_mainuser=False
+        ).exclude(id=user.id)
+
     # Main user sees all records; others see only their own visible records
     if hasattr(user, 'is_main_user') and user.is_main_user:
         kyc_list = KycDetailsNew.objects.all()
@@ -282,7 +291,7 @@ def form_page(request):
             messages.success(request, "KYC submitted successfully.")
             return redirect("formpage")
 
-    return render(request, "formpage.html", {"kyc_list": kyc_list,
+    return render(request, "formpage.html", {"kyc_list": kyc_list, "users": users,
      "is_sub_mainuser": getattr(user, 'is_sub_mainuser', False)})
 
 
@@ -563,3 +572,39 @@ def profile_view(request):
 
     return render(request, 'profile.html', {'user_obj': user})
 
+
+# from django.contrib.auth.decorators import login_required
+# from django.contrib.auth import get_user_model
+# from django.shortcuts import render, redirect, get_object_or_404
+# from django.contrib import messages
+# from .models import KycDetailsNew, BondImage
+
+# User = get_user_model()
+
+# @login_required
+# def form_page(request):
+#     user = request.user
+
+#     # Show users only if the logged-in user is main or sub main
+#     users = []
+#     if getattr(user, "is_main_user", False) or getattr(user, "is_sub_mainuser", False):
+#         users = User.objects.filter(
+#             is_superuser=False,
+#             is_main_user=False,
+#             is_sub_mainuser=False
+#         ).exclude(id=user.id)
+
+#     # KYC data
+#     if user.is_superuser or getattr(user, "is_main_user", False):
+#         kyc_list = KycDetailsNew.objects.filter(is_hidden=False)
+#     elif getattr(user, "is_sub_mainuser", False):
+#         kyc_list = KycDetailsNew.objects.filter(is_hidden=False)
+#     else:
+#         kyc_list = KycDetailsNew.objects.filter(user=user, is_hidden=False)
+
+#     return render(request, "formpage.html", {
+#         "kyc_list": kyc_list,
+#         "users": users,
+#         "is_main_user": getattr(user, 'is_main_user', False),
+#         "is_sub_mainuser": getattr(user, 'is_sub_mainuser', False)
+#     })
