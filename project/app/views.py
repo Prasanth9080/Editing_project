@@ -225,14 +225,24 @@ def form_page(request):
             except User.DoesNotExist:
                 selected_user = None
 
-    if selected_user:
-        # Show all entries created by selected_user
-        my_kyc_list = KycDetailsNew.objects.filter(user=selected_user, created_by=selected_user, is_hidden=False)
-        sub_kyc_list = KycDetailsNew.objects.filter(created_by=selected_user).exclude(user=selected_user).filter(is_hidden=False)
-    else:
-        # Normal view based on logged-in user
-        my_kyc_list = KycDetailsNew.objects.filter(user=user, created_by=user, is_hidden=False)
-        sub_kyc_list = KycDetailsNew.objects.filter(created_by=user).exclude(user=user).filter(is_hidden=False)
+        if selected_user:
+            if user.is_main_user or user.is_sub_mainuser:
+                # Show ALL entries created by selected_user including soft-deleted
+                my_kyc_list = KycDetailsNew.objects.filter(user=selected_user, created_by=selected_user)
+                sub_kyc_list = KycDetailsNew.objects.filter(created_by=selected_user).exclude(user=selected_user)
+            else:
+                # Not expected flow; fallback
+                my_kyc_list = []
+                sub_kyc_list = []
+        else:
+            if user.is_main_user or user.is_sub_mainuser:
+                # Show ALL entries (including soft-deleted)
+                my_kyc_list = KycDetailsNew.objects.filter(user=user, created_by=user)
+                sub_kyc_list = KycDetailsNew.objects.filter(created_by=user).exclude(user=user)
+            else:
+                # For normal users, hide their soft-deleted entries
+                my_kyc_list = KycDetailsNew.objects.filter(user=user, created_by=user, is_hidden=False)
+                sub_kyc_list = KycDetailsNew.objects.filter(created_by=user, is_hidden=False).exclude(user=user)
 
     # All non-super users for dropdown and sidebar
     users = User.objects.filter(is_superuser=False, is_main_user=False, is_sub_mainuser=False).exclude(id=user.id)
@@ -320,7 +330,7 @@ from .models import KycDetailsNew, BondImage
 def edit_kyc(request, kyc_id):
     kyc = get_object_or_404(KycDetailsNew, id=kyc_id)
 
-    # Authorization check
+    # Only creator or main user can edit
     if not (request.user.is_main_user or request.user == kyc.created_by):
         messages.error(request, "You are not authorized to edit this entry.")
         return redirect("formpage")
@@ -337,12 +347,11 @@ def edit_kyc(request, kyc_id):
         nameSH = request.POST.get('nameSH')
         investmentamt = request.POST.get('investmentamt')
 
-        # Validate required fields
         if not all([name, fathername, mobile_number, aadhar_number, address, profession]):
             messages.error(request, "All fields are required.")
             return render(request, "edit_kyc.html", {"kyc": kyc})
 
-        # Assign new values
+        # Update values
         kyc.name = name
         kyc.age = age
         kyc.fathername = fathername
@@ -354,7 +363,7 @@ def edit_kyc(request, kyc_id):
         kyc.nameSH = nameSH
         kyc.investmentamt = investmentamt
 
-        # File updates
+        # Handle file updates
         if request.FILES.get('aadhar_image'):
             kyc.aadhar_image = request.FILES['aadhar_image']
         if request.FILES.get('pan_image'):
@@ -362,15 +371,15 @@ def edit_kyc(request, kyc_id):
         if request.FILES.get('passportphoto'):
             kyc.passportphoto = request.FILES['passportphoto']
 
-        # Handle bond image deletion
+        # Delete old bond images
         delete_bond_ids = request.POST.getlist('delete_bonds')
         for bond_id in delete_bond_ids:
             bond = BondImage.objects.filter(id=bond_id, kyc=kyc).first()
             if bond:
-                bond.image.delete(save=False)  # deletes file from storage
+                bond.image.delete(save=False)
                 bond.delete()
 
-        # Handle new bond image uploads
+        # Add new bond images
         new_bonds = request.FILES.getlist('bonds')
         for bond_img in new_bonds:
             BondImage.objects.create(kyc=kyc, image=bond_img)
@@ -382,27 +391,27 @@ def edit_kyc(request, kyc_id):
     return render(request, "edit_kyc.html", {"kyc": kyc})
 
 
-
 @login_required
 def delete_kyc(request, kyc_id):
     kyc = get_object_or_404(KycDetailsNew, id=kyc_id)
 
-    # Authorization check
+    # Only main user or creator can delete
     if not (request.user.is_main_user or request.user == kyc.created_by):
         messages.error(request, "You are not authorized to delete this entry.")
         return redirect("formpage")
 
     if request.user.is_main_user:
-        # Hard delete
+        # Hard delete for main users
         kyc.delete()
         messages.success(request, "KYC permanently deleted.")
     else:
-        # Soft delete
+        # Soft delete for normal users (hidden only from themselves)
         kyc.is_hidden = True
         kyc.save()
-        messages.success(request, "KYC record deleted successfully.")
+        messages.success(request, "KYC hidden from your view.")
 
     return redirect("formpage")
+
 
 
 
