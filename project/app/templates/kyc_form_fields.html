@@ -1,0 +1,73 @@
+<div class="row">
+  <div class="col-md-6 mb-3">
+    <label>Name:</label>
+    <input type="text" name="name" class="form-control" required>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label>Age:</label>
+    <input type="number" name="age" class="form-control" required>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label>Father Name:</label>
+    <input type="text" name="fathername" class="form-control" required>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label>Mobile Number:</label>
+    <input type="text" name="mobile_number" class="form-control" maxlength="10" required>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label>Aadhar Number:</label>
+    <input type="text" name="aadhar_number" class="form-control" required>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label>Aadhar Image:</label>
+    <input type="file" name="aadhar_image" class="form-control" required>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label>PAN Image:</label>
+    <input type="file" name="pan_image" class="form-control" required>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label>Address:</label>
+    <input type="text" name="address" class="form-control" required>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label>Profession:</label>
+    <input type="text" name="profession" class="form-control" required>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label>Contact SH or NH:</label>
+    <input type="text" name="contactSH" class="form-control" required>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label>Name SH or NH:</label>
+    <input type="text" name="nameSH" class="form-control" required>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label>Investment Amount:</label>
+    <input type="number" name="investmentamt" class="form-control" required>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label>Passport Photo:</label>
+    <input type="file" name="passportphoto" class="form-control" required>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label>Bond Images:</label>
+    <div id="bondInputs">
+      <input type="file" name="bonds" accept="image/*" class="form-control mb-2">
+    </div>
+    <button type="button" class="btn btn-sm btn-success" onclick="addBondInput()">+ Add More</button>
+  </div>
+</div>
+
+<script>
+  function addBondInput() {
+    const container = document.getElementById('bondInputs');
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.name = 'bonds';
+    input.accept = 'image/*';
+    input.className = 'form-control mb-2';
+    container.appendChild(input);
+  }
+</script>

@@ -10,6 +10,8 @@ class UserAdmin(admin.ModelAdmin):
 @admin.register(KycDetailsNew)
 class KycDetailsAdmin(admin.ModelAdmin):
     list_display = ("name","age","mobile_number","aadhar_number","aadhar_image","pan_image","address","fathername","profession","contactSH","nameSH","investmentamt","passportphoto")
+    list_filter = ('created_by',)
+    search_fields = ('name', 'mobile_number', 'created_by__username', 'user__username')
 
 @admin.register(BondImage)
 class BondImageAdmin(admin.ModelAdmin):

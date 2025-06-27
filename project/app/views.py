@@ -207,40 +207,38 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import KycDetailsNew, User, BondImage
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 @login_required
 def form_page(request):
     user = request.user
+    selected_user = None
+    user_id = request.GET.get('user_id')
 
-    # Show users only if the logged-in user is main or sub main
-    users = []
-    if getattr(user, "is_main_user", False) or getattr(user, "is_sub_mainuser", False):
-        users = User.objects.filter(
-            is_superuser=False,
-            is_main_user=False,
-            is_sub_mainuser=False
-        ).exclude(id=user.id)
+    # If a main or sub-main user selected someone from sidebar
+    if user.is_main_user or user.is_sub_mainuser:
+        if user_id:
+            try:
+                selected_user = User.objects.get(id=user_id)
+            except User.DoesNotExist:
+                selected_user = None
 
-    # Main user sees all records; others see only their own visible records
-    if hasattr(user, 'is_main_user') and user.is_main_user:
-        kyc_list = KycDetailsNew.objects.all()
+    if selected_user:
+        # Show all entries created by selected_user
+        my_kyc_list = KycDetailsNew.objects.filter(user=selected_user, created_by=selected_user, is_hidden=False)
+        sub_kyc_list = KycDetailsNew.objects.filter(created_by=selected_user).exclude(user=selected_user).filter(is_hidden=False)
     else:
-        kyc_list = KycDetailsNew.objects.filter(user=user, is_hidden=False)
+        # Normal view based on logged-in user
+        my_kyc_list = KycDetailsNew.objects.filter(user=user, created_by=user, is_hidden=False)
+        sub_kyc_list = KycDetailsNew.objects.filter(created_by=user).exclude(user=user).filter(is_hidden=False)
 
-    # ✅ Show all KYC entries to superuser, main user, or sub-main user
-    if user.is_superuser or getattr(user, "is_main_user", False) or getattr(user, "is_sub_mainuser", False):
-        kyc_list = KycDetailsNew.objects.filter(is_hidden=False)
-    else:
-        # ✅ Normal users see only their own visible records
-        kyc_list = KycDetailsNew.objects.filter(user=user, is_hidden=False)
+    # All non-super users for dropdown and sidebar
+    users = User.objects.filter(is_superuser=False, is_main_user=False, is_sub_mainuser=False).exclude(id=user.id)
 
-    # if user.is_superuser or getattr(user, "is_main_user", False):
-    #     kyc_list = KycDetailsNew.objects.all()
-    # elif getattr(user, "is_sub_mainuser", False):
-    #     kyc_list = KycDetailsNew.objects.filter(user=user)
-    # else:
-    #     kyc_list = KycDetailsNew.objects.filter(user=user)
-
+    # Show all visible KYC entries (for overview if needed)
+    kyc_list = KycDetailsNew.objects.filter(is_hidden=False) if (user.is_main_user or user.is_sub_mainuser) else []
     if request.method == "POST":
         name = request.POST.get('name')
         age = request.POST.get('age')
@@ -255,8 +253,19 @@ def form_page(request):
         nameSH = request.POST.get('nameSH')
         investmentamt = request.POST.get('investmentamt')
         passportphoto = request.FILES.get('passportphoto')
-        bonds = request.FILES.getlist('bonds')  # handles multiple files
+        bonds = request.FILES.getlist('bonds')
 
+        # 👇 Determine for whom the KYC is created
+        data_for_user = user  # default
+        if user.is_main_user or user.is_sub_mainuser:
+            data_for_user_id = request.POST.get('data_for_user')
+            try:
+                data_for_user = User.objects.get(id=data_for_user_id)
+            except User.DoesNotExist:
+                messages.error(request, "Invalid user selected.")
+                return redirect("formpage")
+
+        # Validate required fields
         if not all([name, mobile, aadhar, aadhar_img, pan_img, address]):
             messages.error(request, "All required fields must be filled.")
         else:
@@ -266,9 +275,9 @@ def form_page(request):
                 messages.error(request, "Investment amount must be a number.")
                 return redirect("formpage")
 
-            # Create the KYC record
             kyc = KycDetailsNew.objects.create(
-                user=user,
+                user=data_for_user,               # who the KYC is about
+                created_by=user,                 # who is creating the KYC
                 name=name,
                 age=age,
                 fathername=fathername,
@@ -284,15 +293,22 @@ def form_page(request):
                 passportphoto=passportphoto,
             )
 
-            # Save each bond image
             for bond_img in bonds:
                 BondImage.objects.create(kyc=kyc, image=bond_img)
 
             messages.success(request, "KYC submitted successfully.")
             return redirect("formpage")
 
-    return render(request, "formpage.html", {"kyc_list": kyc_list, "users": users,
-     "is_sub_mainuser": getattr(user, 'is_sub_mainuser', False)})
+    return render(request, "formpage.html", {
+        "kyc_list": kyc_list,
+        "users": users,
+        "my_kyc_list": my_kyc_list,
+        "sub_kyc_list": sub_kyc_list,
+        "is_sub_mainuser": user.is_sub_mainuser,
+        "is_main_user": user.is_main_user,
+    })
+
+
 
 
 from django.shortcuts import render, redirect, get_object_or_404
@@ -305,7 +321,7 @@ def edit_kyc(request, kyc_id):
     kyc = get_object_or_404(KycDetailsNew, id=kyc_id)
 
     # Authorization check
-    if not (request.user.is_main_user or request.user == kyc.user):
+    if not (request.user.is_main_user or request.user == kyc.created_by):
         messages.error(request, "You are not authorized to edit this entry.")
         return redirect("formpage")
 
@@ -372,7 +388,7 @@ def delete_kyc(request, kyc_id):
     kyc = get_object_or_404(KycDetailsNew, id=kyc_id)
 
     # Authorization check
-    if not (request.user.is_main_user or request.user == kyc.user):
+    if not (request.user.is_main_user or request.user == kyc.created_by):
         messages.error(request, "You are not authorized to delete this entry.")
         return redirect("formpage")
 
@@ -608,3 +624,69 @@ def profile_view(request):
 #         "is_main_user": getattr(user, 'is_main_user', False),
 #         "is_sub_mainuser": getattr(user, 'is_sub_mainuser', False)
 #     })
+
+
+# add_my_kyc and add_sub_kc
+
+@login_required
+def add_my_kyc(request):
+    if request.method == "POST":
+        user = request.user
+        try:
+            investmentamt = int(request.POST.get('investmentamt')) if request.POST.get('investmentamt') else None
+        except ValueError:
+            messages.error(request, "Investment amount must be numeric.")
+            return redirect('formpage')
+
+        kyc = KycDetailsNew.objects.create(
+            user=user,
+            created_by=user,
+            name=request.POST.get('name'),
+            age=request.POST.get('age'),
+            fathername=request.POST.get('fathername'),
+            mobile_number=request.POST.get('mobile_number'),
+            aadhar_number=request.POST.get('aadhar_number'),
+            aadhar_image=request.FILES.get('aadhar_image'),
+            pan_image=request.FILES.get('pan_image'),
+            address=request.POST.get('address'),
+            profession=request.POST.get('profession'),
+            contactSH=request.POST.get('contactSH'),
+            nameSH=request.POST.get('nameSH'),
+            investmentamt=investmentamt,
+            passportphoto=request.FILES.get('passportphoto'),
+        )
+
+        for bond_file in request.FILES.getlist('bonds'):
+            BondImage.objects.create(kyc=kyc, image=bond_file)
+
+        messages.success(request, "My KYC data saved successfully.")
+        return redirect('formpage')
+
+@login_required
+def add_other_kyc(request):
+    if request.method == 'POST':
+        created_by = request.user
+
+        # Proceed to save the form data
+        # Example:
+        kyc = KycDetailsNew(
+            created_by=created_by,
+            name=request.POST.get('name'),
+            age=request.POST.get('age'),
+            mobile_number=request.POST.get('mobile_number'),
+            fathername=request.POST.get('fathername'),
+            address=request.POST.get('address'),
+            aadhar_number=request.POST.get('aadhar_number'),
+            profession=request.POST.get('profession'),
+            contactSH=request.POST.get('contactSH'),
+            nameSH=request.POST.get('nameSH'),
+            investmentamt=request.POST.get('investmentamt'),
+            aadhar_image=request.FILES.get('aadhar_image'),
+            pan_image=request.FILES.get('pan_image'),
+            passportphoto=request.FILES.get('passportphoto'),
+        )
+        kyc.save()
+
+        messages.success(request, "Sub-KYC added successfully.")
+        return redirect('formpage')
+

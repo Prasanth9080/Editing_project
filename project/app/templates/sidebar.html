@@ -109,19 +109,27 @@
         <div class="px-3 mt-4">
             <!-- <h3 class="sidebar-title">Phoenix</h3> -->
         </div>
-    <a href="{% url 'formpage' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">Dashboard</a>
-    <a href="{% url 'profile' %}" class="{% if request.resolver_match.url_name == 'profile' %}active{% endif %}">Profile</a>
+    <!-- <a href="{% url 'formpage' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">Dashboard</a>
+    <a href="{% url 'profile' %}" class="{% if request.resolver_match.url_name == 'profile' %}active{% endif %}">Profile</a> -->
 
     <div class="px-3 mt-4">
+    <ul class="list-unstyled text-white">
+        {% if is_main_user or is_sub_mainuser %}
+  <div class="px-3 mt-4">
     <h5 class="text-white">Users</h5>
     <ul class="list-unstyled text-white">
-        {% for user in users %}
-            <li style="font-size: 14px;">
-                <i class="fas fa-user"></i> {{ user.username }}
-            </li>
-        {% empty %}
-            <li>Sidebar</li>
-        {% endfor %}
+      {% for user in users %}
+        <li style="font-size: 14px;">
+          <a href="{% url 'formpage' %}?user_id={{ user.id }}" style="color: white;">
+            <i class="fas fa-user"></i> {{ user.username }}
+          </a>
+        </li>
+      {% empty %}
+        <li>No users</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
     </ul>
     </div>
 

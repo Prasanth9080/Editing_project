@@ -10,6 +10,8 @@ urlpatterns = [
 
 
     path('form/', views.form_page, name='formpage'),
+    path('add-my-kyc/', views.add_my_kyc, name='add_my_kyc'),
+    path('add-other-kyc/', views.add_other_kyc, name='add_other_kyc'),
     path('edit/<int:kyc_id>/', views.edit_kyc, name='edit_kyc'),
     path('delete/<int:kyc_id>/', views.delete_kyc, name='delete_kyc'),
 

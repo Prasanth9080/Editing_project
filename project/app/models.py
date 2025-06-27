@@ -14,11 +14,14 @@ class User(AbstractUser):
 ### another file models
 
 from django.db import models
-from django.utils import timezone
-from django.conf import settings
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class KycDetailsNew(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='kyc_created_by', null=True, blank=True)  # whom this data is about
+    is_hidden = models.BooleanField(default=False)
     name = models.CharField(max_length=100)
     age = models.IntegerField(null=True, blank=True)
     fathername = models.CharField(max_length=100, default="")
