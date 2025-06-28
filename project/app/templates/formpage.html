@@ -26,10 +26,45 @@
     {% endif %}
   </h2>
 
-  <div class="mb-3 d-flex"> 
-    <button class="btn btn-primary btn-add" onclick="toggleModal('myKycModal')" {% if is_sub_mainuser %}disabled{% endif %}>Add My KYC</button>
-    <button class="btn btn-secondary" onclick="toggleModal('subKycModal')" {% if is_sub_mainuser %}disabled{% endif %}>Add Sub-KYC</button>
+ <div class="mb-3 row align-items-center gx-2 gy-2">
+  <!-- Add My KYC Button -->
+  <div class="col-lg-3 col-md-6 col-sm-12">
+    <button class="btn btn-primary w-100"
+            onclick="toggleModal('myKycModal')"
+            {% if is_sub_mainuser %}disabled{% endif %}>
+      Add My KYC
+    </button>
   </div>
+
+  <!-- Add Sub-KYC Button -->
+  <div class="col-lg-3 col-md-6 col-sm-12">
+    <button class="btn btn-secondary w-100"
+            onclick="toggleModal('subKycModal')"
+            {% if is_sub_mainuser %}disabled{% endif %}>
+      Add Sub-KYC
+    </button>
+  </div>
+
+  <!-- Empty Column (can be removed or used for spacing) -->
+  <div class="col-lg-3 col-md-6 col-sm-12"></div>
+
+  <!-- Download Buttons (Disabled for sub_mainuser) -->
+  <div class="col-lg-3 col-md-6 col-sm-12 d-flex justify-content-end gap-2">
+    <a href="{% url 'download_kyc_excel' %}"
+       class="btn btn-success w-100 {% if is_sub_mainuser %}disabled{% endif %}"
+       {% if is_sub_mainuser %}onclick="return false;"{% endif %}>
+      Download Excel
+    </a>
+    <a href="{% url 'download_kyc_pdf' %}"
+       class="btn btn-danger w-100 {% if is_sub_mainuser %}disabled{% endif %}"
+       {% if is_sub_mainuser %}onclick="return false;"{% endif %}>
+      Download PDF
+    </a>
+  </div>
+</div>
+
+
+
 
   <!-- My KYC Entries -->
   <h4 class="mt-4">My KYC Entries</h4>
@@ -137,7 +172,7 @@
   </div>
 </div>
 
-<!-- Sub-KYC Modal -->
+<!-- Sub-KYC Modal --> 
 <div id="subKycModal" class="modal-overlay d-none">
   <div class="modal-content">
     <h5>Add Sub-KYC</h5>

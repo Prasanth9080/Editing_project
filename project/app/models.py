@@ -7,6 +7,7 @@ class User(AbstractUser):
     jwt_token = models.CharField(max_length=500, blank=True, null=True)
     is_main_user = models.BooleanField(default=False)  # 🔐 Add this
     is_sub_mainuser = models.BooleanField(default=False)
+    parent_user = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='children')
 
     def __str__(self):
         return self.username
