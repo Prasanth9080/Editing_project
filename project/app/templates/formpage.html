@@ -26,9 +26,9 @@
     {% endif %}
   </h2>
 
-  <div class="mb-3 d-flex">
-    <button class="btn btn-primary btn-add" onclick="toggleModal('myKycModal')">Add My KYC</button>
-    <button class="btn btn-secondary" onclick="toggleModal('subKycModal')">Add Sub-KYC</button>
+  <div class="mb-3 d-flex"> 
+    <button class="btn btn-primary btn-add" onclick="toggleModal('myKycModal')" {% if is_sub_mainuser %}disabled{% endif %}>Add My KYC</button>
+    <button class="btn btn-secondary" onclick="toggleModal('subKycModal')" {% if is_sub_mainuser %}disabled{% endif %}>Add Sub-KYC</button>
   </div>
 
   <!-- My KYC Entries -->
@@ -38,8 +38,8 @@
       <table class="table table-bordered table-striped">
         <thead class="table-dark">
           <tr>
-            <th>#</th><th>Name</th><th>Age</th><th>Mobile</th><th>Father</th><th>Address</th>
-            <th>Aadhar Number</th><th>Aadhar Image</th><th>PAN Image</th><th>Profession</th>
+            <th>S.no</th><th>Name</th><th>Age</th><th>Mobile</th><th>Father Name</th><th>Address</th>
+            <th>Aadhar Number</th><th>Aadhar Front Image</th><th>Aadhar Back Image</th><th>Profession</th>
             <th>Contact SH/NH</th><th>Name SH/NH</th><th>Investment</th><th>Passport</th><th>Actions</th>
           </tr>
         </thead>

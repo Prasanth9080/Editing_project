@@ -226,29 +226,22 @@ def form_page(request):
                 selected_user = None
 
         if selected_user:
-            if user.is_main_user or user.is_sub_mainuser:
-                # Show ALL entries created by selected_user including soft-deleted
-                my_kyc_list = KycDetailsNew.objects.filter(user=selected_user, created_by=selected_user)
-                sub_kyc_list = KycDetailsNew.objects.filter(created_by=selected_user).exclude(user=selected_user)
-            else:
-                # Not expected flow; fallback
-                my_kyc_list = []
-                sub_kyc_list = []
+            my_kyc_list = KycDetailsNew.objects.filter(user=selected_user, created_by=selected_user)
+            sub_kyc_list = KycDetailsNew.objects.filter(created_by=selected_user).exclude(user=selected_user)
         else:
-            if user.is_main_user or user.is_sub_mainuser:
-                # Show ALL entries (including soft-deleted)
-                my_kyc_list = KycDetailsNew.objects.filter(user=user, created_by=user)
-                sub_kyc_list = KycDetailsNew.objects.filter(created_by=user).exclude(user=user)
-            else:
-                # For normal users, hide their soft-deleted entries
-                my_kyc_list = KycDetailsNew.objects.filter(user=user, created_by=user, is_hidden=False)
-                sub_kyc_list = KycDetailsNew.objects.filter(created_by=user, is_hidden=False).exclude(user=user)
+            my_kyc_list = KycDetailsNew.objects.filter(user=user, created_by=user)
+            sub_kyc_list = KycDetailsNew.objects.filter(created_by=user).exclude(user=user)
+    else:
+        # This is the part that was missing and caused the error
+        my_kyc_list = KycDetailsNew.objects.filter(user=user, created_by=user, is_hidden=False)
+        sub_kyc_list = KycDetailsNew.objects.filter(created_by=user, is_hidden=False).exclude(user=user)
 
-    # All non-super users for dropdown and sidebar
+    # Sidebar users: All non-super, non-main users except self
     users = User.objects.filter(is_superuser=False, is_main_user=False, is_sub_mainuser=False).exclude(id=user.id)
 
-    # Show all visible KYC entries (for overview if needed)
+    # Show visible KYC list if needed
     kyc_list = KycDetailsNew.objects.filter(is_hidden=False) if (user.is_main_user or user.is_sub_mainuser) else []
+
     if request.method == "POST":
         name = request.POST.get('name')
         age = request.POST.get('age')
@@ -265,8 +258,8 @@ def form_page(request):
         passportphoto = request.FILES.get('passportphoto')
         bonds = request.FILES.getlist('bonds')
 
-        # 👇 Determine for whom the KYC is created
-        data_for_user = user  # default
+        # For whom the data is being submitted
+        data_for_user = user  # default to self
         if user.is_main_user or user.is_sub_mainuser:
             data_for_user_id = request.POST.get('data_for_user')
             try:
@@ -275,7 +268,7 @@ def form_page(request):
                 messages.error(request, "Invalid user selected.")
                 return redirect("formpage")
 
-        # Validate required fields
+        # Validate fields
         if not all([name, mobile, aadhar, aadhar_img, pan_img, address]):
             messages.error(request, "All required fields must be filled.")
         else:
@@ -286,8 +279,8 @@ def form_page(request):
                 return redirect("formpage")
 
             kyc = KycDetailsNew.objects.create(
-                user=data_for_user,               # who the KYC is about
-                created_by=user,                 # who is creating the KYC
+                user=data_for_user,
+                created_by=user,
                 name=name,
                 age=age,
                 fathername=fathername,
@@ -317,6 +310,7 @@ def form_page(request):
         "is_sub_mainuser": user.is_sub_mainuser,
         "is_main_user": user.is_main_user,
     })
+
 
 
 
