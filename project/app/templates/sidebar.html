@@ -116,20 +116,19 @@
     <ul class="list-unstyled text-white">
         {% if is_main_user or is_sub_mainuser %}
   <div class="px-3 mt-4">
-    <h5 class="text-white">Users</h5>
+    <h2 class="text-center">🙍🏻‍♂️</h2>
     <ul class="list-unstyled text-white">
-      {% for user in users %}
-        <li style="font-size: 14px;">
-          <a href="{% url 'formpage' %}?user_id={{ user.id }}" style="color: white;">
-            <i class="fas fa-user"></i> {{ user.username }}
+      {% for u in users %}
+        <li>
+          <a href="{% url 'formpage' %}?user_id={{ u.id }}" style="color: white;">
+            📌 {{ u.username }}
           </a>
         </li>
-      {% empty %}
-        <li>No users</li>
       {% endfor %}
     </ul>
   </div>
 {% endif %}
+
     </ul>
     </div>
 

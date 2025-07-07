@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User,KycDetailsNew,BondImage
+from .models import User,MyKYC,BondImage,SubKYC
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -7,16 +7,30 @@ class UserAdmin(admin.ModelAdmin):
     list_filter = ('is_main_user','is_sub_mainuser') 
     search_fields = ('username', 'phone_number', 'email')
 
-@admin.register(KycDetailsNew)
-class KycDetailsAdmin(admin.ModelAdmin):
-    list_display = ("name","age","mobile_number","aadhar_number","aadhar_image","pan_image","address","fathername","profession","contactSH","nameSH","investmentamt","passportphoto")
+# ----------------------------------------
+# Admin for MyKYC
+# ----------------------------------------
+@admin.register(MyKYC)
+class MyKYCAdmin(admin.ModelAdmin):
+    list_display = ('name', 'created_by', 'mobile_number', 'profession', 'investmentamt')
+    search_fields = ('name', 'mobile_number', 'aadhar_number')
     list_filter = ('created_by',)
-    search_fields = ('name', 'mobile_number', 'created_by__username', 'user__username')
 
+# ----------------------------------------
+# Admin for SubKYC
+# ----------------------------------------
+@admin.register(SubKYC)
+class SubKYCAdmin(admin.ModelAdmin):
+    list_display = ('name', 'created_by', 'mobile_number', 'profession', 'investmentamt')
+    search_fields = ('name', 'mobile_number', 'aadhar_number')
+    list_filter = ('created_by',)
+
+# ----------------------------------------
+# Admin for BondImage (optional, direct access)
+# ----------------------------------------
 @admin.register(BondImage)
 class BondImageAdmin(admin.ModelAdmin):
-    list_display = ['id', 'kyc', 'image']
-    search_fields = ['kyc__name']
+    list_display = ('image', 'my_kyc', 'sub_kyc')
 
 # from django.contrib import admin
 # from django.contrib.auth.admin import UserAdmin

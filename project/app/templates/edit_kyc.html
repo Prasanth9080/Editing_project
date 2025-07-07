@@ -16,6 +16,11 @@
                 </div>
 
                 <div class="col-md-6">
+                    <label>Age:</label>
+                    <input type="text" name="age" value="{{ kyc.age }}" class="form-control" required>
+                </div>
+
+                <div class="col-md-6">
                     <label>Father Name:</label>
                     <input type="text" name="fathername" value="{{ kyc.fathername }}" class="form-control" required>
                 </div>
@@ -79,7 +84,7 @@
                     <input type="file" name="passportphoto" class="form-control">
                 </div>
 
-                <!-- Show existing bond images -->
+    <!-- Show existing bond images -->
 <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
     <label>Existing Bond Images:</label><br>
     {% for bond in kyc.bonds.all %}
@@ -151,3 +156,4 @@ function addBondInput() {
 }
 </script>
 {% endblock %}
+

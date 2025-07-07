@@ -17,14 +17,14 @@
   </div>
   <div class="col-md-6 mb-3">
     <label>Aadhar Number:</label>
-    <input type="text" name="aadhar_number" class="form-control" required>
+    <input type="text" name="aadhar_number" class="form-control" maxlength="14" id="aadharInput" required>
   </div>
   <div class="col-md-6 mb-3">
-    <label>Aadhar Image:</label>
+    <label>Aadhar Front Image:</label>
     <input type="file" name="aadhar_image" class="form-control" required>
   </div>
   <div class="col-md-6 mb-3">
-    <label>PAN Image:</label>
+    <label>Aadhar Back Image:</label>
     <input type="file" name="pan_image" class="form-control" required>
   </div>
   <div class="col-md-6 mb-3">
@@ -60,6 +60,7 @@
   </div>
 </div>
 
+<!-- Add bond images -->
 <script>
   function addBondInput() {
     const container = document.getElementById('bondInputs');
@@ -71,3 +72,25 @@
     container.appendChild(input);
   }
 </script>
+
+<!-- Aadhar number -->
+
+<script>
+  const aadharInput = document.getElementById('aadharInput');
+
+  aadharInput.addEventListener('input', function () {
+    // Remove all non-digit characters
+    let digits = this.value.replace(/\D/g, '');
+
+    // Limit to 12 digits max
+    digits = digits.substring(0, 12);
+
+    // Format: XXXX XXXX XXXX
+    let formatted = digits.replace(/(\d{4})(\d{1,4})?(\d{1,4})?/, function (_, g1, g2, g3) {
+      return [g1, g2, g3].filter(Boolean).join(' ');
+    });
+
+    this.value = formatted;
+  });
+</script>
+

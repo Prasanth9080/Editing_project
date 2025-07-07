@@ -16,6 +16,14 @@
     width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto;
   }
   .d-none { display: none; }
+
+  .disabled-link {
+  pointer-events: none;
+  opacity: 0.6;
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
 </style>
 
 <div class="container mt-5">
@@ -49,7 +57,7 @@
   <div class="col-lg-3 col-md-6 col-sm-12"></div>
 
   <!-- Download Buttons (Disabled for sub_mainuser) -->
-  <div class="col-lg-3 col-md-6 col-sm-12 d-flex justify-content-end gap-2">
+  <!-- <div class="col-lg-3 col-md-6 col-sm-12 d-flex justify-content-end gap-2">
     <a href="{% url 'download_kyc_excel' %}"
        class="btn btn-success w-100 {% if is_sub_mainuser %}disabled{% endif %}"
        {% if is_sub_mainuser %}onclick="return false;"{% endif %}>
@@ -60,7 +68,47 @@
        {% if is_sub_mainuser %}onclick="return false;"{% endif %}>
       Download PDF
     </a>
+  </div> -->
+
+<!-- {% if is_main_user or request.user == kyc.created_by %}
+  <a href="{% url 'download_kyc_excel' 'my' %}" class="btn btn-success w-100">My KYC Excel</a>
+  <a href="{% url 'download_kyc_excel' 'sub' %}" class="btn btn-secondary w-100">Sub-KYC Excel</a>
+  <a href="{% url 'download_kyc_pdf' 'my' %}" class="btn btn-danger w-100">My KYC PDF</a>
+  <a href="{% url 'download_kyc_pdf' 'sub' %}" class="btn btn-danger w-100">Sub-KYC PDF</a>
+{% elif is_sub_mainuser %}
+  <a class="btn btn-success w-100 disabled-link" {% if is_sub_mainuser %}disabled-link{% endif %}>My KYC Excel</a>
+  <a class="btn btn-secondary w-100 disabled-link" {% if is_sub_mainuser %}disabled-link{% endif %}>Sub-KYC Excel</a>
+  <a class="btn btn-danger w-100 disabled-link" {% if is_sub_mainuser %}disabled-link{% endif %}>My KYC PDF</a>
+  <a class="btn btn-danger w-100 disabled-link" {% if is_sub_mainuser %}disabled-link{% endif %}>Sub-KYC PDF</a>
+{% endif %} -->
+
+<div class="row my-3">
+  <div class="col-lg-3 col-md-3 col-sm-12">
+    <a href="{% if not is_sub_mainuser %}{% url 'download_kyc_excel' 'my' %}{% endif %}"
+       class="btn btn-success w-100 {% if is_sub_mainuser %}disabled-link{% endif %}">
+      My KYC Excel
+    </a>
   </div>
+  <div class="col-lg-3 col-md-3 col-sm-12">
+    <a href="{% url 'download_subkyc_excel' %}" 
+   class="btn btn-secondary w-100 {% if is_sub_mainuser %}disabled-link{% endif %}">
+   Sub-KYC Excel
+</a>
+  </div>
+  <div class="col-lg-3 col-md-3 col-sm-12">
+    <a href="{% if not is_sub_mainuser %}{% url 'download_kyc_pdf' 'my' %}{% endif %}"
+       class="btn btn-danger w-100 {% if is_sub_mainuser %}disabled-link{% endif %}">
+      My KYC PDF
+    </a>
+  </div>
+  <div class="col-lg-3 col-md-3 col-sm-12">
+    <a href="{% url 'download_subkyc_pdf' %}" 
+   class="btn btn-danger w-100 {% if is_sub_mainuser %}disabled-link{% endif %}">
+   Sub-KYC PDF
+</a>
+  </div>
+</div>
+
 </div>
 
 
@@ -75,7 +123,7 @@
           <tr>
             <th>S.no</th><th>Name</th><th>Age</th><th>Mobile</th><th>Father Name</th><th>Address</th>
             <th>Aadhar Number</th><th>Aadhar Front Image</th><th>Aadhar Back Image</th><th>Profession</th>
-            <th>Contact SH/NH</th><th>Name SH/NH</th><th>Investment</th><th>Passport</th><th>Actions</th>
+            <th>Contact SH/NH</th><th>Name SH/NH</th><th>Investment</th><th>Passport</th><th>Bond Image</th><th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -96,9 +144,16 @@
               <td>{{ kyc.investmentamt }}</td>
               <td>{% if kyc.passportphoto %}<img src="{{ kyc.passportphoto.url }}" class="img-fluid table-img">{% endif %}</td>
               <td>
+  {% for bond in kyc.bonds.all %}
+    <img src="{{ bond.image.url }}" class="img-fluid table-img mb-1"><br>
+  {% empty %}
+    <span class="text-muted">No Bond Images</span>
+  {% endfor %}
+</td>
+              <td>
                 {% if is_main_user or request.user == kyc.created_by %}
-                  <a href="{% url 'edit_kyc' kyc.id %}" class="btn btn-sm btn-info">Edit</a>
-                  <a href="{% url 'delete_kyc' kyc.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure to delete?');">Delete</a>
+                  <a href="{% url 'edit_kyc' kyc.id 'my' %}" class="btn btn-sm btn-info">Edit</a>
+                  <a href="{% url 'delete_kyc' kyc.id 'my' %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure to delete?');">Delete</a>
                 {% elif is_sub_mainuser %}
                   <span class="text-muted">View Only</span>
                 {% endif %}
@@ -121,7 +176,7 @@
           <tr>
             <th>#</th><th>Name</th><th>Age</th><th>Mobile</th><th>Father</th><th>Address</th>
             <th>Aadhar #</th><th>Aadhar Img</th><th>PAN Img</th><th>Profession</th>
-            <th>SH/NH Contact</th><th>SH/NH Name</th><th>Investment</th><th>Passport</th><th>Actions</th>
+            <th>SH/NH Contact</th><th>SH/NH Name</th><th>Investment</th><th>Passport</th><th>Bond Image</th><th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -142,9 +197,16 @@
               <td>{{ kyc.investmentamt }}</td>
               <td>{% if kyc.passportphoto %}<img src="{{ kyc.passportphoto.url }}" class="img-fluid table-img">{% endif %}</td>
               <td>
+  {% for bond in kyc.bonds.all %}
+    <img src="{{ bond.image.url }}" class="img-fluid table-img mb-1"><br>
+  {% empty %}
+    <span class="text-muted">No Bond Images</span>
+  {% endfor %}
+</td> 
+              <td>
                 {% if is_main_user or request.user == kyc.created_by %}
-                  <a href="{% url 'edit_kyc' kyc.id %}" class="btn btn-sm btn-info">Edit</a>
-                  <a href="{% url 'delete_kyc' kyc.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure to delete?');">Delete</a>
+                  <a href="{% url 'edit_kyc' kyc.id 'sub' %}" class="btn btn-sm btn-info">Edit</a>
+                  <a href="{% url 'delete_kyc' kyc.id 'sub' %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure to delete?');">Delete</a>
                 {% elif is_sub_mainuser %}
                   <span class="text-muted">View Only</span>
                 {% endif %}
@@ -162,10 +224,26 @@
 <!-- My KYC Modal -->
 <div id="myKycModal" class="modal-overlay d-none">
   <div class="modal-content">
-    <h5>Add My KYC</h5>
-    <button type="button" class="btn-close float-end" onclick="toggleModal('myKycModal')"></button>
+    <div class="d-flex justify-content-between">
+      <div><h5>Add My KYC</h5></div>
+      <div><button type="button" class="btn-close float-end" onclick="toggleModal('myKycModal')"></button></div>
+    </div>
     <form method="post" action="{% url 'add_my_kyc' %}" enctype="multipart/form-data">
       {% csrf_token %}
+
+      {% if is_main_user or is_sub_mainuser %}
+        <div class="mb-3">
+          <label for="created_for_user">Select User</label>
+          <select class="form-control" name="data_for_user" required>
+            <option value="">-- Select User --</option>
+            {% for u in users %}
+              <option value="{{ u.id }}">{{ u.username }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      {% else %}
+        <input type="hidden" name="data_for_user" value="{{ request.user.id }}">
+      {% endif %}
       {% include "kyc_form_fields.html" %}
       <button type="submit" class="btn btn-success mt-3">Submit</button>
     </form>
@@ -175,34 +253,41 @@
 <!-- Sub-KYC Modal --> 
 <div id="subKycModal" class="modal-overlay d-none">
   <div class="modal-content">
-    <h5>Add Sub-KYC</h5>
-    <button type="button" class="btn-close float-end" onclick="toggleModal('subKycModal')"></button>
+    <div class="d-flex justify-content-between">
+      <div><h5>Add Sub-KYC</h5></div>
+      <div class="text-end">
+        <button type="button" class="btn-close float-end" onclick="toggleModal('subKycModal')"></button>
+      </div>
+    </div>
     <form method="post" action="{% url 'add_other_kyc' %}" enctype="multipart/form-data">
       {% csrf_token %}
-      {% if is_main_user or is_sub_mainuser %}
-  <div class="mb-3">
-    <label for="created_for_user">Select User</label>
-    <select class="form-control" name="data_for_user" required>
-      <option value="">-- Select User --</option>
-      {% for u in users %}
-        <option value="{{ u.id }}">{{ u.username }}</option>
-      {% endfor %}
-    </select>
-  </div>
-{% else %}
-  <input type="hidden" name="data_for_user" value="{{ request.user.id }}">
-{% endif %}
 
-      {% include "kyc_form_fields.html" %}
+      {% if is_main_user or is_sub_mainuser %}
+        <div class="mb-3">
+          <label for="created_for_user">Select User</label>
+          <select class="form-control" name="data_for_user" required>
+            <option value="">-- Select User --</option>
+            {% for u in users %}
+              <option value="{{ u.id }}">{{ u.username }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      {% else %}
+        <input type="hidden" name="data_for_user" value="{{ request.user.id }}">
+      {% endif %}
+
+      {% include "sub_kyc_form_fields.html" %}
       <button type="submit" class="btn btn-success mt-3">Submit</button>
     </form>
   </div>
 </div>
+
 
 <script>
   function toggleModal(id) {
     document.getElementById(id).classList.toggle('d-none');
   }
 </script>
+
 
 {% endblock %}

@@ -19,28 +19,63 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-class KycDetailsNew(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='kyc_created_by', null=True, blank=True)  # whom this data is about
-    is_hidden = models.BooleanField(default=False)
+class MyKYC(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="my_kycs", default='')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="created_my_kycs")
     name = models.CharField(max_length=100)
     age = models.IntegerField(null=True, blank=True)
-    fathername = models.CharField(max_length=100, default="")
+    fathername = models.CharField(max_length=100)
     mobile_number = models.CharField(max_length=15)
     aadhar_number = models.CharField(max_length=20)
-    aadhar_image = models.ImageField(upload_to='kyc/aadhar/')
-    pan_image = models.ImageField(upload_to='kyc/pan/')
-    is_hidden = models.BooleanField(default=False)
-    address = models.CharField(max_length=250, default="")
-    profession = models.CharField(max_length=100, blank=True)
-    contactSH = models.CharField(max_length=100, blank=True)
-    nameSH = models.CharField(max_length=100, blank=True)
+    aadhar_image = models.ImageField(upload_to='aadhar/', null=True, blank=True)
+    pan_image = models.ImageField(upload_to='pan/', null=True, blank=True)
+    address = models.TextField()
+    profession = models.CharField(max_length=100, null=True, blank=True)
+    contactSH = models.CharField(max_length=100, null=True, blank=True)
+    nameSH = models.CharField(max_length=100, null=True, blank=True)
     investmentamt = models.IntegerField(null=True, blank=True)
-    passportphoto = models.ImageField(upload_to='kyc/passport_photo/')
+    passportphoto = models.ImageField(upload_to='passport/', null=True, blank=True)
+    is_hidden = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.name
+        return f"MyKYC - {self.name}"
+
+
+# -----------------------------
+# Model 2: SubKYC (Sub KYC)
+# -----------------------------
+class SubKYC(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sub_kycs", default='')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sub_kycs_created')
+    name = models.CharField(max_length=100)
+    age = models.IntegerField()
+    mobile_number = models.CharField(max_length=15)
+    fathername = models.CharField(max_length=100)
+    address = models.TextField()
+    aadhar_number = models.CharField(max_length=20)
+    aadhar_image = models.ImageField(upload_to='sub_aadhar_front/', blank=True, null=True)
+    pan_image = models.ImageField(upload_to='sub_aadhar_back/', blank=True, null=True)
+    profession = models.CharField(max_length=100)
+    contactSH = models.CharField(max_length=100)
+    nameSH = models.CharField(max_length=100)
+    investmentamt = models.DecimalField(max_digits=12, decimal_places=2)
+    passportphoto = models.ImageField(upload_to='sub_passport_photos/', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_hidden = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"SubKYC: {self.name}"
+
+# -----------------------------
+# Common Model: Bond Images
+# -----------------------------
+from django.db import models
 
 class BondImage(models.Model):
-    kyc = models.ForeignKey(KycDetailsNew, related_name='bonds', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='kyc/bonds/')
+    my_kyc = models.ForeignKey("MyKYC", on_delete=models.CASCADE, null=True, blank=True, related_name='bonds')
+    sub_kyc = models.ForeignKey("SubKYC", on_delete=models.CASCADE, null=True, blank=True, related_name='bonds')
+    image = models.ImageField(upload_to='bonds/')
+
+    def __str__(self):
+        return f"BondImage ({self.image.name})"
+
