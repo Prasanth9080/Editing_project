@@ -24,6 +24,13 @@
   text-decoration: none;
 }
 
+@media (max-width: 375px){
+    h2 {
+      font-size: 18px;
+      font-weight: 600;
+    }
+}
+
 </style>
 
 <div class="container mt-5">
@@ -40,18 +47,18 @@
     <button class="btn btn-primary w-100"
             onclick="toggleModal('myKycModal')"
             {% if is_sub_mainuser %}disabled{% endif %}>
-      Add My KYC
+      Add Member Details
     </button>
   </div>
 
   <!-- Add Sub-KYC Button -->
-  <div class="col-lg-3 col-md-6 col-sm-12">
+  <!-- <div class="col-lg-3 col-md-6 col-sm-12">
     <button class="btn btn-secondary w-100"
             onclick="toggleModal('subKycModal')"
             {% if is_sub_mainuser %}disabled{% endif %}>
       Add Sub-KYC
     </button>
-  </div>
+  </div> -->
 
   <!-- Empty Column (can be removed or used for spacing) -->
   <div class="col-lg-3 col-md-6 col-sm-12"></div>
@@ -84,29 +91,37 @@
 
 <div class="row my-3">
   <div class="col-lg-3 col-md-3 col-sm-12">
-    <a href="{% if not is_sub_mainuser %}{% url 'download_kyc_excel' 'my' %}{% endif %}"
+    <!-- <a href="{% if not is_sub_mainuser %}{% url 'download_kyc_excel' 'my' %}{% endif %}"
        class="btn btn-success w-100 {% if is_sub_mainuser %}disabled-link{% endif %}">
       My KYC Excel
+    </a> -->
+    <a href="{% if is_main_user and selected_user %}{% url 'download_kyc_excel' 'my' %}?user_id={{ selected_user.id }}{% else %}#{% endif %}"
+   class="btn btn-success w-100 mt-2 {% if not is_main_user %}disabled disabled-link{% endif %}">
+  Download Excel
     </a>
   </div>
-  <div class="col-lg-3 col-md-3 col-sm-12">
+  <!-- <div class="col-lg-3 col-md-3 col-sm-12">
     <a href="{% url 'download_subkyc_excel' %}" 
    class="btn btn-secondary w-100 {% if is_sub_mainuser %}disabled-link{% endif %}">
    Sub-KYC Excel
 </a>
-  </div>
+  </div> -->
   <div class="col-lg-3 col-md-3 col-sm-12">
-    <a href="{% if not is_sub_mainuser %}{% url 'download_kyc_pdf' 'my' %}{% endif %}"
+    <!-- <a href="{% if not is_sub_mainuser %}{% url 'download_kyc_pdf' 'my' %}{% endif %}"
        class="btn btn-danger w-100 {% if is_sub_mainuser %}disabled-link{% endif %}">
       My KYC PDF
-    </a>
+    </a> -->
+    <a href="{% if is_main_user and selected_user %}{% url 'download_kyc_pdf' 'my' %}?user_id={{ selected_user.id }}{% else %}#{% endif %}"
+   class="btn btn-danger w-100 mt-2 {% if not is_main_user %}disabled disabled-link{% endif %}">
+  Download PDF
+</a>
   </div>
-  <div class="col-lg-3 col-md-3 col-sm-12">
+  <!-- <div class="col-lg-3 col-md-3 col-sm-12">
     <a href="{% url 'download_subkyc_pdf' %}" 
    class="btn btn-danger w-100 {% if is_sub_mainuser %}disabled-link{% endif %}">
    Sub-KYC PDF
 </a>
-  </div>
+  </div> -->
 </div>
 
 </div>
@@ -118,57 +133,146 @@
   <h4 class="mt-4">My KYC Entries</h4>
   {% if my_kyc_list %}
     <div class="table-responsive">
-      <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-          <tr>
-            <th>S.no</th><th>Name</th><th>Age</th><th>Mobile</th><th>Father Name</th><th>Address</th>
-            <th>Aadhar Number</th><th>Aadhar Front Image</th><th>Aadhar Back Image</th><th>Profession</th>
-            <th>Contact SH/NH</th><th>Name SH/NH</th><th>Investment</th><th>Passport</th><th>Bond Image</th><th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for kyc in my_kyc_list %}
-            <tr>
-              <td>{{ forloop.counter }}</td>
-              <td>{{ kyc.name }}</td>
-              <td>{{ kyc.age }}</td>
-              <td>{{ kyc.mobile_number }}</td>
-              <td>{{ kyc.fathername }}</td>
-              <td>{{ kyc.address }}</td>
-              <td>{{ kyc.aadhar_number }}</td>
-              <td>{% if kyc.aadhar_image %}<img src="{{ kyc.aadhar_image.url }}" class="img-fluid table-img">{% endif %}</td>
-              <td>{% if kyc.pan_image %}<img src="{{ kyc.pan_image.url }}" class="img-fluid table-img">{% endif %}</td>
-              <td>{{ kyc.profession }}</td>
-              <td>{{ kyc.contactSH }}</td>
-              <td>{{ kyc.nameSH }}</td>
-              <td>{{ kyc.investmentamt }}</td>
-              <td>{% if kyc.passportphoto %}<img src="{{ kyc.passportphoto.url }}" class="img-fluid table-img">{% endif %}</td>
-              <td>
-  {% for bond in kyc.bonds.all %}
-    <img src="{{ bond.image.url }}" class="img-fluid table-img mb-1"><br>
-  {% empty %}
-    <span class="text-muted">No Bond Images</span>
-  {% endfor %}
-</td>
-              <td>
-                {% if is_main_user or request.user == kyc.created_by %}
-                  <a href="{% url 'edit_kyc' kyc.id 'my' %}" class="btn btn-sm btn-info">Edit</a>
-                  <a href="{% url 'delete_kyc' kyc.id 'my' %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure to delete?');">Delete</a>
-                {% elif is_sub_mainuser %}
-                  <span class="text-muted">View Only</span>
-                {% endif %}
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+      <table class="table table-bordered table-striped align-middle">
+  <thead class="table-dark text-center">
+    <!-- Main header row -->
+    <tr>
+      <th rowspan="2">S.No</th>
+      <th rowspan="2">Name</th>
+      <th rowspan="2">Age</th>
+      <th rowspan="2">Mobile</th>
+      <th rowspan="2">Father Name</th>
+      <th rowspan="2">Address</th>
+      <th rowspan="2">Aadhar Number</th>
+      <th rowspan="2">Aadhar Front Image</th>
+      <th rowspan="2">Aadhar Back Image</th>
+      <th rowspan="2">Profession</th>
+      <th rowspan="2">Contact SH/NH</th>
+      <th rowspan="2">Name SH/NH</th>
+      <th rowspan="2">Investment</th>
+      <th rowspan="2">Passport</th>
+      <th colspan="6">Bond Details</th>
+      <th rowspan="2">Actions</th>
+    </tr>
+    <!-- Sub-heading for Bond Details -->
+    <tr>
+      <th>Image</th>
+      <th>Company Name</th>
+      <th>Project Name</th>
+      <th>Amount</th>
+      <th>Investment Date</th>
+      <th>Customer ID</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for kyc in my_kyc_list %}
+      {% for bond in kyc.bonds.all %}
+        <tr>
+          {% if forloop.first %}
+            <td rowspan="{{ kyc.bonds.count }}">{{ forloop.parentloop.counter }}</td>
+            <td rowspan="{{ kyc.bonds.count }}">{{ kyc.name }}</td>
+            <td rowspan="{{ kyc.bonds.count }}">{{ kyc.age }}</td>
+            <td rowspan="{{ kyc.bonds.count }}">{{ kyc.mobile_number }}</td>
+            <td rowspan="{{ kyc.bonds.count }}">{{ kyc.fathername }}</td>
+            <td rowspan="{{ kyc.bonds.count }}">{{ kyc.address }}</td>
+            <td rowspan="{{ kyc.bonds.count }}">{{ kyc.aadhar_number }}</td>
+            <td rowspan="{{ kyc.bonds.count }}">
+              {% if kyc.aadhar_front_image %}
+                <img src="{{ kyc.aadhar_front_image.url }}" class="img-fluid table-img" style="max-height: 80px;">
+              {% endif %}
+            </td>
+            <td rowspan="{{ kyc.bonds.count }}">
+              {% if kyc.aadhar_back_image %}
+                <img src="{{ kyc.aadhar_back_image.url }}" class="img-fluid table-img" style="max-height: 80px;">
+              {% endif %}
+            </td>
+            <td rowspan="{{ kyc.bonds.count }}">{{ kyc.profession }}</td>
+            <td rowspan="{{ kyc.bonds.count }}">{{ kyc.contactSH }}</td>
+            <td rowspan="{{ kyc.bonds.count }}">{{ kyc.nameSH }}</td>
+            <td rowspan="{{ kyc.bonds.count }}">₹{{ kyc.investmentamt }}</td>
+            <td rowspan="{{ kyc.bonds.count }}">
+              {% if kyc.passportphoto %}
+                <img src="{{ kyc.passportphoto.url }}" class="img-fluid table-img" style="max-height: 80px;">
+              {% endif %}
+            </td>
+          {% endif %}
+
+          <!-- Bond Details -->
+          <td>
+            {% if bond.image %}
+              <img src="{{ bond.image.url }}" class="img-fluid" style="max-height: 80px;">
+            {% else %}
+              <span class="text-muted">No Image</span>
+            {% endif %}
+          </td>
+          <td>{{ bond.companyname }}</td>
+          <td>{{ bond.projectname }}</td>
+          <td>₹{{ bond.amount }}</td>
+          <td>{{ bond.investment_date|date:"d M Y" }}</td>
+          <td>{{ bond.customer_id }}</td>
+
+          {% if forloop.first %}
+            <td rowspan="{{ kyc.bonds.count }}">
+              {% if is_main_user or request.user == kyc.created_by %}
+                <a href="{% url 'edit_kyc' kyc.id 'my' %}" class="btn btn-sm btn-info mb-1">Edit</a><br>
+                <a href="{% url 'delete_kyc' kyc.id 'my' %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure to delete?');">Delete</a>
+              {% elif is_sub_mainuser %}
+                <span class="text-muted">View Only</span>
+              {% endif %}
+            </td>
+          {% endif %}
+        </tr>
+      {% empty %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ kyc.name }}</td>
+          <td>{{ kyc.age }}</td>
+          <td>{{ kyc.mobile_number }}</td>
+          <td>{{ kyc.fathername }}</td>
+          <td>{{ kyc.address }}</td>
+          <td>{{ kyc.aadhar_number }}</td>
+          <td>
+            {% if kyc.aadhar_front_image %}
+              <img src="{{ kyc.aadhar_front_image.url }}" class="img-fluid table-img" style="max-height: 80px;">
+            {% endif %}
+          </td>
+          <td>
+            {% if kyc.aadhar_back_image %}
+              <img src="{{ kyc.aadhar_back_image.url }}" class="img-fluid table-img" style="max-height: 80px;">
+            {% endif %}
+          </td>
+          <td>{{ kyc.profession }}</td>
+          <td>{{ kyc.contactSH }}</td>
+          <td>{{ kyc.nameSH }}</td>
+          <td>₹{{ kyc.investmentamt }}</td>
+          <td>
+            {% if kyc.passportphoto %}
+              <img src="{{ kyc.passportphoto.url }}" class="img-fluid table-img" style="max-height: 80px;">
+            {% endif %}
+          </td>
+          <td colspan="6" class="text-center text-muted">No Bond Info</td>
+          <td>
+            {% if is_main_user or request.user == kyc.created_by %}
+              <a href="{% url 'edit_kyc' kyc.id 'my' %}" class="btn btn-sm btn-info mb-1">Edit</a><br>
+              <a href="{% url 'delete_kyc' kyc.id 'my' %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure to delete?');">Delete</a>
+            {% elif is_sub_mainuser %}
+              <span class="text-muted">View Only</span>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    {% endfor %}
+  </tbody>
+</table>
+
     </div>
   {% else %}
     <p>No personal KYC entries found.</p>
   {% endif %}
 
   <!-- Sub KYC Entries -->
-  <h4 class="mt-5">Sub-KYC Entries</h4>
+  <!-- <h4 class="mt-5">Sub-KYC Entries</h4>
   {% if sub_kyc_list %}
     <div class="table-responsive">
       <table class="table table-bordered table-striped">
@@ -189,8 +293,8 @@
               <td>{{ kyc.fathername }}</td>
               <td>{{ kyc.address }}</td>
               <td>{{ kyc.aadhar_number }}</td>
-              <td>{% if kyc.aadhar_image %}<img src="{{ kyc.aadhar_image.url }}" class="img-fluid table-img">{% endif %}</td>
-              <td>{% if kyc.pan_image %}<img src="{{ kyc.pan_image.url }}" class="img-fluid table-img">{% endif %}</td>
+              <td>{% if kyc.aadhar_front_image %}<img src="{{ kyc.aadhar_front_image.url }}" class="img-fluid table-img">{% endif %}</td>
+              <td>{% if kyc.aadhar_back_image %}<img src="{{ kyc.aadhar_back_image.url }}" class="img-fluid table-img">{% endif %}</td>
               <td>{{ kyc.profession }}</td>
               <td>{{ kyc.contactSH }}</td>
               <td>{{ kyc.nameSH }}</td>
@@ -218,7 +322,7 @@
     </div>
   {% else %}
     <p>No Sub-KYC entries found.</p>
-  {% endif %}
+  {% endif %} -->
 </div>
 
 <!-- My KYC Modal -->

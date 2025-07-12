@@ -1,96 +1,243 @@
 <div class="row">
   <div class="col-md-6 mb-3">
     <label>Name:</label>
-    <input type="text" name="name" class="form-control" required>
+    <input type="text" name="name" placeholder="Name" class="form-control" required>
   </div>
   <div class="col-md-6 mb-3">
     <label>Age:</label>
-    <input type="number" name="age" class="form-control" required>
+    <input type="number" name="age" placeholder="Age" class="form-control" required>
   </div>
   <div class="col-md-6 mb-3">
     <label>Father Name:</label>
-    <input type="text" name="fathername" class="form-control" required>
+    <input type="text" name="fathername" placeholder="Father Name" class="form-control" required>
   </div>
   <div class="col-md-6 mb-3">
     <label>Mobile Number:</label>
-    <input type="text" name="mobile_number" class="form-control" maxlength="10" required>
+    <input type="number" name="mobile_number" placeholder="Mobile Number" class="form-control" maxlength="10" required>
   </div>
   <div class="col-md-6 mb-3">
     <label>Aadhar Number:</label>
-    <input type="text" name="aadhar_number" class="form-control" maxlength="14" id="aadharInput" required>
+    <input type="text" name="aadhar_number" id="aadharInput" class="form-control" maxlength="14" placeholder="Aadhar Number" required>
   </div>
   <div class="col-md-6 mb-3">
     <label>Aadhar Front Image:</label>
-    <input type="file" name="aadhar_image" class="form-control" required>
+    <input type="file" name="aadhar_front_image" placeholder="Aadhar Front Image" class="form-control" required>
   </div>
   <div class="col-md-6 mb-3">
     <label>Aadhar Back Image:</label>
-    <input type="file" name="pan_image" class="form-control" required>
+    <input type="file" name="aadhar_back_image" placeholder="Aadhar Back Image" class="form-control" required>
   </div>
   <div class="col-md-6 mb-3">
     <label>Address:</label>
-    <input type="text" name="address" class="form-control" required>
+    <input type="text" name="address" placeholder="Address" class="form-control" required>
   </div>
   <div class="col-md-6 mb-3">
     <label>Profession:</label>
-    <input type="text" name="profession" class="form-control" required>
+    <input type="text" name="profession" placeholder="Profession" class="form-control" required>
   </div>
   <div class="col-md-6 mb-3">
-    <label>Contact SH or NH:</label>
-    <input type="text" name="contactSH" class="form-control" required>
+    <label>Leader Contact Number:</label>
+    <input type="text" name="contactSH" placeholder="Leader Contact Number" class="form-control" required maxlength="10">
   </div>
   <div class="col-md-6 mb-3">
-    <label>Name SH or NH:</label>
-    <input type="text" name="nameSH" class="form-control" required>
+    <label>Name of the Leader:</label>
+    <input type="text" name="nameSH" placeholder="Name of the Leader" class="form-control" required>
   </div>
   <div class="col-md-6 mb-3">
-    <label>Investment Amount:</label>
-    <input type="number" name="investmentamt" class="form-control" required>
+    <label>Total Investment Amount:</label>
+    <input type="number" name="investmentamt" placeholder="Total Investment" class="form-control" required>
   </div>
   <div class="col-md-6 mb-3">
     <label>Passport Photo:</label>
-    <input type="file" name="passportphoto" class="form-control" required>
+    <input type="file" name="passportphoto" placeholder="Passport Photo" class="form-control" required>
   </div>
-  <div class="col-md-6 mb-3">
-    <label>Bond Images:</label>
+  <!-- <div class="col-md-6 mb-3">
+    <label>Bond Details:</label>
     <div id="bondInputs">
       <input type="file" name="bonds" accept="image/*" class="form-control mb-2">
     </div>
     <button type="button" class="btn btn-sm btn-success" onclick="addBondInput()">+ Add More</button>
+  </div> -->
+  <div class="col-md-12 mb-3">
+  <label>Bond Details:</label>
+  <div id="bondInputs">
+    <div class="bond-input-group border p-3 mb-3">
+  <div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-12">      
+      <h6>Bond Image:</h6>
+      <input type="file" name="bonds" placeholder="Bond Image" accept="image/*" class="form-control mb-2" required>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12">
+      <h6>Company Name:</h6>
+      <input type="text" name="companyname_0" placeholder="Company Name" class="form-control mb-2" required>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12">
+      <h6>Project Name:</h6>
+      <input type="text" name="projectname_0" placeholder="Project Name" class="form-control mb-2" required>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12">
+      <h6>Amount:</h6>
+      <input type="number" step="0.01" placeholder="Amount" name="amount_0" class="form-control mb-2" required>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12">
+      <h6>Investment Date:</h6>
+      <input type="date" name="investment_date_0" placeholder="Investment Date" class="form-control mb-2" required>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12">
+      <h6>Customer ID:</h6>
+      <input type="text" name="customer_id_0" placeholder="Customer ID" class="form-control mb-2" required>
+    </div>
   </div>
 </div>
 
+  </div>
+
+  <button type="button" class="btn btn-sm btn-success" onclick="addBondInput()">+ Add More</button>
+</div>
+
+</div>
+
 <!-- Add bond images -->
+
+<!-- <script>
+function addBondInput() {
+  const bondInputs = document.getElementById('bondInputs');
+
+  const group = document.createElement('div');
+  group.className = 'bond-input-group border p-3 mb-3';
+  group.innerHTML = `
+     <div class="row">
+      <div class="col-md-6 mb-3">
+        <label><strong>Bond Image:</strong></label>
+        <input type="file" name="bonds" accept="image/*" class="form-control" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Company Name:</strong></label>
+        <input type="text" name="companyname" placeholder="Company Name" class="form-control" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Project Name:</strong></label>
+        <input type="text" name="projectname" placeholder="Project Name" class="form-control" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Amount:</strong></label>
+        <input type="number" step="0.01" name="amount" placeholder="Amount" class="form-control" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Investment Date:</strong></label>
+        <input type="date" name="investment_date" class="form-control investment-date" placeholder="Investment Date" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Customer ID:</strong></label>
+        <input type="text" name="customer_id" placeholder="Customer ID" class="form-control" required>
+      </div>
+    </div>
+  `;
+
+  bondInputs.appendChild(group);
+}
+</script> -->
+
 <script>
-  function addBondInput() {
-    const container = document.getElementById('bondInputs');
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.name = 'bonds';
-    input.accept = 'image/*';
-    input.className = 'form-control mb-2';
-    container.appendChild(input);
-  }
+let bondIndex = 1;
+
+function addBondInput() {
+  const bondInputs = document.getElementById('bondInputs');
+
+  const group = document.createElement('div');
+  group.className = 'bond-input-group border p-3 mb-3';
+  group.innerHTML = `
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label><strong>Bond Image:</strong></label>
+        <input type="file" name="bonds" accept="image/*" class="form-control" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Company Name:</strong></label>
+        <input type="text" name="companyname_${bondIndex}" placeholder="Company Name" class="form-control" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Project Name:</strong></label>
+        <input type="text" name="projectname_${bondIndex}" placeholder="Project Name" class="form-control" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Amount:</strong></label>
+        <input type="number" step="0.01" name="amount_${bondIndex}" placeholder="Amount" class="form-control" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Investment Date:</strong></label>
+        <input type="date" name="investment_date_${bondIndex}" class="form-control" placeholder="Investment Date" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Customer ID:</strong></label>
+        <input type="text" name="customer_id_${bondIndex}" placeholder="Customer ID" class="form-control" required>
+      </div>
+    </div>
+  `;
+
+  bondInputs.appendChild(group);
+  bondIndex++;
+}
 </script>
+
 
 <!-- Aadhar number -->
 
 <script>
-  const aadharInput = document.getElementById('aadharInput');
+  document.addEventListener("DOMContentLoaded", function () {
+    const aadharInput = document.getElementById("aadharInput");
 
-  aadharInput.addEventListener('input', function () {
-    // Remove all non-digit characters
-    let digits = this.value.replace(/\D/g, '');
+    aadharInput.addEventListener("input", function () {
+      // Only digits, max 12
+      let digits = this.value.replace(/\D/g, "").substring(0, 12);
 
-    // Limit to 12 digits max
-    digits = digits.substring(0, 12);
+      // Add space after every 4 digits: XXXX XXXX XXXX
+      let formatted = '';
+      for (let i = 0; i < digits.length; i++) {
+        if (i > 0 && i % 4 === 0) formatted += ' ';
+        formatted += digits[i];
+      }
 
-    // Format: XXXX XXXX XXXX
-    let formatted = digits.replace(/(\d{4})(\d{1,4})?(\d{1,4})?/, function (_, g1, g2, g3) {
-      return [g1, g2, g3].filter(Boolean).join(' ');
+      this.value = formatted;
     });
 
-    this.value = formatted;
+    aadharInput.addEventListener("keydown", function (e) {
+      const allowed = ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"];
+      if (allowed.includes(e.key)) return;
+
+      // Block any non-digit key
+      if (!/^\d$/.test(e.key)) {
+        e.preventDefault();
+      }
+    });
+
+    // Prevent invalid paste
+    aadharInput.addEventListener("paste", function (e) {
+      const data = (e.clipboardData || window.clipboardData).getData("text").replace(/\D/g, "");
+      if (data.length > 12) e.preventDefault();
+    });
   });
 </script>
 
+<!-- Contact of the leader -->
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const contactInput = document.querySelector('input[name="contactSH"]');
+
+    contactInput.addEventListener("input", function () {
+      // Remove all non-numeric characters
+      this.value = this.value.replace(/\D/g, '');
+    });
+
+    contactInput.addEventListener("keydown", function (e) {
+      const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+      if (allowedKeys.includes(e.key)) return;
+
+      // Block non-numeric keys
+      if (!/^\d$/.test(e.key)) {
+        e.preventDefault();
+      }
+    });
+  });
+</script>

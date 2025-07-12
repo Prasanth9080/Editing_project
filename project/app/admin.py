@@ -12,7 +12,9 @@ class UserAdmin(admin.ModelAdmin):
 # ----------------------------------------
 @admin.register(MyKYC)
 class MyKYCAdmin(admin.ModelAdmin):
-    list_display = ('name', 'created_by', 'mobile_number', 'profession', 'investmentamt')
+    list_display = ('name', 'created_by', 'name', 'age', 'fathername',
+                    'mobile_number', 'aadhar_number','aadhar_front_image','aadhar_back_image','address',
+                    'profession','contactSH','nameSH','investmentamt','passportphoto')
     search_fields = ('name', 'mobile_number', 'aadhar_number')
     list_filter = ('created_by',)
 
@@ -21,7 +23,9 @@ class MyKYCAdmin(admin.ModelAdmin):
 # ----------------------------------------
 @admin.register(SubKYC)
 class SubKYCAdmin(admin.ModelAdmin):
-    list_display = ('name', 'created_by', 'mobile_number', 'profession', 'investmentamt')
+    list_display = ('name', 'created_by', 'name', 'age', 'fathername',
+                    'mobile_number', 'aadhar_number','aadhar_front_image','aadhar_back_image','address',
+                    'profession','contactSH','nameSH','investmentamt','passportphoto')
     search_fields = ('name', 'mobile_number', 'aadhar_number')
     list_filter = ('created_by',)
 
@@ -30,8 +34,21 @@ class SubKYCAdmin(admin.ModelAdmin):
 # ----------------------------------------
 @admin.register(BondImage)
 class BondImageAdmin(admin.ModelAdmin):
-    list_display = ('image', 'my_kyc', 'sub_kyc')
+    list_display = (
+        'id','username', 'image', 'my_kyc', 'sub_kyc',
+        'companyname', 'projectname', 'amount',
+        'investment_date', 'customer_id'
+    )
+    search_fields = ('companyname', 'projectname', 'customer_id')
+    list_filter = ('investment_date', 'companyname')
 
+    @admin.display(ordering='my_kyc__user__username', description='Username')
+    def username(self, obj):
+        if obj.my_kyc:
+            return obj.my_kyc.user.username
+        elif obj.sub_kyc:
+            return obj.sub_kyc.user.username
+        return '-'
 # from django.contrib import admin
 # from django.contrib.auth.admin import UserAdmin
 # from .models import User, KycDetailsNew

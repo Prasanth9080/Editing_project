@@ -26,9 +26,9 @@ class MyKYC(models.Model):
     age = models.IntegerField(null=True, blank=True)
     fathername = models.CharField(max_length=100)
     mobile_number = models.CharField(max_length=15)
-    aadhar_number = models.CharField(max_length=20)
-    aadhar_image = models.ImageField(upload_to='aadhar/', null=True, blank=True)
-    pan_image = models.ImageField(upload_to='pan/', null=True, blank=True)
+    aadhar_number = models.CharField(max_length=20, null=True, blank=True)
+    aadhar_front_image = models.ImageField(upload_to='aadhar/', null=True, blank=True)
+    aadhar_back_image = models.ImageField(upload_to='pan/', null=True, blank=True)
     address = models.TextField()
     profession = models.CharField(max_length=100, null=True, blank=True)
     contactSH = models.CharField(max_length=100, null=True, blank=True)
@@ -53,8 +53,8 @@ class SubKYC(models.Model):
     fathername = models.CharField(max_length=100)
     address = models.TextField()
     aadhar_number = models.CharField(max_length=20)
-    aadhar_image = models.ImageField(upload_to='sub_aadhar_front/', blank=True, null=True)
-    pan_image = models.ImageField(upload_to='sub_aadhar_back/', blank=True, null=True)
+    aadhar_front_image = models.ImageField(upload_to='sub_aadhar_front/', blank=True, null=True)
+    aadhar_back_image = models.ImageField(upload_to='sub_aadhar_back/', blank=True, null=True)
     profession = models.CharField(max_length=100)
     contactSH = models.CharField(max_length=100)
     nameSH = models.CharField(max_length=100)
@@ -69,12 +69,19 @@ class SubKYC(models.Model):
 # -----------------------------
 # Common Model: Bond Images
 # -----------------------------
+from decimal import Decimal
+import datetime
 from django.db import models
 
 class BondImage(models.Model):
     my_kyc = models.ForeignKey("MyKYC", on_delete=models.CASCADE, null=True, blank=True, related_name='bonds')
     sub_kyc = models.ForeignKey("SubKYC", on_delete=models.CASCADE, null=True, blank=True, related_name='bonds')
     image = models.ImageField(upload_to='bonds/')
+    companyname = models.CharField(max_length=100,)
+    projectname = models.CharField(max_length=100,)
+    investment_date = models.DateField(default=datetime.date.today)  # ✅ CORRECT DEFAULT
+    customer_id = models.CharField(max_length=10,)
+    amount = models.IntegerField(null=True, blank=True, default=0)
 
     def __str__(self):
         return f"BondImage ({self.image.name})"
