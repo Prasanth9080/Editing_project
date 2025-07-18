@@ -32,10 +32,12 @@ class SubKYCAdmin(admin.ModelAdmin):
 # ----------------------------------------
 # Admin for BondImage (optional, direct access)
 # ----------------------------------------
+from django.utils.html import format_html
+
 @admin.register(BondImage)
 class BondImageAdmin(admin.ModelAdmin):
     list_display = (
-        'id','username', 'image', 'my_kyc', 'sub_kyc',
+        'id','username', 'image_tag', 'my_kyc', 'sub_kyc',
         'companyname', 'projectname', 'amount',
         'investment_date', 'customer_id'
     )
@@ -49,6 +51,12 @@ class BondImageAdmin(admin.ModelAdmin):
         elif obj.sub_kyc:
             return obj.sub_kyc.user.username
         return '-'
+    
+    @admin.display(description='Image')
+    def image_tag(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" style="width: 100px; height: auto;" />', obj.image.url)
+        return "-"
 # from django.contrib import admin
 # from django.contrib.auth.admin import UserAdmin
 # from .models import User, KycDetailsNew

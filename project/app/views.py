@@ -417,11 +417,12 @@ def download_kyc_excel(request, kyc_type):
     # Headers
     headers = [
         'S.No', 'Name', 'Age', 'Father Name', 'Mobile Number', 'Aadhar Number',
-        'Address', 'Profession', 'Contact SH/NH', 'Name SH/NH', 'Investment Amount'
+        'Address', 'Profession', 'Contact SH/NH', 'Name SH/NH', 'Investment Amount',
+        'Bond Image', 'Company Name', 'Project Name', 'Amount', 'Investment Date', 'Customer ID'
     ]
     sheet.append(headers)
 
-    user = request.user
+    user = request.user 
     selected_user = user
 
     # Get user_id from query param
@@ -449,20 +450,39 @@ def download_kyc_excel(request, kyc_type):
     kyc_list = kyc_list.exclude(id__in=hidden_ids)
 
     for idx, kyc in enumerate(kyc_list, start=1):
-        sheet.append([
-            idx,
-            kyc.name,
-            kyc.age,
-            kyc.fathername,
-            kyc.mobile_number,
-            kyc.aadhar_number,
-            kyc.address,
-            kyc.profession,
-            kyc.contactSH,
-            kyc.nameSH,
-            kyc.investmentamt
-        ])
-
+        bonds = kyc.bonds.all()
+        if not bonds:
+            sheet.append([
+                idx,
+                kyc.name,
+                kyc.age,
+                kyc.fathername,
+                kyc.mobile_number,
+                kyc.aadhar_number,
+                kyc.address,
+                kyc.profession,
+                kyc.contactSH,
+                kyc.nameSH,
+                kyc.investmentamt,
+                '',
+                '',
+                '',
+                '',
+                '',
+                ''
+            ])
+        else:
+            for bond in bonds:
+                sheet.append([
+                    idx, kyc.name, kyc.age, kyc.fathername, kyc.mobile_number, kyc.aadhar_number,
+                    kyc.address, kyc.profession, kyc.contactSH, kyc.nameSH, kyc.investmentamt,
+                    bond.image.url if bond.image else '',
+                    bond.companyname,
+                    bond.projectname,
+                    bond.amount,
+                    bond.investment_date.strftime('%d-%m-%Y') if bond.investment_date else '',
+                    bond.customer_id
+                ])
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     filename = 'my_kyc_details.xlsx' if kyc_type == 'my' else 'sub_kyc_details.xlsx'
     response['Content-Disposition'] = f'attachment; filename={filename}'
@@ -489,14 +509,8 @@ def download_kyc_pdf(request, kyc_type):
     c = canvas.Canvas(response, pagesize=A4)
     W, H = A4
     margin = 20 * mm
-    card_width = W - 2 * margin
-    card_height = 60 * mm
     x0 = margin
     y = H - margin
-
-    c.setFont("Helvetica-Bold", 18)
-    c.drawCentredString(W / 2, y, "KYC Report")
-    y -= 15 * mm
 
     user = request.user
     selected_user = user
@@ -515,33 +529,16 @@ def download_kyc_pdf(request, kyc_type):
     if kyc_type == 'my':
         kyc_list = MyKYC.objects.filter(created_by=selected_user)
     else:
-        kyc_list = SubKYC.objects.filter(
-            user=selected_user
-        ) | SubKYC.objects.filter(
-            created_by=selected_user
-        )
+        kyc_list = SubKYC.objects.filter(user=selected_user) | SubKYC.objects.filter(created_by=selected_user)
         kyc_list = kyc_list.distinct()
 
     kyc_list = kyc_list.exclude(id__in=hidden_ids)
 
+    c.setFont("Helvetica-Bold", 18)
+    c.drawCentredString(W / 2, y, "KYC Report")
+    y -= 15 * mm
+
     for idx, kyc in enumerate(kyc_list, 1):
-        if y - card_height < margin:
-            c.showPage()
-            y = H - margin
-            c.setFont("Helvetica-Bold", 18)
-            c.drawCentredString(W / 2, y, "KYC Report")
-            y -= 15 * mm
-
-        c.setLineWidth(1)
-        c.roundRect(x0, y - card_height, card_width, card_height, 5 * mm, stroke=1, fill=0)
-
-        header_h = 10 * mm
-        c.setFillColor(colors.lightgrey)
-        c.roundRect(x0, y - header_h, card_width, header_h, 5 * mm, stroke=0, fill=1)
-        c.setFillColor(colors.black)
-        c.setFont("Helvetica-Bold", 12)
-        c.drawString(x0 + 5 * mm, y - header_h + 2 * mm, f"KYC #{idx}")
-
         labels = [
             ("Name", kyc.name),
             ("Father's Name", kyc.fathername or "—"),
@@ -554,7 +551,33 @@ def download_kyc_pdf(request, kyc_type):
             ("Investment", str(kyc.investmentamt) if kyc.investmentamt else "—"),
         ]
 
-        col_x = [x0 + 5 * mm, x0 + card_width / 2 + 5 * mm]
+        bonds = kyc.bonds.all()
+        bond_lines = len(bonds) * 2 if bonds.exists() else 1
+        lines_needed = (len(labels) + 1) // 2 + bond_lines + 4  # extra padding
+        card_height = lines_needed * 6 * mm + 15 * mm  # each line ~6mm
+
+        # Page break
+        if y - card_height < margin:
+            c.showPage()
+            y = H - margin
+            c.setFont("Helvetica-Bold", 18)
+            c.drawCentredString(W / 2, y, "KYC Report")
+            y -= 15 * mm
+
+        # Draw box
+        c.setLineWidth(1)
+        c.roundRect(x0, y - card_height, W - 2 * margin, card_height, 5 * mm, stroke=1, fill=0)
+
+        # Header
+        header_h = 10 * mm
+        c.setFillColor(colors.lightgrey)
+        c.roundRect(x0, y - header_h, W - 2 * margin, header_h, 5 * mm, stroke=0, fill=1)
+        c.setFillColor(colors.black)
+        c.setFont("Helvetica-Bold", 12)
+        c.drawString(x0 + 5 * mm, y - header_h + 2 * mm, f"KYC #{idx}")
+
+        # Labels (2 columns)
+        col_x = [x0 + 5 * mm, x0 + (W - 2 * margin) / 2 + 5 * mm]
         c.setFont("Helvetica", 10)
         line_h = 6 * mm
         start_y = y - header_h - 5 * mm
@@ -565,10 +588,127 @@ def download_kyc_pdf(request, kyc_type):
             text_y = start_y - row * line_h
             c.drawString(col_x[col], text_y, f"{label}: {val}")
 
+        # Bond Section
+        bond_start_y = start_y - ((len(labels) + 1) // 2) * line_h - 4 * mm
+        c.setFont("Helvetica-Bold", 10)
+        c.drawString(x0 + 5 * mm, bond_start_y, "Bond Details:")
+        bond_y = bond_start_y - 5 * mm
+        c.setFont("Helvetica", 9)
+
+        if bonds.exists():
+            for bond in bonds:
+                c.drawString(x0 + 10 * mm, bond_y, f"Company: {bond.companyname}, Project: {bond.projectname}")
+                bond_y -= line_h
+                c.drawString(x0 + 10 * mm, bond_y, f"Amount: ₹{bond.amount}, Date: {bond.investment_date.strftime('%d-%m-%Y')}, ID: {bond.customer_id}")
+                bond_y -= line_h
+        else:
+            c.drawString(x0 + 10 * mm, bond_y, "No bond details available.")
+            bond_y -= line_h
+
+        # Update Y for next card
         y -= card_height + 5 * mm
 
     c.save()
     return response
+
+
+# from reportlab.lib.pagesizes import A4
+# from reportlab.pdfgen import canvas
+# from reportlab.lib import colors
+# from reportlab.lib.units import mm
+# from django.http import HttpResponse
+# from django.contrib.auth.decorators import login_required
+# from .models import MyKYC, SubKYC
+
+# @login_required
+# def download_kyc_pdf(request, kyc_type):
+#     response = HttpResponse(content_type='application/pdf')
+#     filename = "my_kyc_report.pdf" if kyc_type == 'my' else "sub_kyc_report.pdf"
+#     response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+#     c = canvas.Canvas(response, pagesize=A4)
+#     W, H = A4
+#     margin = 20 * mm
+#     card_width = W - 2 * margin
+#     card_height = 60 * mm
+#     x0 = margin
+#     y = H - margin
+
+#     c.setFont("Helvetica-Bold", 18)
+#     c.drawCentredString(W / 2, y, "KYC Report")
+#     y -= 15 * mm
+
+#     user = request.user
+#     selected_user = user
+ 
+#     user_id = request.GET.get('user_id')
+#     if user.is_main_user and user_id:
+#         from django.contrib.auth import get_user_model
+#         User = get_user_model()
+#         try:
+#             selected_user = User.objects.get(id=user_id)
+#         except User.DoesNotExist:
+#             selected_user = user
+
+#     hidden_ids = request.session.get('hidden_my_kyc' if kyc_type == 'my' else 'hidden_sub_kyc', [])
+
+#     if kyc_type == 'my':
+#         kyc_list = MyKYC.objects.filter(created_by=selected_user)
+#     else:
+#         kyc_list = SubKYC.objects.filter(
+#             user=selected_user
+#         ) | SubKYC.objects.filter(
+#             created_by=selected_user
+#         )
+#         kyc_list = kyc_list.distinct()
+
+#     kyc_list = kyc_list.exclude(id__in=hidden_ids)
+
+#     for idx, kyc in enumerate(kyc_list, 1):
+#         if y - card_height < margin:
+#             c.showPage()
+#             y = H - margin
+#             c.setFont("Helvetica-Bold", 18)
+#             c.drawCentredString(W / 2, y, "KYC Report")
+#             y -= 15 * mm
+
+#         c.setLineWidth(1)
+#         c.roundRect(x0, y - card_height, card_width, card_height, 5 * mm, stroke=1, fill=0)
+
+#         header_h = 10 * mm
+#         c.setFillColor(colors.lightgrey)
+#         c.roundRect(x0, y - header_h, card_width, header_h, 5 * mm, stroke=0, fill=1)
+#         c.setFillColor(colors.black)
+#         c.setFont("Helvetica-Bold", 12)
+#         c.drawString(x0 + 5 * mm, y - header_h + 2 * mm, f"KYC #{idx}")
+
+#         labels = [
+#             ("Name", kyc.name),
+#             ("Father's Name", kyc.fathername or "—"),
+#             ("Mobile", kyc.mobile_number),
+#             ("Aadhar", kyc.aadhar_number),
+#             ("Address", kyc.address),
+#             ("Profession", kyc.profession or "—"),
+#             ("Contact SH", kyc.contactSH or "—"),
+#             ("Name SH", kyc.nameSH or "—"),
+#             ("Investment", str(kyc.investmentamt) if kyc.investmentamt else "—"),
+#         ]
+
+#         col_x = [x0 + 5 * mm, x0 + card_width / 2 + 5 * mm]
+#         c.setFont("Helvetica", 10)
+#         line_h = 6 * mm
+#         start_y = y - header_h - 5 * mm
+
+#         for i, (label, val) in enumerate(labels):
+#             col = i % 2
+#             row = i // 2
+#             text_y = start_y - row * line_h
+#             c.drawString(col_x[col], text_y, f"{label}: {val}")
+
+#         y -= card_height + 5 * mm
+
+#     c.save()
+#     return response
 
 
 
