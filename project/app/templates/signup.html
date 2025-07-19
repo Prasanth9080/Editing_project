@@ -1,0 +1,196 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Signup</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- Toastify CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body, html {
+      height: 100%;
+      margin: 0;
+      background: linear-gradient(to right, #dbeafe, #f0e9ff);
+    }
+
+    .wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 20px;
+    }
+
+    .signup-container {
+      width: 100%;
+      max-width: 500px;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(12px);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 28px;
+      color: #3730a3;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    input {
+      padding: 12px 14px;
+      margin-bottom: 18px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 16px;
+      background-color: #f9fafb;
+      transition: border-color 0.3s;
+    }
+
+    input:focus {
+      border-color: #6366f1;
+      outline: none;
+    }
+
+    button {
+      padding: 12px;
+      font-size: 16px;
+      background: linear-gradient(to right, #6366f1, #7c3aed);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(to right, #4338ca, #6d28d9);
+    }
+
+    .mt-4 {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .mt-4 a {
+      color: #4f46e5;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .signup-container {
+        padding: 25px;
+      }
+
+      h2 {
+        font-size: 24px;
+      }
+
+      input, button {
+        font-size: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h2 {
+        font-size: 22px;
+      }
+
+      input, button {
+        font-size: 14px;
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="signup-container">
+    <h2>Create Account</h2>
+    <form method="post" onsubmit="return validatePhone()">
+      {% csrf_token %}
+      <input type="text" name="username" placeholder="Enter your Name" required>
+      <!-- <input type="email" name="email" placeholder="Enter your Email" required> -->
+      <input type="tel" name="phone_number" id="phone_number" placeholder="Enter 10-digit phone number"
+             maxlength="10" pattern="\d{10}" required>
+      <button type="submit">Sign Up</button>
+    </form>
+
+    <div class="mt-4">
+      <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Message Container -->
+<div id="toast-messages">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="toast" data-message="{{ message|escapejs }}" data-tag="{{ message.tags }}"></div>
+    {% endfor %}
+  {% endif %}
+</div>
+
+<!-- Toastify JS -->
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+<!-- JS Validation -->
+<script>
+  const phoneInput = document.getElementById('phone_number');
+  phoneInput.addEventListener('input', function () {
+    this.value = this.value.replace(/\D/g, '').slice(0, 10);
+  });
+
+  function validatePhone() {
+    const phone = phoneInput.value;
+    if (!/^\d{10}$/.test(phone)) {
+      alert("Please enter a valid 10-digit phone number.");
+      return false;
+    }
+    return true;
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const toasts = document.querySelectorAll('#toast-messages .toast');
+    toasts.forEach(function (toast) {
+      const message = toast.getAttribute('data-message');
+      const tag = toast.getAttribute('data-tag');
+
+      let bgColor = "#3b82f6";
+      if (tag.includes("success")) bgColor = "#10b981";
+      else if (tag.includes("error")) bgColor = "#ef4444";
+
+      Toastify({
+        text: message,
+        duration: 4000,
+        gravity: "top",
+        position: "right",
+        backgroundColor: bgColor,
+        stopOnFocus: true
+      }).showToast();
+    });
+  });
+</script>
+
+</body>
+</html>

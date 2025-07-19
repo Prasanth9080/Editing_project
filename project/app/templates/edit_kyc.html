@@ -1,0 +1,281 @@
+{% extends "base.html" %}
+{% block title %}Edit KYC{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Edit KYC</h2>
+
+    <div class="card p-4 shadow">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row g-3">
+
+                <div class="col-md-6">
+                    <label>Name:</label>
+                    <input type="text" name="name" value="{{ kyc.name }}" class="form-control" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label>Age:</label>
+                    <input type="text" name="age" value="{{ kyc.age }}" class="form-control" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label>Father Name:</label>
+                    <input type="text" name="fathername" value="{{ kyc.fathername }}" class="form-control" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label>Mobile Number:</label>
+                    <input type="text" name="mobile_number" value="{{ kyc.mobile_number }}" class="form-control" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label>Aadhar Number:</label>
+                    <input type="text" name="aadhar_number" id="aadharInput" class="form-control" maxlength="14" placeholder="Aadhar Number" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label>Aadhar Front Image:</label><br>
+                    {% if kyc.aadhar_front_image %}
+                        <img src="{{ kyc.aadhar_front_image.url }}" width="100" class="mb-2 img-thumbnail">
+                    {% endif %}
+                    <input type="file" name="aadhar_front_image" class="form-control">
+                </div>
+
+                <div class="col-md-6">
+                    <label>Aadhar Back Image:</label><br>
+                    {% if kyc.aadhar_back_image %}
+                        <img src="{{ kyc.aadhar_back_image.url }}" width="100" class="mb-2 img-thumbnail">
+                    {% endif %}
+                    <input type="file" name="aadhar_back_image" class="form-control">
+                </div>
+
+                <div class="col-md-6">
+                    <label>Address:</label>
+                    <input type="text" name="address" value="{{ kyc.address }}" class="form-control" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label>Profession:</label>
+                    <input type="text" name="profession" value="{{ kyc.profession }}" class="form-control" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label>Contact SH or NH:</label>
+                    <input type="text" name="contactSH" value="{{ kyc.contactSH }}" class="form-control" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label>Name SH or NH:</label>
+                    <input type="text" name="nameSH" value="{{ kyc.nameSH }}" class="form-control" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label>Investment Amount:</label>
+                    <input type="number" name="investmentamt" value="{{ kyc.investmentamt }}" class="form-control" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label>Passport Photo:</label><br>
+                    {% if kyc.passportphoto %}
+                        <img src="{{ kyc.passportphoto.url }}" width="100" class="mb-2 img-thumbnail">
+                    {% endif %}
+                    <input type="file" name="passportphoto" class="form-control">
+                </div>
+
+    <!-- Show existing bond images -->
+<div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+    <label>Existing Bond Images:</label><br>
+    {% for bond in kyc.bonds.all %}
+        <div class="d-inline-block me-3 text-center">
+            <img src="{{ bond.image.url }}" width="80" class="img-thumbnail mb-1">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="delete_bonds" value="{{ bond.id }}" id="del{{ bond.id }}">
+                <label class="form-check-label small" for="del{{ bond.id }}">Remove</label>
+            </div>
+        </div>
+    {% empty %}
+        <p class="text-muted">No bond images uploaded.</p>
+    {% endfor %}
+</div>
+
+
+<!-- Upload new bond images -->
+<!-- <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+    <label for="bondImages">Add New Bond Images</label>
+    <div id="bondInputs">
+        <input type="file" name="bonds" accept="image/*" class="form-control mb-2">
+    </div>
+    <button type="button" class="btn btn-sm btn-success" onclick="addBondInput()">+ Add Bond Image</button>
+</div> -->
+
+<div class="col-12 mb-3">
+  <label class="form-label">Bond Details</label>
+  <div id="bondInputs">
+    {% for bond in kyc.bonds.all %}
+      <div class="bond-entry border rounded p-3 mb-3">
+        <input type="hidden" name="bond_id" value="{{ bond.id }}">
+
+        <div class="row g-2">
+          <div class="col-md-4">
+            <label class="form-label">Bond Image</label>
+            <input type="file" name="bond_image_{{ bond.id }}" class="form-control">
+            {% if bond.image %}
+              <img src="{{ bond.image.url }}" class="img-fluid mt-2" style="max-height: 100px;">
+            {% endif %}
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Company Name</label>
+            <input type="text" name="companyname_{{ bond.id }}" class="form-control" value="{{ bond.companyname }}">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Project Name</label>
+            <input type="text" name="projectname_{{ bond.id }}" class="form-control" value="{{ bond.projectname }}">
+          </div>
+
+          <div class="col-md-3 mt-2">
+            <label class="form-label">Amount</label>
+            <input type="number" step="0.01" name="amount_{{ bond.id }}" class="form-control" value="{{ bond.amount }}">
+          </div>
+
+          <div class="col-md-3 mt-2">
+            <label class="form-label">Investment Date</label>
+            <input type="date" name="investment_date_{{ bond.id }}" class="form-control" value="{{ bond.investment_date|date:'Y-m-d' }}">
+          </div>
+
+          <div class="col-md-3 mt-2">
+            <label class="form-label">Customer ID</label>
+            <input type="text" name="customer_id_{{ bond.id }}" class="form-control" value="{{ bond.customer_id }}">
+          </div>
+        </div> 
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+<!-- Replace passport photo -->
+<div class="mb-3">
+    <label>Passport Photo:</label><br>
+    {% if kyc.passportphoto %}
+        <img src="{{ kyc.passportphoto.url }}" width="100" class="img-thumbnail mb-2"><br>
+    {% endif %}
+    <input type="file" name="passportphoto" class="form-control">
+</div>
+
+            </div>
+
+            <div class="mt-4 text-end">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Add bond images -->
+
+<script>
+function addBondInput() {
+  const bondInputs = document.getElementById('bondInputs');
+
+  const group = document.createElement('div');
+  group.className = 'bond-input-group border p-3 mb-3';
+  group.innerHTML = `
+     <div class="row">
+      <div class="col-md-6 mb-3">
+        <label><strong>Bond Image:</strong></label>
+        <input type="file" name="bonds" accept="image/*" class="form-control" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Company Name:</strong></label>
+        <input type="text" name="companyname" placeholder="Company Name" class="form-control" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Project Name:</strong></label>
+        <input type="text" name="projectname" placeholder="Project Name" class="form-control" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Amount:</strong></label>
+        <input type="number" step="0.01" name="amount" placeholder="Amount" class="form-control" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Investment Date:</strong></label>
+        <input type="text" name="investment_date" class="form-control investment-date" placeholder="Investment Date" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Customer ID:</strong></label>
+        <input type="text" name="customer_id" placeholder="Customer ID" class="form-control" required>
+      </div>
+    </div>
+  `;
+
+  bondInputs.appendChild(group);
+}
+</script>
+
+<!-- Aadhar number -->
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const aadharInput = document.getElementById("aadharInput");
+
+    aadharInput.addEventListener("input", function () {
+      // Only digits, max 12
+      let digits = this.value.replace(/\D/g, "").substring(0, 12);
+
+      // Add space after every 4 digits: XXXX XXXX XXXX
+      let formatted = '';
+      for (let i = 0; i < digits.length; i++) {
+        if (i > 0 && i % 4 === 0) formatted += ' ';
+        formatted += digits[i];
+      }
+
+      this.value = formatted;
+    });
+
+    aadharInput.addEventListener("keydown", function (e) {
+      const allowed = ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"];
+      if (allowed.includes(e.key)) return;
+
+      // Block any non-digit key
+      if (!/^\d$/.test(e.key)) {
+        e.preventDefault();
+      }
+    });
+
+    // Prevent invalid paste
+    aadharInput.addEventListener("paste", function (e) {
+      const data = (e.clipboardData || window.clipboardData).getData("text").replace(/\D/g, "");
+      if (data.length > 12) e.preventDefault();
+    });
+  });
+</script>
+
+<!-- Contact of the leader -->
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const contactInput = document.querySelector('input[name="contactSH"]');
+
+    contactInput.addEventListener("input", function () {
+      // Remove all non-numeric characters
+      this.value = this.value.replace(/\D/g, '');
+    });
+
+    contactInput.addEventListener("keydown", function (e) {
+      const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+      if (allowedKeys.includes(e.key)) return;
+
+      // Block non-numeric keys
+      if (!/^\d$/.test(e.key)) {
+        e.preventDefault();
+      }
+    });
+  });
+</script>
+
+{% endblock %}
+

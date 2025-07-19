@@ -1,0 +1,206 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap & Toastify CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+  <style>
+    * {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body, html {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #c3dafe, #f5e0ff);
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    .container-fluid {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-wrapper {
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      max-width: 950px;
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      overflow: hidden;
+    }
+
+    .left-image {
+      flex: 1;
+      min-width: 300px;
+      background: linear-gradient(to bottom right, #dbeafe, #e0f2fe);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .left-image img {
+      width: 100%;
+      max-width: 400px;
+      height: auto;
+      filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.1));
+    }
+
+    .login-form {
+      flex: 1;
+      min-width: 300px;
+      padding: 50px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .login-form h2 {
+      font-weight: 600;
+      font-size: 30px;
+      margin-bottom: 25px;
+      text-align: center;
+      color: #1e3a8a;
+    }
+
+    .form-control {
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+    }
+
+    .btn-login {
+      background: linear-gradient(to right, #6366f1, #3b82f6);
+      border: none;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 10px;
+      transition: background 0.3s ease;
+      color: white;
+    }
+
+    .btn-login:hover {
+      background: linear-gradient(to right, #4338ca, #2563eb);
+    }
+
+    .signup-link {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .signup-link a {
+      color: #3b82f6;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .login-wrapper {
+        flex-direction: column;
+      }
+
+      .left-image {
+        display: none;
+      }
+
+      .login-form {
+        padding: 40px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid">
+  <div class="login-wrapper">
+
+    <!-- Left Image -->
+    <div class="left-image">
+      <img src="{% static 'images/login-img.jpg' %}" alt="Login Image">
+    </div>
+
+    <!-- Login Form -->
+    <div class="login-form">
+      <h2>Login your account</h2>
+      <form method="post" onsubmit="return validatePhone()">
+        {% csrf_token %}
+        <div class="mb-3">
+          <input type="tel" name="phone_number" id="phone_number" class="form-control" placeholder="Enter 10-digit phone number" maxlength="10" pattern="\d{10}" required>
+        </div>
+        <div class="d-grid">
+          <button type="submit" class="btn btn-login">Send OTP</button>
+        </div>
+      </form>
+      <div class="signup-link">
+        Don't have an account? <a href="{% url 'signup' %}">Sign Up</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Toastify JS -->
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+<!-- Django Messages Toast -->
+<div id="toast-messages">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="toast" data-message="{{ message|escapejs }}" data-tag="{{ message.tags }}"></div>
+    {% endfor %}
+  {% endif %}
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const toasts = document.querySelectorAll('#toast-messages .toast');
+    toasts.forEach(function (toast) {
+      const message = toast.getAttribute('data-message');
+      const tag = toast.getAttribute('data-tag');
+
+      let bgColor = "#3b82f6";
+      if (tag.includes("success")) bgColor = "#10b981";
+      else if (tag.includes("error")) bgColor = "#ef4444";
+
+      Toastify({
+        text: message,
+        duration: 4000,
+        gravity: "top",
+        position: "right",
+        backgroundColor: bgColor,
+        stopOnFocus: true,
+      }).showToast();
+    });
+  });
+
+  function validatePhone() {
+    const phone = document.getElementById('phone_number').value;
+    if (!/^[0-9]{10}$/.test(phone)) {
+      alert("Please enter a valid 10-digit phone number.");
+      return false;
+    }
+    return true;
+  }
+</script>
+
+</body>
+</html>

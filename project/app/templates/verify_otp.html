@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verify OTP</title>
+
+  <!-- Toastify CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #dbeafe, #f0e9ff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .otp-container {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 420px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 26px;
+      color: #3730a3;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    input[type="text"] {
+      padding: 14px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      background-color: #f9fafb;
+      transition: border-color 0.3s;
+    }
+
+    input[type="text"]:focus {
+      border-color: #6366f1;
+      outline: none;
+    }
+
+    button {
+      padding: 14px;
+      font-size: 16px;
+      background: linear-gradient(to right, #6366f1, #7c3aed);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(to right, #4338ca, #6d28d9);
+    }
+
+    @media (max-width: 480px) {
+      .otp-container {
+        padding: 25px;
+        margin: 15px;
+      }
+
+      h2 {
+        font-size: 22px;
+      }
+
+      input, button {
+        font-size: 14px;
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="otp-container">
+  <h2>Enter OTP</h2>
+  <form method="post">
+    {% csrf_token %}
+    <input type="text" name="otp" placeholder="Enter OTP" required />
+    <button type="submit">Verify OTP</button>
+  </form>
+</div>
+
+<!-- Toast Message Container -->
+<div id="toast-messages">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="toast" data-message="{{ message|escapejs }}" data-tag="{{ message.tags }}"></div>
+    {% endfor %}
+  {% endif %}
+</div>
+
+<!-- Toastify JS -->
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+<!-- Show Toast Messages -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const toasts = document.querySelectorAll('#toast-messages .toast');
+    toasts.forEach(function (toast) {
+      const message = toast.getAttribute('data-message');
+      const tag = toast.getAttribute('data-tag');
+
+      let bgColor = "#17a2b8"; // default = info
+      if (tag.includes("success")) {
+        bgColor = "#28a745"; // green
+      } else if (tag.includes("error")) {
+        bgColor = "#dc3545"; // red
+      }
+
+      Toastify({
+        text: message,
+        duration: 4000,
+        close: false,
+        gravity: "top",
+        position: "right",
+        backgroundColor: bgColor,
+        stopOnFocus: true
+      }).showToast();
+    });
+  });
+</script>
+
+</body>
+</html>
