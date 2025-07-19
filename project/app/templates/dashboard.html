@@ -1,0 +1,38 @@
+<!-- {% extends 'base.html' %}
+{% block content %}
+<h2>Dashboard</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Mobile</th>
+            <th>Aadhar</th>
+            <th>PAN</th>
+            <th>Aadhar Image</th>
+            <th>PAN Image</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for kyc in kyc_list %}
+        <tr>
+            <td>{{ kyc.name }}</td>
+            <td>{{ kyc.mobile_number }}</td>
+            <td>{{ kyc.aadhar_number }}</td>
+            <td>{{ kyc.pan_number }}</td>
+            <td><img src="{{ kyc.aadhar_image.url }}" width="100"></td>
+            <td><img src="{{ kyc.pan_image.url }}" width="100"></td>
+            <td>
+                {% if user.is_main_user or kyc.mobile_number == user.phone_number %}
+                <a href="{% url 'edit_kyc' kyc.id %}">Edit</a> |
+                <a href="{% url 'delete_kyc' kyc.id %}">Delete</a>
+                {% else %}
+                No Access
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %} -->

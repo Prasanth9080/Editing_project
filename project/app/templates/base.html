@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}JWT Auth{% endblock %}</title>
+
+  <!-- Toastify CSS -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      height: 100vh;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .wrapper {
+      display: flex;
+      flex: 1;
+      flex-direction: row;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .sidebar {
+      width: 250px;
+      background-color: #343a40;
+      padding-top: 20px;
+      transition: width 0.3s ease;
+      height: 100vh;
+      overflow: hidden;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 1000;
+      transition: width 0.3s ease;
+    }
+
+    .sidebar.collapsed {
+      width: 80px;
+    }
+
+    .sidebar a {
+      color: white;
+      padding: 15px;
+      display: block;
+      text-decoration: none;
+      font-size: 18px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sidebar.collapsed a {
+      font-size: 0;
+      padding: 15px 10px;
+    }
+
+    .sidebar h3.sidebar-title {
+      color: white;
+      text-align: center;
+      transition: opacity 0.3s;
+    }
+
+    .sidebar.collapsed .sidebar-title {
+      opacity: 0;
+    }
+
+    .main-container {
+      flex: 1;
+      background-color: #f4f4f4;
+      overflow-y: auto;
+      height: 100vh;
+      background-color: #f4f4f4;
+    }
+
+    .main-content {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 6px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    form input,
+    button {
+      padding: 10px;
+      margin: 10px 0;
+      width: 100%;
+    }
+
+    input {
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid black;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: white;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    .toast-success {
+    background: #28a745 !important;  /* Green */
+    color: #fff;
+  }
+
+  .toast-error {
+    background: #dc3545 !important;  /* Red */
+    color: #fff;
+  }
+
+  .toast-info {
+    background: #17a2b8 !important;  /* Blue */
+    color: #fff;
+  }
+
+    @media (max-width: 768px) {
+
+      .sidebar {
+        width: 100%;
+        position: relative;
+        padding-top: 10px;
+        position: relative;
+      }
+
+      .sidebar.collapsed {
+        width: 100%;
+      }
+
+      .sidebar a {
+        font-size: 16px;
+        text-align: center;
+      }
+
+      .main-container {
+        margin-left: 0;
+        height: auto;
+        /* overflow-y: visible; */
+        padding: 10px;
+      }
+
+      #toggleSidebar {
+        top: 10px;
+        left: 10px;
+        position: absolute;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Sidebar and Main Content -->
+<div class="wrapper">
+  {% include 'sidebar.html' %}
+
+  <div class="main-container">
+    {% include 'navbar.html' %}
+    {% block content %}{% endblock %}
+  </div>
+</div>
+
+<!-- Toastify JS -->
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+<div id="toast-messages">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="toast" data-message="{{ message|escapejs }}" data-tag="{{ message.tags }}"></div>
+    {% endfor %}
+  {% endif %}
+</div>
+
+
+<!-- Toastify Script -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const toasts = document.querySelectorAll('#toast-messages .toast');
+    toasts.forEach(function (toast) {
+      const message = toast.getAttribute('data-message');
+      const tag = toast.getAttribute('data-tag');
+
+      let className = "toast-info";
+      if (tag.includes("success")) {
+        className = "toast-success";
+      } else if (tag.includes("error")) {
+        className = "toast-error";
+      }
+
+      Toastify({
+        text: message,
+        duration: 4000,
+        close: false,
+        gravity: "top",
+        position: "right",
+        className: className, // set custom class here
+        stopOnFocus: true,
+      }).showToast();
+    });
+  });
+</script>
+
+</body>
+</html>

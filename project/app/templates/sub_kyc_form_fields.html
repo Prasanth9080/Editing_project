@@ -1,0 +1,103 @@
+<!-- sub_kyc_form_fields.html -->
+<div class="row">
+  <div class="col-md-6 mb-3">
+    <label>Name:</label>
+    <input type="text" name="name" class="form-control" required>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label>Age:</label>
+    <input type="number" name="age" class="form-control" required>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label>Father Name:</label>
+    <input type="text" name="fathername" class="form-control" required>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label>Mobile Number:</label>
+    <input type="number" name="mobile_number" class="form-control" maxlength="10" required>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label>Aadhar Number:</label>
+    <input type="number" name="aadhar_number" class="form-control aadhar-input" maxlength="14" id="aadharInput" required>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label>Aadhar Front Image:</label>
+    <input type="file" name="aadhar_front_image" class="form-control" required>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label>Aadhar Back Image:</label>
+    <input type="file" name="aadhar_back_image" class="form-control" required>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label>Address:</label>
+    <input type="text" name="address" class="form-control" required>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label>Profession:</label>
+    <input type="text" name="profession" class="form-control" required>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label>Contact SH or NH:</label>
+    <input type="text" name="contactSH" class="form-control" required>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label>Name SH or NH:</label>
+    <input type="text" name="nameSH" class="form-control" required>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label>Investment Amount:</label>
+    <input type="number" name="investmentamt" class="form-control" required>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label>Passport Photo:</label>
+    <input type="file" name="passportphoto" class="form-control" required>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label>Bond Images:</label>
+    <div id="subBondInputs">
+      <input type="file" name="bonds" accept="image/*" class="form-control mb-2">
+    </div>
+    <button type="button" class="btn btn-sm btn-success" onclick="addsubBondInput()">+ Add More</button>
+  </div>
+</div>
+
+
+<!-- Add bond images -->
+<script>
+  function addsubBondInput() {
+    const container = document.getElementById('subBondInputs'); // ID must match your HTML div
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.name = 'bonds';
+    input.accept = 'image/*';
+    input.className = 'form-control mb-2';
+    container.appendChild(input);
+  }
+</script>
+
+
+<!-- Aadhar number -->
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('.aadhar-input').forEach(function (input) {
+      input.addEventListener('input', function (e) {
+        let digits = this.value.replace(/\D/g, '').substring(0, 12); // Remove non-digits & limit to 12
+        let formatted = digits.match(/.{1,4}/g); // Split into groups of 4
+        this.value = formatted ? formatted.join(' ') : '';
+      });
+
+      input.addEventListener('keydown', function (e) {
+        const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+        if (allowedKeys.includes(e.key)) return;
+
+        if (!/^\d$/.test(e.key)) {
+          e.preventDefault(); // Block non-digit keys
+        }
+      });
+    });
+  });
+</script>
+
+
+
