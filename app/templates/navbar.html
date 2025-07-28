@@ -1,13 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Navbar</title>
-
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <title>Document</title>
 
     <style>
         * {
@@ -19,7 +15,7 @@
         .navbar {
             background-color: skyblue;
             color: white;
-            padding: 15px 20px;
+            padding: 15px 5px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -94,6 +90,10 @@
         opacity: 1;
     }
 
+    .sidebar-menu a {
+      font-size: 16px;
+      padding: 12px;
+    }
             /* .nav-links {
                 display: none;
                 flex-direction: column;
@@ -111,43 +111,118 @@
                 padding: 10px 10px;
             }
         }
+
+        .sidebar-menu ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .sidebar-menu li {
+    margin-bottom: 10px;
+  }
+
+  .sidebar-menu a {
+    display: block;
+    padding: 10px 15px;
+    color: rgb(35, 35, 35);
+    background-color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background 0.3s ease;
+    font-weight: bold;
+  }
+
+  .sidebar-menu a:hover,
+  .sidebar-menu a.active {
+    /* background-color: #babcbd; */
+    background-color: rgb(87, 162, 192);
+  }
     </style>
 </head>
-
 <body>
-{% load static %}
-    <div class="navbar">
-        <!-- <span class="brand">Editing-project</span> -->
+    <nav class="navbar bg-body-tertiary fixed-top">
+  <div class="container-fluid">
+    <div class="row w-100 align-items-center">
+  <div class="col-8 col-lg-11 col-md-10 col-sm-6">
+    <a class="navbar-brand mb-0" href="{% url 'formpage' %}">Neomax Investors</a>
+  </div>
+  <div class="col-4 col-lg-1 col-md-2 col-sm-6 text-end">
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+      aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</div>
 
-        <a href="{% url 'formpage' %}" class="brand">
-            <img src="{% static 'images/phoenix_logo.png' %}" height="40" width="100" alt="Logo" class="logp-img" />
-        </a>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+      <div class="offcanvas-header"> 
+        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Neomax</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <!-- <div class="offcanvas-body">
+        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Dropdown
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Action</a></li>
+              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+          </li>
+        </ul>
+        <form class="d-flex mt-3" role="search">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+      </div> -->
 
-        <span class="nav-toggle" onclick="toggleMenu()">
-            <i class="fas fa-bars"></i>
-        </span>
+<div class="sidebar-menu">
+  <ul>
+    <li>
+      <a href="{% url 'formpage' %}" class="{% if request.resolver_match.url_name == 'formpage' %}active{% endif %}">
+        📊 Dashboard
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'profile' %}" class="{% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+        👤 Profile
+      </a>
+    </li>
 
-        <div class="nav-links" id="navLinks">
-            <a href="{% url 'formpage' %}">Dashboard</a>
-            <a href="{% url 'profile' %}">Profile</a>
-            <a href="{% url 'login' %}" onclick="logoutUser()"><button>Logout</button></a>
-            <!-- <a href="{% url 'profile' %}" title="Profile">
-                <i class="fas fa-user-circle"></i>
-            </a> -->
-        </div>
+    {% if is_main_user or is_sub_mainuser %}
+          <div class="mt-4 px-3">
+            <h5 class="text-center">🙍🏻Users</h5>
+            <ul class="list-unstyled text-black">
+              {% for u in users %}
+              <li>
+                <a href="{% url 'formpage' %}?user_id={{ u.id }}" style="color: black;">
+                  📌 {{ u.username }}
+                </a>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+
+        <li>
+        <a href="{% url 'login' %}" onclick="logoutUser()"><button>Logout</button></a>
+    </li>
+  </ul>
+</div>
     </div>
-
-    <script>
-        function toggleMenu() {
-            const navLinks = document.getElementById("navLinks");
-            navLinks.classList.toggle("active");
-        }
-
-        function logoutUser() {
-            localStorage.removeItem("auth_token");
-        }
-    </script>
-
+  </div>
+</nav>
 </body>
-
 </html>

@@ -35,8 +35,25 @@
     color: #444;
   }
 
-  .edit-toggle-btn {
-    margin-top: 15px;
+  .btn-action {
+    width: 100%;
+    background: linear-gradient(to right, #6366f1, #3b82f6);
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 10px;
+    color: white;
+    transition: background 0.3s ease;
+    margin-top: 20px;
+    text-decoration: none;
+    text-align: center;
+    display: inline-block;
+  }
+
+  .btn-action:hover {
+    background: linear-gradient(to right, #4338ca, #2563eb);
+    color: white;
   }
 
   @media (max-width: 576px) {
@@ -60,19 +77,22 @@
         <div class="col-6 profile-label"><i class="bi bi-telephone-fill me-2"></i>Phone:</div>
         <div class="col-6">{{ user_obj.phone_number }}</div>
       </div>
-      <!-- <div class="row mb-3">
+
+      <!-- Optional Email Display -->
+       <div class="row mb-3">
         <div class="col-6 profile-label"><i class="bi bi-envelope-fill me-2"></i>Email:</div>
         <div class="col-6">{{ user_obj.email }}</div>
-      </div> -->
+      </div> 
 
-      <!-- <div class="text-end edit-toggle-btn">
-        <button class="btn btn-outline-primary" onclick="toggleEdit()">
-          <i class="bi bi-pencil-square me-1"></i>Edit Profile
-        </button>
-      </div> -->
+      <!-- Reset Password Button -->
+      <div class="text-center">
+        <a href="{% url 'change_password' %}" class="btn-action">
+          <i class="me-2"></i>Reset Password
+        </a>
+      </div>
     </div>
 
-    <!-- Edit Form -->
+    <!-- Edit Form (Optional Toggle) -->
     <form method="post" id="editForm" style="display: none;">
       {% csrf_token %}
       <div class="mb-3">

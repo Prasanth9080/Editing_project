@@ -24,22 +24,27 @@
   text-decoration: none;
 }
 
-@media (max-width: 375px){
+@media (max-width: 425px){
     h2 {
       font-size: 18px;
-      font-weight: 600;
+      font-weight: 400;
     }
 }
 
 </style>
 
 <div class="container mt-5">
-  <h2 class="text-center mb-4">
+  <h2 class="text-center mb-4">Neomax Investors Welfare Association Karaikudi - {{ request.user.username }}
+    {% if selected_user and selected_user != request.user %}
+      - Viewing: {{ selected_user.username }}
+    {% endif %}</h2>
+
+  <!-- <h2 class="text-center mb-4">
     Welcome, {{ request.user.username }}
     {% if selected_user and selected_user != request.user %}
       - Viewing: {{ selected_user.username }}
     {% endif %}
-  </h2>
+  </h2> -->
 
  <div class="mb-3 row align-items-center gx-2 gy-2">
   <!-- Add My KYC Button -->

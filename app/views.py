@@ -13,20 +13,63 @@ def generate_otp():
     return ''.join(random.choices(string.digits, k=6))  # 6-digit OTP
 
 
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.contrib.auth.models import BaseUserManager
-from rest_framework_simplejwt.tokens import RefreshToken
+# from django.shortcuts import render, redirect
+# from django.contrib import messages
+# from django.contrib.auth.models import BaseUserManager
+# from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import User  # your custom user model
+# from .models import User  # your custom user model
+
+# def signup_view(request):
+#     if request.method == 'POST':
+#         name = request.POST.get('username')
+#         phone = request.POST.get('phone_number')
+#         email = request.POST.get('email')
+
+#         # Server-side validation
+#         if len(phone) != 10 or not phone.isdigit():
+#             messages.error(request, "Enter a valid 10-digit phone number")
+#             return redirect('signup')
+
+#         if User.objects.filter(phone_number=phone).exists():
+#             messages.error(request, "Phone number already registered")
+#             return redirect('signup')
+
+#         if User.objects.filter(email=email).exists():
+#             messages.error(request, "Email already registered")
+#             return redirect('signup')
+
+#         # Generate random password using BaseUserManager
+#         # random_password = BaseUserManager().make_random_password()
+
+#         # Create user
+#         user = User.objects.create_user(
+#             username=name,
+#             email=email,
+#             phone_number=phone,
+#             # password=random_password
+#         )
+
+#         # Generate JWT token
+#         refresh = RefreshToken.for_user(user)
+#         user.jwt_token = str(refresh.access_token)
+#         user.save()
+
+#         messages.success(request, "Signup successful! Please login.")
+#         return redirect('login')
+
+#     return render(request, 'signup.html')
+
+
+# Signup
 
 def signup_view(request):
     if request.method == 'POST':
         name = request.POST.get('username')
         phone = request.POST.get('phone_number')
         email = request.POST.get('email')
+        password = request.POST.get('password')
 
-        # Server-side validation
         if len(phone) != 10 or not phone.isdigit():
             messages.error(request, "Enter a valid 10-digit phone number")
             return redirect('signup')
@@ -39,18 +82,13 @@ def signup_view(request):
             messages.error(request, "Email already registered")
             return redirect('signup')
 
-        # Generate random password using BaseUserManager
-        # random_password = BaseUserManager().make_random_password()
-
-        # Create user
         user = User.objects.create_user(
             username=name,
-            email=email,
+            email=email, 
             phone_number=phone,
-            # password=random_password
+            password=password
         )
 
-        # Generate JWT token
         refresh = RefreshToken.for_user(user)
         user.jwt_token = str(refresh.access_token)
         user.save()
@@ -60,33 +98,145 @@ def signup_view(request):
 
     return render(request, 'signup.html')
 
+# change password
+
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import update_session_auth_hash
+from django.contrib import messages
+from django.shortcuts import render, redirect
+
+@login_required
+def change_password_view(request):
+    if request.method == 'POST':
+        old_password = request.POST.get('old_password')
+        new_password1 = request.POST.get('new_password1')
+        new_password2 = request.POST.get('new_password2')
+
+        user = request.user
+
+        if not user.check_password(old_password):
+            messages.error(request, '❌ Old password is incorrect.')
+        elif new_password1 != new_password2:
+            messages.error(request, '❌ New passwords do not match.')
+        else:
+            user.set_password(new_password1)
+            user.save()
+            update_session_auth_hash(request, user)  # prevent logout
+            messages.success(request, '✅ Password changed successfully.')
+            return redirect('profile')  # change this to your success page
+
+    return render(request, 'change_password.html')
+
+# test-mail
+
+# from django.core.mail import send_mail
+# from django.http import HttpResponse
+
+# def test_email(request):
+#     send_mail(
+#         'Test Subject',
+#         'This is a test email from Django.',
+#         'prasanthchaandhu02@gmail.com',  # must match EMAIL_HOST_USER in settings
+#         ['prasanthchaandhu02@gmail.com'],  # recipient email
+#         fail_silently=False,
+#     )
+#     return HttpResponse("Email sent!")
+
+# password reset through email
+
+from django.contrib.auth.forms import PasswordResetForm
+from django.shortcuts import render, redirect
+
+def password_reset_request(request):
+    if request.method == "POST":
+        form = PasswordResetForm(request.POST)
+        if form.is_valid():
+            form.save(
+                request=request,
+                use_https=False,  # Set to True if using HTTPS
+                from_email='prasanthchaandhu02@gmail.com',
+                email_template_name='password_reset_email.html',
+            )
+            return redirect('password_reset_done')
+    else:
+        form = PasswordResetForm()
+    return render(request, 'password_reset_form.html', {'form': form})
+
+
+# def login_view(request):
+#     if request.method == 'POST':
+#         phone = request.POST.get('phone_number')
+
+#         try:
+#             user = User.objects.get(phone_number=phone)
+
+#             if not user.jwt_token:
+#                 # Generate new token if missing
+#                 refresh = RefreshToken.for_user(user)
+#                 user.jwt_token = str(refresh.access_token)
+#                 user.save()
+
+#             otp = generate_otp()
+#             otp_storage[phone] = otp
+#             request.session['phone_number'] = phone
+
+#             print(f"\n🔐 OTP for {phone}: {otp}\n")  # Print clearly to terminal
+
+#             messages.success(request, "OTP sent to your number.")
+#             return redirect('verify_otp')
+
+#         except User.DoesNotExist:
+#             messages.error(request, "This number is not registered. Please sign up.")
+#             return redirect('signup')
+
+#     return render(request, 'login.html')
+
+# Login 
+
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
+from django.contrib import messages
+from .models import User
+
 def login_view(request):
     if request.method == 'POST':
         phone = request.POST.get('phone_number')
+        password = request.POST.get('password')
 
         try:
             user = User.objects.get(phone_number=phone)
 
-            if not user.jwt_token:
-                # Generate new token if missing
-                refresh = RefreshToken.for_user(user)
-                user.jwt_token = str(refresh.access_token)
-                user.save()
-
-            otp = generate_otp()
-            otp_storage[phone] = otp
-            request.session['phone_number'] = phone
-
-            print(f"\n🔐 OTP for {phone}: {otp}\n")  # Print clearly to terminal
-
-            messages.success(request, "OTP sent to your number.")
-            return redirect('verify_otp')
+            if user.check_password(password):
+                login(request, user)
+                messages.success(request, "Login successful.")
+                return redirect('formpage')
+            else:
+                messages.error(request, "Incorrect password.")
+                return redirect('login')
 
         except User.DoesNotExist:
-            messages.error(request, "This number is not registered. Please sign up.")
-            return redirect('signup')
+            messages.error(request, "User with this phone number does not exist.")
+            return redirect('login')
 
     return render(request, 'login.html')
+
+
+
+
+
+# Phone number
+
+from django.contrib.auth.backends import ModelBackend
+from .models import User
+
+class PhoneNumberBackend(ModelBackend):
+    def authenticate(self, request, phone_number=None, password=None, **kwargs):
+        try:
+            user = User.objects.get(phone_number=phone_number)
+            if user.check_password(password):
+                return user
+        except User.DoesNotExist:
+            return None
 
 
 def verify_otp_view(request):

@@ -8,6 +8,9 @@
   <!-- Toastify CSS -->
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
+  <!-- Bootstrap css -->
+       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
   <style>
     * {
       box-sizing: border-box;
@@ -163,6 +166,7 @@
         position: absolute;
       }
     }
+    
   </style>
 </head>
 
@@ -172,11 +176,20 @@
 <div class="wrapper">
   {% include 'sidebar.html' %}
 
+  <!-- Main container with fixed top navbar -->
   <div class="main-container">
-    {% include 'navbar.html' %}
-    {% block content %}{% endblock %}
+    <!-- Fixed Navbar -->
+    <div style="position: fixed; top: 0; left: 250px; right: 0; z-index: 1030;">
+      {% include 'navbar.html' %}
+    </div>
+
+    <!-- Page content with top padding to prevent overlap -->
+    <div style="padding-top: 70px;">
+      {% block content %}{% endblock %}
+    </div>
   </div>
 </div>
+
 
 <!-- Toastify JS -->
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
@@ -189,6 +202,8 @@
   {% endif %}
 </div>
 
+<!-- Bootstrap JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <!-- Toastify Script -->
 <script>

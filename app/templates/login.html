@@ -139,7 +139,7 @@
     </div>
 
     <!-- Login Form -->
-    <div class="login-form">
+    <!-- <div class="login-form">
       <h2>Login your account</h2>
       <form method="post" onsubmit="return validatePhone()">
         {% csrf_token %}
@@ -153,7 +153,28 @@
       <div class="signup-link">
         Don't have an account? <a href="{% url 'signup' %}">Sign Up</a>
       </div>
+    </div> -->
+
+    <div class="login-form">
+  <h2>Login - NIWAK</h2>
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <input type="tel" autocomplete="off" name="phone_number" class="form-control" placeholder="Enter 10-digit phone number" maxlength="10" pattern="\d{10}" required>
     </div>
+    <div class="mb-3">
+      <input type="password" autocomplete="off" name="password" class="form-control" placeholder="Enter your Password" required>
+    </div>
+    <div class="d-grid">
+      <button type="submit" class="btn btn-login">Login</button>
+    </div>
+  </form>
+  <div class="signup-link">
+    Don't have an account? <a href="{% url 'signup' %}">Sign Up</a>
+  </div>
+  <a href="{% url 'password_reset' %}">Forgot Password?</a>
+
+</div>
 
   </div>
 </div>
