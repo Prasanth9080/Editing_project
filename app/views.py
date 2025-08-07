@@ -144,23 +144,28 @@ def change_password_view(request):
 
 # password reset through email
 
-from django.contrib.auth.forms import PasswordResetForm
+# views.py
 from django.shortcuts import render, redirect
+from .forms import CustomPasswordResetForm
+from django.contrib import messages
 
 def password_reset_request(request):
+    form = CustomPasswordResetForm(request.POST or None)
     if request.method == "POST":
-        form = PasswordResetForm(request.POST)
         if form.is_valid():
             form.save(
                 request=request,
-                use_https=False,  # Set to True if using HTTPS
+                use_https=False,
                 from_email='prasanthchaandhu02@gmail.com',
                 email_template_name='password_reset_email.html',
             )
+            messages.success(request, "Password reset link sent! Please check your email.")
             return redirect('password_reset_done')
-    else:
-        form = PasswordResetForm()
-    return render(request, 'password_reset_form.html', {'form': form})
+        else:
+            messages.error(request, "Email is not valid. Please enter a valid email address.")
+    return render(request, 'password_reset.html', {'form': form})
+
+
 
 
 # def login_view(request):
@@ -197,7 +202,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib import messages
 from .models import User
-
+ 
 def login_view(request):
     if request.method == 'POST':
         phone = request.POST.get('phone_number')
@@ -219,9 +224,6 @@ def login_view(request):
             return redirect('login')
 
     return render(request, 'login.html')
-
-
-
 
 
 # Phone number
