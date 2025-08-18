@@ -1,101 +1,199 @@
 <div class="row">
+
+  <!-- Membership No -->
   <div class="col-md-6 mb-3">
-    <label>Name:</label>
-    <input type="text" name="name" placeholder="Name" class="form-control" required>
+    <label>Membership No:</label>
+    <input type="number" name="membershipno" class="form-control">
   </div>
+
+  <!-- Depositor Name -->
   <div class="col-md-6 mb-3">
-    <label>Age:</label>
-    <input type="number" name="age" placeholder="Age" class="form-control" required>
+    <label>Depositor's Name:</label>
+    <input type="text" name="depositorsname" class="form-control">
   </div>
+
+  <!-- Depositor Address -->
   <div class="col-md-6 mb-3">
-    <label>Father Name:</label>
-    <input type="text" name="fathername" placeholder="Father Name" class="form-control" required>
+    <label>Depositor's Address:</label>
+    <textarea name="depositorsaddress" class="form-control"></textarea>
   </div>
+
+  <!-- Company Name -->
   <div class="col-md-6 mb-3">
-    <label>Mobile Number:</label>
-    <input type="number" name="mobile_number" placeholder="Mobile Number" class="form-control" maxlength="10" required>
+    <label>Name of the Company:</label>
+    <input type="text" name="nameofthecompany" class="form-control">
   </div>
+
+  <!-- Customer ID -->
+  <div class="col-md-6 mb-3">
+    <label>Customer ID No:</label>
+    <input type="number" name="customeridno" class="form-control">
+  </div>
+
+  <!-- Receipt No -->
+  <div class="col-md-6 mb-3">
+    <label>Receipt No:</label>
+    <input type="number" name="receiptno" class="form-control">
+  </div>
+
+  <!-- MOD No -->
+  <div class="col-md-6 mb-3">
+    <label>MOD No:</label>
+    <input type="number" name="modno" class="form-control">
+  </div>
+
+  <!-- Deposit Amount -->
+  <div class="col-md-6 mb-3">
+    <label>Deposit Amount:</label>
+    <input type="number" name="depositamount" class="form-control">
+  </div>
+
+  <!-- Interest Refund Amount -->
+  <div class="col-md-6 mb-3">
+    <label>Interest Refund Amount:</label>
+    <input type="number" name="intrefundamount" class="form-control">
+  </div>
+
+  <!-- Default Amount -->
+  <div class="col-md-6 mb-3">
+    <label>Default Amount:</label>
+    <input type="number" name="defaultamount" class="form-control">
+  </div>
+
+  <!-- Investment Date -->
+  <div class="col-md-6 mb-3">
+    <label>Investment Date:</label>
+    <input type="date" name="investmentdate" class="form-control">
+  </div>
+
+  <!-- Bondholder Name -->
+  <div class="col-md-6 mb-3">
+    <label>Bondholder Name:</label>
+    <input type="text" name="bondholdername" class="form-control">
+  </div>
+
+  <!-- Project Name -->
+  <div class="col-md-6 mb-3">
+    <label>Project Name:</label>
+    <input type="text" name="projectname" class="form-control">
+  </div>
+
+  <!-- Depositor Mobile Number -->
+  <div class="col-md-6 mb-3">
+    <label>Depositor Mobile Number:</label>
+    <input type="text" name="depositormobile_number" maxlength="12" class="form-control">
+  </div>
+
+  <!-- Agent Name -->
+  <div class="col-md-6 mb-3">
+    <label>Agent Name:</label>
+    <input type="text" name="agentname" class="form-control">
+  </div>
+
+  <!-- Agent Address -->
+  <div class="col-md-6 mb-3">
+    <label>Agent Address:</label>
+    <textarea name="agentaddress" class="form-control"></textarea>
+  </div>
+
+  <!-- Name of Director -->
+  <div class="col-md-6 mb-3">
+    <label>Name of Director:</label>
+    <input type="text" name="nameofdirector" class="form-control">
+  </div>
+
+  <!-- Aadhar Number -->
   <div class="col-md-6 mb-3">
     <label>Aadhar Number:</label>
-    <input type="text" name="aadhar_number" id="aadharInput" class="form-control" maxlength="14" placeholder="Aadhar Number" required>
+    <input type="text" name="aadhar_number" maxlength="14" id="aadharInput" class="form-control">
   </div>
+
+  <!-- Aadhar Front Image -->
   <div class="col-md-6 mb-3">
-    <label>Aadhar Front Image:</label>
-    <input type="file" name="aadhar_front_image" placeholder="Aadhar Front Image" class="form-control" required>
+    <label>Depositor Aadhar Front Image:</label>
+    <input type="file" name="aadhar_front_image" accept="image/*" class="form-control">
   </div>
+
+  <!-- Aadhar Back Image -->
   <div class="col-md-6 mb-3">
-    <label>Aadhar Back Image:</label>
-    <input type="file" name="aadhar_back_image" placeholder="Aadhar Back Image" class="form-control" required>
+    <label>Depositor Aadhar Back Image:</label>
+    <input type="file" name="aadhar_back_image" accept="image/*" class="form-control">
   </div>
+
+  <!-- Passport Photo -->
   <div class="col-md-6 mb-3">
-    <label>Address:</label>
-    <input type="text" name="address" placeholder="Address" class="form-control" required>
+    <label>Depositor Passport Photo:</label>
+    <input type="file" name="passportphoto" accept="image/*" class="form-control">
   </div>
+
+  <!-- PAN Number -->
   <div class="col-md-6 mb-3">
-    <label>Profession:</label>
-    <input type="text" name="profession" placeholder="Profession" class="form-control" required>
+    <label>PAN Number:</label>
+    <input type="text" name="pan_number" class="form-control">
   </div>
+
+  <!-- Ration Number -->
   <div class="col-md-6 mb-3">
-    <label>Leader Contact Number:</label>
-    <input type="text" name="contactSH" placeholder="Leader Contact Number" class="form-control" required maxlength="10">
+    <label>Ration Number:</label>
+    <input type="text" name="ration_number" class="form-control">
   </div>
+
+  <!-- Bank Name -->
   <div class="col-md-6 mb-3">
-    <label>Name of the Leader:</label>
-    <input type="text" name="nameSH" placeholder="Name of the Leader" class="form-control" required>
+    <label>Bank Name:</label>
+    <input type="text" name="bankname" class="form-control">
   </div>
+
+  <!-- Bank Account No -->
   <div class="col-md-6 mb-3">
-    <label>Total Investment Amount:</label>
-    <input type="number" name="investmentamt" placeholder="Total Investment" class="form-control" required>
+    <label>Bank Account No:</label>
+    <input type="text" name="bankaccno" class="form-control">
   </div>
+
+  <!-- IFSC Code -->
   <div class="col-md-6 mb-3">
-    <label>Passport Photo:</label>
-    <input type="file" name="passportphoto" placeholder="Passport Photo" class="form-control" required>
+    <label>IFSC Code:</label>
+    <input type="text" name="ifscno" class="form-control">
   </div>
-  <!-- <div class="col-md-6 mb-3">
+
+  <!-- Bond Details -->
+  <div class="col-md-12 mb-3">
     <label>Bond Details:</label>
     <div id="bondInputs">
-      <input type="file" name="bonds" accept="image/*" class="form-control mb-2">
+      <div class="bond-input-group border p-3 mb-3">
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-12">
+            <h6>Bond Image:</h6>
+            <input type="file" name="bonds" accept="image/*" class="form-control mb-2" required>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12">
+            <h6>Company Name:</h6>
+            <input type="text" name="companyname_0" placeholder="Company Name" class="form-control mb-2" required>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12">
+            <h6>Project Name:</h6>
+            <input type="text" name="projectname_0" placeholder="Project Name" class="form-control mb-2" required>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12">
+            <h6>Amount:</h6>
+            <input type="number" step="0.01" placeholder="Amount" name="amount_0" class="form-control mb-2" required>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12">
+            <h6>Investment Date:</h6>
+            <input type="date" name="investment_date_0" placeholder="Investment Date" class="form-control mb-2" required>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12">
+            <h6>Customer ID:</h6>
+            <input type="text" name="customer_id_0" placeholder="Customer ID" class="form-control mb-2" required>
+          </div>
+        </div>
+      </div>
     </div>
     <button type="button" class="btn btn-sm btn-success" onclick="addBondInput()">+ Add More</button>
-  </div> -->
-  <div class="col-md-12 mb-3">
-  <label>Bond Details:</label>
-  <div id="bondInputs">
-    <div class="bond-input-group border p-3 mb-3">
-  <div class="row">
-    <div class="col-lg-6 col-md-6 col-sm-12">      
-      <h6>Bond Image:</h6>
-      <input type="file" name="bonds" placeholder="Bond Image" accept="image/*" class="form-control mb-2" required>
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-12">
-      <h6>Company Name:</h6>
-      <input type="text" name="companyname_0" placeholder="Company Name" class="form-control mb-2" required>
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-12">
-      <h6>Project Name:</h6>
-      <input type="text" name="projectname_0" placeholder="Project Name" class="form-control mb-2" required>
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-12">
-      <h6>Amount:</h6>
-      <input type="number" step="0.01" placeholder="Amount" name="amount_0" class="form-control mb-2" required>
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-12">
-      <h6>Investment Date:</h6>
-      <input type="date" name="investment_date_0" placeholder="Investment Date" class="form-control mb-2" required>
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-12">
-      <h6>Customer ID:</h6>
-      <input type="text" name="customer_id_0" placeholder="Customer ID" class="form-control mb-2" required>
-    </div>
-  </div>
-</div>
-
   </div>
 
-  <button type="button" class="btn btn-sm btn-success" onclick="addBondInput()">+ Add More</button>
 </div>
 
-</div>
 
 <!-- Add bond images -->
 

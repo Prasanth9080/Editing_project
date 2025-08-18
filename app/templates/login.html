@@ -75,7 +75,7 @@
 
     .login-form h2 {
       font-weight: 600;
-      font-size: 30px;
+      font-size: 25px;
       margin-bottom: 25px;
       text-align: center;
       color: #1e3a8a;
@@ -126,6 +126,16 @@
         padding: 40px 20px;
       }
     }
+
+    @media (max-width: 475px) {
+      .login-form h2 {
+    font-weight: 600;
+    font-size: 18px;
+    margin-bottom: 25px;
+    text-align: center;
+    color: #1e3a8a;
+}
+    }
   </style>
 </head>
 <body>
@@ -156,7 +166,7 @@
     </div> -->
 
     <div class="login-form">
-  <h2>Login - NIWAK</h2>
+  <h2>Login - NIWAK(Association)</h2>
   <form method="post">
     {% csrf_token %}
     <div class="mb-3">

@@ -16,29 +16,54 @@ class User(AbstractUser):
 
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 User = get_user_model()
 
 class MyKYC(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="my_kycs", default='')
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="created_my_kycs")
-    name = models.CharField(max_length=100)
-    age = models.IntegerField(null=True, blank=True)
-    fathername = models.CharField(max_length=100)
-    mobile_number = models.CharField(max_length=15)
+    MEMBERSHIP_CHOICES = [
+        ('senior', 'Senior'),
+        ('junior', 'Junior')
+    ]
+    BOND_IMAGE_TYPE_CHOICES = [
+        ('original', 'Original'),
+        ('xerox', 'Xerox'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="my_kycs", null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="created_my_kycs", null=True, blank=True)
+
+    membershipno = models.IntegerField(null=True, blank=True)
+    depositorsname = models.CharField(max_length=100, blank=True)
+    depositorsaddress = models.TextField(blank=True)
+    nameofthecompany = models.CharField(max_length=100, blank=True)
+    customeridno = models.IntegerField(null=True, blank=True)
+    receiptno = models.IntegerField(null=True, blank=True)
+    modno = models.IntegerField(null=True, blank=True)
+    depositamount = models.IntegerField(null=True, blank=True)
+    intrefundamount = models.IntegerField(null=True, blank=True)
+    defaultamount = models.IntegerField(null=True, blank=True)
+    investmentdate = models.DateTimeField(default=timezone.now)
+    bondholdername = models.CharField(max_length=100, blank=True)
+    projectname = models.CharField(max_length=100, blank=True)
+    depositormobile_number = models.CharField(max_length=15, blank=True)
+    agentname = models.CharField(max_length=100, blank=True)
+    agentaddress = models.TextField(blank=True)
+    nameofdirector = models.CharField(max_length=100, blank=True)
     aadhar_number = models.CharField(max_length=20, null=True, blank=True)
-    aadhar_front_image = models.ImageField(upload_to='aadhar/', null=True, blank=True)
-    aadhar_back_image = models.ImageField(upload_to='pan/', null=True, blank=True)
-    address = models.TextField()
-    profession = models.CharField(max_length=100, null=True, blank=True)
-    contactSH = models.CharField(max_length=100, null=True, blank=True)
-    nameSH = models.CharField(max_length=100, null=True, blank=True)
-    investmentamt = models.IntegerField(null=True, blank=True)
-    passportphoto = models.ImageField(upload_to='passport/', null=True, blank=True)
-    is_hidden = models.BooleanField(default=False)
+    pan_number = models.CharField(max_length=20, blank=True)
+    ration_number = models.CharField(max_length=20, blank=True)
+    bankname = models.CharField(max_length=100, blank=True)
+    bankaccno = models.CharField(max_length=20, blank=True)
+    ifscno = models.CharField(max_length=50, blank=True)
+    aadhar_front_image = models.ImageField(upload_to='kyc/aadhar/', null=True, blank=True)
+    aadhar_back_image = models.ImageField(upload_to='kyc/aadhar/', null=True, blank=True)  # fixed path from 'pan/' to 'aadhar/'
+    passportphoto = models.ImageField(upload_to='kyc/passport/', null=True, blank=True)
 
     def __str__(self):
-        return f"MyKYC - {self.name}"
+        return f"MyKYC - {self.depositorsname}"  # fixed wrong attribute 'self.name'
+
+
 
 
 # -----------------------------

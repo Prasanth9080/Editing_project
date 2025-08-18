@@ -27,12 +27,22 @@ class UserAdmin(admin.ModelAdmin):
 # ----------------------------------------
 # Admin for MyKYC
 # ----------------------------------------
+from django.contrib import admin
+from .models import MyKYC
+
 @admin.register(MyKYC)
 class MyKYCAdmin(admin.ModelAdmin):
-    list_display = ('name', 'created_by', 'name', 'age', 'fathername',
-                    'mobile_number', 'aadhar_number','aadhar_front_image','aadhar_back_image','address',
-                    'profession','contactSH','nameSH','investmentamt','passportphoto')
-    search_fields = ('name', 'mobile_number', 'aadhar_number')
+    list_display = (
+        'membershipno', 'depositorsname', 'bondholdername',
+        'projectname', 'depositormobile_number', 'aadhar_number',
+        'aadhar_front_image', 'aadhar_back_image', 'passportphoto',
+        'pan_number', 'investmentdate', 'depositamount', 'intrefundamount',
+        'defaultamount', 'created_by'
+    )
+    search_fields = (
+        'depositorsname', 'bondholdername', 'projectname',
+        'depositormobile_number', 'aadhar_number', 'pan_number'
+    )
     list_filter = ('created_by',)
 
 # ----------------------------------------

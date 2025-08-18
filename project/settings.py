@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+ 
 from pathlib import Path
 import os
 
@@ -29,7 +29,6 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'app.User'
-
 
 
 INSTALLED_APPS = [
@@ -101,7 +100,7 @@ SIMPLE_JWT = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'editing_db',
+        'NAME': 'editing_db1',
         'USER': 'root',
         'PASSWORD': 'root',
         'HOST': 'localhost',
