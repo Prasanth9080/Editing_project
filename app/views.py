@@ -70,6 +70,10 @@ def signup_view(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
 
+        if User.objects.filter(username=name).exists():
+            messages.error(request, "Username is already exists")
+            return redirect('signup')
+
         if len(phone) != 10 or not phone.isdigit():
             messages.error(request, "Enter a valid 10-digit phone number")
             return redirect('signup')
@@ -160,7 +164,7 @@ def password_reset_request(request):
                 email_template_name='password_reset_email.html',
             )
             messages.success(request, "Password reset link sent! Please check your email.")
-            return redirect('login')
+            return redirect('password_reset_done')
         else:
             messages.error(request, "Email is not valid. Please enter a valid email address.")
     return render(request, 'password_reset.html', {'form': form})
@@ -635,7 +639,7 @@ def download_kyc_excel(request, kyc_type):
         base_row = [
             idx,
             kyc.membershipno,
-            kyc.membershiptype,
+            # kyc.membershiptype,
             kyc.depositorsname,
             kyc.depositorsaddress,
             kyc.nameofthecompany,
@@ -748,7 +752,7 @@ def download_kyc_pdf(request, kyc_type):
         # Main KYC details
         main_table_data = [
             ["Membership No", kyc.membershipno or "—"],
-            ["Membership Type", kyc.membershiptype or "—"],
+            # ["Membership Type", kyc.membershiptype or "—"],
             ["Depositor Name", kyc.depositorsname or "—"],
             ["Depositor Address", kyc.depositorsaddress or "—"],
             ["Company Name", kyc.nameofthecompany or "—"],
@@ -1211,7 +1215,7 @@ def add_my_kyc(request):
             user=data_for_user,
             created_by=created_by,
             membershipno=to_int(request.POST.get('membershipno')),
-            membershiptype=request.POST.get('membershiptype'),
+            # membershiptype=request.POST.get('membershiptype'),
             depositorsname=request.POST.get('depositorsname'),
             depositorsaddress=request.POST.get('depositorsaddress'),
             nameofthecompany=request.POST.get('nameofthecompany'),

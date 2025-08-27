@@ -3,7 +3,7 @@
   <!-- Membership No -->
   <div class="col-md-6 mb-3">
     <label>Membership No:</label>
-    <input type="number" name="membershipno" class="form-control">
+    <input type="number" name="membershipno" class="form-control" required>
   </div>
 
   <!-- Depositor Name -->
@@ -160,7 +160,7 @@
   <div class="col-md-12 mb-3">
     <label>Bond Details:</label>
     <div id="bondInputs">
-      <div class="bond-input-group border p-3 mb-3">
+      <div class="bond-input-group bg-secondary text-white border p-3 mb-3">
         <div class="row">
           <div class="col-lg-6 col-md-6 col-sm-12">
             <h6>Bond Image:</h6>
@@ -243,7 +243,7 @@ function addBondInput() {
   const bondInputs = document.getElementById('bondInputs');
 
   const group = document.createElement('div');
-  group.className = 'bond-input-group border p-3 mb-3';
+  group.className = 'bond-input-group bg-secondary text-white border p-3 mb-3';
   group.innerHTML = `
     <div class="row">
       <div class="col-md-6 mb-3">
