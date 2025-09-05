@@ -68,29 +68,49 @@
     <h3 class="text-center mb-4"><i class="bi bi-person-circle me-2"></i>User Profile</h3>
 
     <!-- Profile Display -->
-    <div id="profileDisplay">
-      <div class="row mb-3">
-        <div class="col-6 profile-label"><i class="bi bi-person-fill me-2"></i>Name:</div>
-        <div class="col-6">{{ user_obj.username }}</div>
+    <div class="card shadow-sm border-0 rounded-3" style="max-width: 500px; margin: auto;">
+  <div class="card-body" id="profileDisplay">
+    
+    <!-- Name -->
+    <div class="row mb-3">
+      <div class="col-6 profile-label">
+        <i class="bi bi-person-fill me-2"></i>Name:
       </div>
-      <div class="row mb-3">
-        <div class="col-6 profile-label"><i class="bi bi-telephone-fill me-2"></i>Phone:</div>
-        <div class="col-6">{{ user_obj.phone_number }}</div>
-      </div>
-
-      <!-- Optional Email Display -->
-       <div class="row mb-3">
-        <div class="col-6 profile-label"><i class="bi bi-envelope-fill me-2"></i>Email:</div>
-        <div class="col-6">{{ user_obj.email }}</div>
-      </div> 
-
-      <!-- Reset Password Button -->
-      <div class="text-center">
-        <a href="{% url 'change_password' %}" class="btn-action">
-          <i class="me-2"></i>Reset Password
-        </a>
+      <div class="col-6">
+        {{ user_obj.username }}
       </div>
     </div>
+
+    <!-- Phone -->
+    <div class="row mb-3">
+      <div class="col-6 profile-label">
+        <i class="bi bi-telephone-fill me-2"></i>Phone:
+      </div>
+      <div class="col-6">
+        {{ user_obj.phone_number }}
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="row mb-3">
+      <div class="col-6 profile-label">
+        <i class="bi bi-envelope-fill me-2"></i>Email:
+      </div>
+      <div class="col-6">
+        {{ user_obj.email }}
+      </div>
+    </div>
+
+    <!-- Reset Password Button -->
+    <div class="text-center mt-3">
+      <a href="{% url 'change_password' %}" class="btn btn-primary px-4">
+        Reset Password
+      </a>
+    </div>
+    
+  </div>
+</div>
+
 
     <!-- Edit Form (Optional Toggle) -->
     <form method="post" id="editForm" style="display: none;">

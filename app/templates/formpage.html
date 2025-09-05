@@ -24,6 +24,10 @@
   text-decoration: none;
 }
 
+.bond-entry {
+    background-color: #CFDAC8;
+  }
+
 @media (max-width: 425px){
     h2 {
       font-size: 18px;
@@ -38,6 +42,7 @@
     {% if selected_user and selected_user != request.user %}
       - Viewing: {{ selected_user.username }}
     {% endif %}</h2>
+    <h4 class="text-center fw-bold mb-4">GOVT.REG.NO (SRG/Trichy/17/2024)</h4>
 
   <!-- <h2 class="text-center mb-4">
     Welcome, {{ request.user.username }}
@@ -151,34 +156,30 @@
         <th rowspan="2">Membership No</th>
         <th rowspan="2">Depositor's Name</th>
         <th rowspan="2">Depositor's Address</th>
-        <th rowspan="2">Name of the Company</th>
-        <th rowspan="2">Customer ID No</th>
-        <th rowspan="2">Receipt No</th>
-        <th rowspan="2">Agreement MOD No</th>
-        <th rowspan="2">Deposit Amount</th>
-        <th rowspan="2">Interest Refund Amount</th>
-        <th rowspan="2">Default Amount</th>
-        <th rowspan="2">Bond Holder Name</th>
+        <!-- <th rowspan="2">Project Name</th> -->
         <th rowspan="2">Depositor Mobile No.</th>
-        <th rowspan="2">Agent Name</th>
-        <th rowspan="2">Agent Address</th>
-        <th rowspan="2">Name of Director</th>
         <th rowspan="2">Aadhar Number</th>
         <th rowspan="2">PAN Number</th>
         <th rowspan="2">Ration Number</th>
         <th rowspan="2">Bank Name</th>
         <th rowspan="2">Bank A/C No</th>
         <th rowspan="2">IFSC No</th>
+        <th rowspan="2">Agent Name</th>
+        <th rowspan="2">Agent Address</th>
+        <th rowspan="2">Name of the Director</th>
         <th rowspan="2">Depositor Photo</th>
         <th rowspan="2">Depositor Aadhar Front photo</th>
         <th rowspan="2">Depositor Aadhar Back photo</th>
-        <th colspan="6">Bond Details</th>
+        <th colspan="9">Bond Details</th>
         <th rowspan="2">Actions</th>
       </tr>
       <tr>
+        <th>Bond Holder Name</th>
         <th>Bond Photo</th>
         <th>Company Name</th>
         <th>Project Name</th>
+        <th>Interest Refund Amount</th>
+        <th>Balance / Default Amount</th>
         <th>Deposit Amount</th>
         <th>Investment Date</th>
         <th>Customer ID</th>
@@ -194,24 +195,17 @@
               <td rowspan="{{ kyc.bonds.count }}">{{ kyc.membershipno }}</td>
               <td rowspan="{{ kyc.bonds.count }}">{{ kyc.depositorsname }}</td>
               <td rowspan="{{ kyc.bonds.count }}">{{ kyc.depositorsaddress }}</td>
-              <td rowspan="{{ kyc.bonds.count }}">{{ kyc.nameofthecompany }}</td>
-              <td rowspan="{{ kyc.bonds.count }}">{{ kyc.customeridno }}</td>
-              <td rowspan="{{ kyc.bonds.count }}">{{ kyc.receiptno }}</td>
-              <td rowspan="{{ kyc.bonds.count }}">{{ kyc.modno }}</td>
-              <td rowspan="{{ kyc.bonds.count }}">{{ kyc.depositamount }}</td>
-              <td rowspan="{{ kyc.bonds.count }}">{{ kyc.intrefundamount }}</td>
-              <td rowspan="{{ kyc.bonds.count }}">{{ kyc.defaultamount }}</td>
-              <td rowspan="{{ kyc.bonds.count }}">{{ kyc.bondholdername }}</td>
+              <!-- <td rowspan="{{ kyc.bonds.count }}">{{ kyc.projectname }}</td> -->
               <td rowspan="{{ kyc.bonds.count }}">{{ kyc.depositormobile_number }}</td>
-              <td rowspan="{{ kyc.bonds.count }}">{{ kyc.agentname }}</td>
-              <td rowspan="{{ kyc.bonds.count }}">{{ kyc.agentaddress }}</td>
-              <td rowspan="{{ kyc.bonds.count }}">{{ kyc.nameofdirector }}</td>
               <td rowspan="{{ kyc.bonds.count }}">{{ kyc.aadhar_number }}</td>
               <td rowspan="{{ kyc.bonds.count }}">{{ kyc.pan_number }}</td>
               <td rowspan="{{ kyc.bonds.count }}">{{ kyc.ration_number }}</td>
               <td rowspan="{{ kyc.bonds.count }}">{{ kyc.bankname }}</td>
               <td rowspan="{{ kyc.bonds.count }}">{{ kyc.bankaccno }}</td>
               <td rowspan="{{ kyc.bonds.count }}">{{ kyc.ifscno }}</td>
+              <td rowspan="{{ kyc.bonds.count }}">{{ kyc.agentname }}</td>
+              <td rowspan="{{ kyc.bonds.count }}">{{ kyc.agentaddress }}</td>
+              <td rowspan="{{ kyc.bonds.count }}">{{ kyc.nameofdirector }}</td>
               <td rowspan="{{ kyc.bonds.count }}">
                 {% if kyc.passportphoto %}
                   <img src="{{ kyc.passportphoto.url }}" class="img-fluid table-img" style="max-height: 80px;">
@@ -230,6 +224,7 @@
             {% endif %}
 
             <!-- Bond Details -->
+            <td>{{ bond.bondholdername }}</td> 
             <td>
               {% if bond.image %}
                 <img src="{{ bond.image.url }}" class="img-fluid" style="max-height: 80px;">
@@ -239,6 +234,8 @@
             </td>
             <td>{{ bond.companyname }}</td>
             <td>{{ bond.projectname }}</td>
+            <td>₹{{ bond.refundamount }}</td>
+            <td>₹{{ bond.balanceamount }}</td>
             <td>₹{{ bond.amount }}</td>
             <td>{{ bond.investment_date|date:"d M Y" }}</td>
             <td>{{ bond.customer_id }}</td>
@@ -258,19 +255,19 @@
           <tr>
             <td>{{ forloop.counter }}</td>
             <td>{{ kyc.membershipno }}</td>
-            <td>{{ kyc.membershiptype }}</td>
+            <!-- <td>{{ kyc.membershiptype }}</td> -->
             <td>{{ kyc.depositorsname }}</td>
             <td>{{ kyc.depositorsaddress }}</td>
-            <td>{{ kyc.nameofthecompany }}</td>
-            <td>{{ kyc.customeridno }}</td>
-            <td>{{ kyc.receiptno }}</td>
-            <td>{{ kyc.modno }}</td>
-            <td>{{ kyc.bondholdername }}</td>
             <td>{{ kyc.depositormobile_number }}</td>
+            <td>{{ kyc.aadhar_number }}</td>
+            <td>{{ kyc.pan_number }}</td>
+            <td>{{ kyc.ration_number }}</td>
+            <td>{{ kyc.bankname }}</td>
+            <td>{{ kyc.bankaccno }}</td>
+            <td>{{ kyc.ifscno }}</td>
             <td>{{ kyc.agentname }}</td>
             <td>{{ kyc.agentaddress }}</td>
             <td>{{ kyc.nameofdirector }}</td>
-            <td>{{ kyc.aadhar_number }}</td>
             <td>
               {% if kyc.aadhar_front_image %}
                 <img src="{{ kyc.aadhar_front_image.url }}" class="img-fluid table-img" style="max-height: 80px;">
@@ -281,17 +278,12 @@
                 <img src="{{ kyc.aadhar_back_image.url }}" class="img-fluid table-img" style="max-height: 80px;">
               {% endif %}
             </td>
-            <td>{{ kyc.pan_number }}</td>
-            <td>{{ kyc.ration_number }}</td>
-            <td>{{ kyc.bankname }}</td>
-            <td>{{ kyc.bankaccno }}</td>
-            <td>{{ kyc.ifscno }}</td>
             <td>
               {% if kyc.passportphoto %}
                 <img src="{{ kyc.passportphoto.url }}" class="img-fluid table-img" style="max-height: 80px;">
               {% endif %}
             </td>
-            <td colspan="6" class="text-center text-muted">No Bond Info</td>
+            <td colspan="9" class="text-center text-muted">No Bond Info</td>
             <td>
               {% if is_main_user or request.user == kyc.created_by %}
                 <a href="{% url 'edit_kyc' kyc.id 'my' %}" class="btn btn-sm btn-info mb-1">Edit</a><br>
@@ -306,8 +298,6 @@
     </tbody>
   </table>
     </div>
-
-
 
   {% else %}
     <p>No personal KYC entries found.</p>
@@ -372,7 +362,9 @@
   <div class="modal-content">
     <div class="d-flex justify-content-between">
       <div><h5>Add My KYC</h5></div>
-      <div><button type="button" class="btn-close float-end" onclick="toggleModal('myKycModal')"></button></div>
+      <div>
+        <button type="button" class="btn-close float-end" onclick="toggleModal('myKycModal')"></button>
+      </div>
     </div>
     <form method="post" action="{% url 'add_my_kyc' %}" enctype="multipart/form-data">
       {% csrf_token %}

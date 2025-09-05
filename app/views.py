@@ -70,6 +70,10 @@ def signup_view(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
 
+        if " " in name:
+            messages.error(request, "Username must not contain spaces")
+            return redirect('signup')
+
         if User.objects.filter(username=name).exists():
             messages.error(request, "Username is already exists")
             return redirect('signup')
@@ -339,16 +343,8 @@ def form_page(request):
             "membershiptype": request.POST.get("membershiptype"),
             "depositorsname": request.POST.get("depositorsname"),
             "depositorsaddress": request.POST.get("depositorsaddress"),
-            "nameofthecompany": request.POST.get("nameofthecompany"),
-            "customeridno": request.POST.get("customeridno"),
-            "receiptno": request.POST.get("receiptno"),
-            "modno": request.POST.get("modno"),
-            "depositamount": request.POST.get("depositamount"),
-            "intrefundamount": request.POST.get("intrefundamount"),
-            "defaultamount": request.POST.get("defaultamount"),
-            "investmentdate": request.POST.get("investmentdate"),
             "bondholdername": request.POST.get("bondholdername"),
-            "projectname": request.POST.get("projectname"),
+            # "projectname": request.POST.get("projectname"),
             "depositormobile_number": request.POST.get("depositormobile_number"),
             "agentname": request.POST.get("agentname"),
             "agentaddress": request.POST.get("agentaddress"),
@@ -374,9 +370,13 @@ def form_page(request):
             if company_key not in request.POST:
                 break
             bond_entries.append({
+                ""
+                "bondholdername": request.POST.get(f"bondholdername_{index}"),
                 "bond_image": request.FILES.getlist("bonds")[index] if len(request.FILES.getlist("bonds")) > index else None,
                 "company_name": request.POST.get(company_key),
                 "project_name": request.POST.get(f"projectname_{index}"),
+                "refundamount": request.POST.get(f"refundamount_{index}"),
+                "balanceamount": request.POST.get(f"balanceamount_{index}"),
                 "amount": request.POST.get(f"amount_{index}"),
                 "investment_date": request.POST.get(f"investment_date_{index}"),
                 "customer_id": request.POST.get(f"customer_id_{index}"),
@@ -409,9 +409,12 @@ def form_page(request):
             BondImage.objects.create(
                 sub_kyc=kyc_obj if is_sub_kyc else None,
                 my_kyc=kyc_obj if not is_sub_kyc else None,
+                bondholdername=bond["bondholdername"],
                 image=bond["bond_image"],
                 company_name=bond["company_name"],
                 project_name=bond["project_name"],
+                refundamount=bond["refundamount"],
+                balanceamount=bond["balanceamount"],
                 amount=bond["amount"],
                 investment_date=bond["investment_date"],
                 customer_id=bond["customer_id"],
@@ -451,29 +454,29 @@ def edit_kyc(request, kyc_id, kyc_type):
     if request.method == "POST":
         # Text fields
         kyc.membershipno = request.POST.get("membershipno")
-        kyc.membershiptype = request.POST.get("membershiptype")
+        # kyc.membershiptype = request.POST.get("membershiptype")
         kyc.depositorsname = request.POST.get("depositorsname")
         kyc.depositorsaddress = request.POST.get("depositorsaddress")
-        kyc.nameofthecompany = request.POST.get("nameofthecompany")
-        kyc.customeridno = request.POST.get("customeridno")
-        kyc.receiptno = request.POST.get("receiptno")
-        kyc.modno = request.POST.get("modno")
-        kyc.depositamount = request.POST.get("depositamount")
-        kyc.intrefundamount = request.POST.get("intrefundamount")
-        kyc.defaultamount = request.POST.get("defaultamount")
-        kyc.investmentdate = request.POST.get("investmentdate")
+        # kyc.nameofthecompany = request.POST.get("nameofthecompany")
+        # kyc.customeridno = request.POST.get("customeridno")
+        # kyc.receiptno = request.POST.get("receiptno")
+        # kyc.modno = request.POST.get("modno")
+        # kyc.depositamount = request.POST.get("depositamount")
+        # kyc.intrefundamount = request.POST.get("intrefundamount")
+        # kyc.defaultamount = request.POST.get("defaultamount")
+        # kyc.investmentdate = request.POST.get("investmentdate")
         kyc.bondholdername = request.POST.get("bondholdername")
-        kyc.projectname = request.POST.get("projectname")
+        # kyc.projectname = request.POST.get("projectname")
         kyc.depositormobile_number = request.POST.get("depositormobile_number")
-        kyc.agentname = request.POST.get("agentname")
-        kyc.agentaddress = request.POST.get("agentaddress")
-        kyc.nameofdirector = request.POST.get("nameofdirector")
         kyc.aadhar_number = request.POST.get("aadhar_number")
         kyc.pan_number = request.POST.get("pan_number")
         kyc.ration_number = request.POST.get("ration_number")
         kyc.bankname = request.POST.get("bankname")
         kyc.bankaccno = request.POST.get("bankaccno")
         kyc.ifscno = request.POST.get("ifscno")
+        kyc.agentname = request.POST.get("agentname")
+        kyc.agentaddress = request.POST.get("agentaddress")
+        kyc.nameofdirector = request.POST.get("nameofdirector")
 
         # File fields — update only if a new file is uploaded
         if request.FILES.get("aadhar_front_image"):
@@ -492,6 +495,7 @@ def edit_kyc(request, kyc_id, kyc_type):
                 continue
 
             # Update bond image if new one is uploaded
+            bond.bondholdername = request.POST.get(f"bondholdername_{bond_id}", "")
             new_image = request.FILES.get(f"bond_image_{bond_id}")
             if new_image:
                 bond.image = new_image
@@ -499,6 +503,8 @@ def edit_kyc(request, kyc_id, kyc_type):
             bond.companyname = request.POST.get(f"companyname_{bond_id}", "")
             bond.projectname = request.POST.get(f"projectname_{bond_id}", "")
             bond.amount = request.POST.get(f"amount_{bond_id}") or 0
+            bond.refundamount = request.POST.get(f"refundamount_{bond_id}", "")
+            bond.balanceamount = request.POST.get(f"balanceamount_{bond_id}", "")
             bond.investment_date = request.POST.get(f"investment_date_{bond_id}") or None
             bond.customer_id = request.POST.get(f"customer_id_{bond_id}", "")
             bond.save()
@@ -508,23 +514,30 @@ def edit_kyc(request, kyc_id, kyc_type):
         for bond_id in delete_ids:
             bond = BondImage.objects.filter(id=bond_id).first()
             if bond:
-                bond.image.delete(save=False)
+                if bond.image:
+                    bond.image.delete(save=False)
                 bond.delete()
 
         # Add new bond images
+        new_bondholder_names = request.POST.getlist("new_bondholdername")
         new_bond_files = request.FILES.getlist("new_bonds")
         new_company_names = request.POST.getlist("new_companyname")
         new_project_names = request.POST.getlist("new_projectname")
         new_amounts = request.POST.getlist("new_amount")
+        new_refundamounts = request.POST.getlist("new_refundamount")
+        new_balanceamounts = request.POST.getlist("new_balanceamount")
         new_dates = request.POST.getlist("new_investment_date")
         new_customer_ids = request.POST.getlist("new_customer_id")
 
         for i, bond_img in enumerate(new_bond_files):
             bond_data = {
+                "bondholdername": new_bondholder_names[i] if i < len(new_bondholder_names) else "",
                 "image": bond_img,
                 "companyname": new_company_names[i] if i < len(new_company_names) else "",
                 "projectname": new_project_names[i] if i < len(new_project_names) else "",
                 "amount": new_amounts[i] if i < len(new_amounts) else 0,
+                "refundamount": new_refundamounts[i] if i < len(new_refundamounts) else "",
+                "balanceamount": new_balanceamounts[i] if i < len(new_balanceamounts) else "",
                 "investment_date": new_dates[i] if i < len(new_dates) else None,
                 "customer_id": new_customer_ids[i] if i < len(new_customer_ids) else "",
             }
@@ -593,13 +606,13 @@ def download_kyc_excel(request, kyc_type):
     sheet.title = "KYC Details"
 
     headers = [
-        'S.No', 'Membership No', 'Membership Type', 'Depositor Name', 'Depositor Address',
-        'Name of Company', 'Customer ID No', 'Receipt No', 'MOD No', 'Bond Holder Name',
-        'Mobile', 'Agent Name', 'Agent Address', 'Name of Director', 'Aadhar Number',
-        'Aadhar Front Image URL', 'Aadhar Back Image URL', 'PAN Number', 'Ration Number',
-        'Bank Name', 'Bank A/C No', 'IFSC No', 'Passport Photo URL',
-        'Bond S.No', 'Bond Image URL', 'Bond Company Name', 'Bond Project Name',
-        'Deposit Amount', 'Investment Date', 'Bond Customer ID'
+        'S.No', 'Membership No', 'Depositor Name', 'Depositor Address',
+        'Mobile', 'Aadhar Number',
+        'PAN Number', 'Ration Number',
+        'Bank Name', 'Bank A/C No', 'IFSC No', 'Agent Name', 'Agent Address', 'Name of Director', 'Passport Photo URL',
+        'Aadhar Front Image URL', 'Aadhar Back Image URL',
+        'Bond S.No','Bond Holder Name', 'Image URL', 'Company Name', 'Project Name', 'Deposit Amount',
+        'Interest Refund Amount', 'Default Amount' , 'Investment Date', 'Customer ID'
     ]
     sheet.append(headers)
 
@@ -642,24 +655,20 @@ def download_kyc_excel(request, kyc_type):
             # kyc.membershiptype,
             kyc.depositorsname,
             kyc.depositorsaddress,
-            kyc.nameofthecompany,
-            kyc.customeridno,
-            kyc.receiptno,
-            kyc.modno,
-            kyc.bondholdername,
+            # kyc.projectname,
             kyc.depositormobile_number,
-            kyc.agentname,
-            kyc.agentaddress,
-            kyc.nameofdirector,
             kyc.aadhar_number,
-            aadhar_front_url,
-            aadhar_back_url,
             kyc.pan_number,
             kyc.ration_number,
             kyc.bankname,
             kyc.bankaccno,
             kyc.ifscno,
-            passport_url
+            kyc.agentname,
+            kyc.agentaddress,
+            kyc.nameofdirector,
+            passport_url,
+            aadhar_front_url,
+            aadhar_back_url,
         ]
         sheet.append(base_row + [''] * 7)  # Empty bond columns for KYC row
 
@@ -667,13 +676,16 @@ def download_kyc_excel(request, kyc_type):
         bonds = list(kyc.bonds.all())
         for b_idx, bond in enumerate(bonds, start=1):
             bond_image_url = bond.image.url if bond.image and bond.image.name else ''
-            bond_row = [''] * 23  # empty KYC columns
+            bond_row = [''] * 17  # empty KYC columns
             bond_row += [
                 b_idx,
+                bond.bondholdername,
                 bond_image_url,
                 bond.companyname,
                 bond.projectname,
                 bond.amount,
+                bond.refundamount,
+                bond.balanceamount,
                 date_format(bond.investment_date, 'd-m-Y') if bond.investment_date else '',
                 bond.customer_id
             ]
@@ -700,7 +712,6 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import mm
 import os
-
 from .models import MyKYC, SubKYC
 
 
@@ -755,27 +766,21 @@ def download_kyc_pdf(request, kyc_type):
             # ["Membership Type", kyc.membershiptype or "—"],
             ["Depositor Name", kyc.depositorsname or "—"],
             ["Depositor Address", kyc.depositorsaddress or "—"],
-            ["Company Name", kyc.nameofthecompany or "—"],
-            ["Customer ID", kyc.customeridno or "—"],
-            ["Receipt No", kyc.receiptno or "—"],
-            ["MOD No", kyc.modno or "—"],
-            ["Deposit Amount", kyc.depositamount or "—"],
-            ["Int Refund Amount", kyc.intrefundamount or "—"],
-            ["Default Amount", kyc.defaultamount or "—"],
-            ["Bondholder Name", kyc.bondholdername or "—"],
+            # ["Project Name", kyc.projectname or "—"],
             ["Depositor Mobile", kyc.depositormobile_number or "—"],
-            ["Agent Name", kyc.agentname or "—"],
-            ["Agent Address", kyc.agentaddress or "—"],
-            ["Director Name", kyc.nameofdirector or "—"],
             ["Aadhar No", kyc.aadhar_number or "—"],
-            ["Aadhar Front", Image(kyc.aadhar_front_image.path, width=20*mm, height=15*mm) if kyc.aadhar_front_image and os.path.exists(kyc.aadhar_front_image.path) else "—"],
-            ["Aadhar Back", Image(kyc.aadhar_back_image.path, width=20*mm, height=15*mm) if kyc.aadhar_back_image and os.path.exists(kyc.aadhar_back_image.path) else "—"],
             ["PAN No", kyc.pan_number or "—"],
             ["Ration Card No", kyc.ration_number or "—"],
             ["Bank Name", kyc.bankname or "—"],
             ["Account No", kyc.bankaccno or "—"],
             ["IFSC Code", kyc.ifscno or "—"],
+            ["Agent Name", kyc.agentname or "—"],
+            ["Agent Address", kyc.agentaddress or "—"],
+            ["Director Name", kyc.nameofdirector or "—"],
             ["Passport Photo", Image(kyc.passportphoto.path, width=20*mm, height=25*mm) if kyc.passportphoto and os.path.exists(kyc.passportphoto.path) else "—"],
+            ["Aadhar Front", Image(kyc.aadhar_front_image.path, width=20*mm, height=15*mm) if kyc.aadhar_front_image and os.path.exists(kyc.aadhar_front_image.path) else "—"],
+            ["Aadhar Back", Image(kyc.aadhar_back_image.path, width=20*mm, height=15*mm) if kyc.aadhar_back_image and os.path.exists(kyc.aadhar_back_image.path) else "—"],
+
         ]
 
         main_table = Table(main_table_data, colWidths=[50*mm, 110*mm])
@@ -799,11 +804,14 @@ def download_kyc_pdf(request, kyc_type):
             elements.append(Spacer(1, 2*mm))
 
             bond_table_data = [
+                ["Bond Holder Name", bond.bondholdername or "—"],
                 ["Investment Date", bond.investment_date.strftime('%d-%m-%Y') if bond.investment_date else "—"],
                 ["Bond Image", Image(bond.image.path, width=20*mm, height=15*mm) if bond.image and os.path.exists(bond.image.path) else "—"],
                 ["Project Name", bond.projectname or "—"],
-                ["Company Name", getattr(bond, "companyname", "—") or "—"],
                 ["Amount", getattr(bond, "amount", "—") or "—"],
+                ["refundamount", getattr(bond, "refundamount", "—") or "—"],
+                ["balanceamount", getattr(bond, "balanceamount", "—") or "—"],
+                ["Company Name", getattr(bond, "companyname", "—") or "—"],
                 ["Customer ID", getattr(bond, "customer_id", "—") or "—"],
             ]
 
@@ -1218,16 +1226,8 @@ def add_my_kyc(request):
             # membershiptype=request.POST.get('membershiptype'),
             depositorsname=request.POST.get('depositorsname'),
             depositorsaddress=request.POST.get('depositorsaddress'),
-            nameofthecompany=request.POST.get('nameofthecompany'),
-            customeridno=to_int(request.POST.get('customeridno')),
-            receiptno=to_int(request.POST.get('receiptno')),
-            modno=to_int(request.POST.get('modno')),
-            depositamount=to_int(request.POST.get('depositamount')),
-            intrefundamount=to_int(request.POST.get('intrefundamount')),
-            defaultamount=to_int(request.POST.get('defaultamount')),
-            investmentdate=request.POST.get('investmentdate') or timezone.now(),
             bondholdername=request.POST.get('bondholdername'),
-            projectname=request.POST.get('projectname'),
+            # projectname=request.POST.get('projectname'),
             depositormobile_number=request.POST.get('depositormobile_number'),
             agentname=request.POST.get('agentname'),
             agentaddress=request.POST.get('agentaddress'),
@@ -1248,9 +1248,12 @@ def add_my_kyc(request):
         for i, bond_file in enumerate(bond_files):
             BondImage.objects.create(
                 my_kyc=my_kyc,
+                bondholdername=request.POST.get(f'bondholdername_{i}'),
                 image=bond_file,
                 companyname=request.POST.get(f'companyname_{i}'),
                 projectname=request.POST.get(f'projectname_{i}'),
+                refundamount=request.POST.get(f'refundamount_{i}'),
+                balanceamount=request.POST.get(f'balanceamount_{i}'),
                 amount=to_int(request.POST.get(f'amount_{i}')) or 0,
                 investment_date=request.POST.get(f'investment_date_{i}') or datetime.date.today(),
                 customer_id=request.POST.get(f'customer_id_{i}')

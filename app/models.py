@@ -36,16 +36,7 @@ class MyKYC(models.Model):
     membershipno = models.IntegerField(null=True, blank=True)
     depositorsname = models.CharField(max_length=100, blank=True)
     depositorsaddress = models.TextField(blank=True)
-    nameofthecompany = models.CharField(max_length=100, blank=True)
-    customeridno = models.IntegerField(null=True, blank=True)
-    receiptno = models.IntegerField(null=True, blank=True)
-    modno = models.IntegerField(null=True, blank=True)
-    depositamount = models.IntegerField(null=True, blank=True)
-    intrefundamount = models.IntegerField(null=True, blank=True)
-    defaultamount = models.IntegerField(null=True, blank=True)
-    investmentdate = models.DateTimeField(default=timezone.now)
-    bondholdername = models.CharField(max_length=100, blank=True)
-    projectname = models.CharField(max_length=100, blank=True)
+    bondholdername = models.CharField(max_length=100, blank=True, null=True)
     depositormobile_number = models.CharField(max_length=15, blank=True)
     agentname = models.CharField(max_length=100, blank=True)
     agentaddress = models.TextField(blank=True)
@@ -62,9 +53,6 @@ class MyKYC(models.Model):
 
     def __str__(self):
         return f"MyKYC - {self.depositorsname}"  # fixed wrong attribute 'self.name'
-
-
-
 
 # -----------------------------
 # Model 2: SubKYC (Sub KYC)
@@ -107,6 +95,9 @@ class BondImage(models.Model):
     investment_date = models.DateField(default=datetime.date.today)  # ✅ CORRECT DEFAULT
     customer_id = models.CharField(max_length=10,)
     amount = models.IntegerField(null=True, blank=True, default=0)
+    refundamount = models.IntegerField(null=True, blank=True, default=0)
+    balanceamount = models.IntegerField(null=True, blank=True, default=0)
+    bondholdername = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
         return f"BondImage ({self.image.name})"

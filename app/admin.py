@@ -33,14 +33,13 @@ from .models import MyKYC
 @admin.register(MyKYC)
 class MyKYCAdmin(admin.ModelAdmin):
     list_display = (
-        'membershipno', 'depositorsname', 'bondholdername',
-        'projectname', 'depositormobile_number', 'aadhar_number',
+        'membershipno', 'depositorsname',
+        'depositormobile_number', 'aadhar_number',
         'aadhar_front_image', 'aadhar_back_image', 'passportphoto',
-        'pan_number', 'investmentdate', 'depositamount', 'intrefundamount',
-        'defaultamount', 'created_by'
+        'pan_number', 'created_by'
     )
     search_fields = (
-        'depositorsname', 'bondholdername', 'projectname',
+        'depositorsname', 'bondholdername',
         'depositormobile_number', 'aadhar_number', 'pan_number'
     )
     list_filter = ('created_by',)
@@ -65,8 +64,8 @@ from django.utils.html import format_html
 class BondImageAdmin(admin.ModelAdmin):
     list_display = (
         'id','username', 'image_tag', 'my_kyc', 'sub_kyc',
-        'companyname', 'projectname', 'amount',
-        'investment_date', 'customer_id'
+        'companyname', 'projectname', 'amount', 'refundamount', 'balanceamount',
+        'investment_date', 'customer_id','bondholdername'
     )
     search_fields = ('companyname', 'projectname', 'customer_id')
     list_filter = ('investment_date', 'companyname')
