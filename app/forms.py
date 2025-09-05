@@ -20,3 +20,5 @@ class CustomPasswordResetForm(PasswordResetForm):
         if not User.objects.filter(email=email).exists():
             raise ValidationError("Email is not valid, please enter a valid email.")
         return email
+    
+    
