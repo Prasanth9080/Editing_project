@@ -2,32 +2,38 @@
 
   <!-- Membership No -->
   <div class="col-md-6 mb-3">
-    <label>Membership No:</label>
+    <label>Membership No:<strong style="color: red;">*</strong></label>
     <input type="number" name="membershipno" placeholder="Membership No." class="form-control" required>
   </div>
 
   <!-- Depositor Name -->
   <div class="col-md-6 mb-3">
-    <label>Depositor's Name:</label>
-    <input type="text" name="depositorsname" placeholder="Depositer's Name" class="form-control">
+    <label>Depositor's Head of the Family Name:<strong style="color: red;">*</strong></label>
+    <input type="text" name="depositorsname" placeholder="Depositer's Head of the Family Name" class="form-control" required>
+  </div>
+
+  <!-- Depositor Mail ID -->
+  <div class="col-md-6 mb-3">
+    <label>Depositor's Email ID<strong style="color: red;">*</strong></label>
+    <input type="email" name="depositorsmailid" placeholder="Depositor Mail ID" class="form-control" required>
   </div>
 
   <!-- Depositor Address -->
   <div class="col-md-6 mb-3">
-    <label>Depositor's Address:</label>
-    <textarea name="depositorsaddress" placeholder="Depositor's Address" class="form-control"></textarea>
+    <label>Depositor's Address:<strong style="color: red;">*</strong></label>
+    <textarea name="depositorsaddress" placeholder="Depositor's Address" class="form-control" required></textarea>
   </div>
 
   <!-- Depositor Mobile Number -->
   <div class="col-md-6 mb-3">
-    <label>Depositor Mobile Number:</label>
-    <input type="text" name="depositormobile_number" placeholder="Depositor Mobile Number" maxlength="12" class="form-control">
+    <label>Depositor Mobile Number:<strong style="color: red;">*</strong></label>
+    <input type="text" name="depositormobile_number" placeholder="Depositor Mobile Number" maxlength="12" class="form-control" required>
   </div>
 
   <!-- Aadhar Number -->
   <div class="col-md-6 mb-3">
-    <label>Aadhar Number:</label>
-    <input type="text" name="aadhar_number" placeholder="Aadhar Number" maxlength="14" id="aadharInput" class="form-control">
+    <label>Aadhar Number:<strong style="color: red;">*</strong></label>
+    <input type="text" name="aadhar_number" placeholder="Aadhar Number" maxlength="14" id="aadharInput" class="form-control" required>
   </div>
 
   <!-- PAN Number -->
@@ -38,63 +44,76 @@
 
   <!-- Ration Number -->
   <div class="col-md-6 mb-3">
-    <label>Ration Number:</label>
-    <input type="text" name="ration_number" placeholder="Ration Number" class="form-control">
+    <label>Ration Number:<strong style="color: red;">*</strong></label>
+    <input type="text" name="ration_number" placeholder="Ration Number" class="form-control" required>
   </div>
 
-  <!-- Bank Name -->
+      <!-- Aadhar Front Image -->
   <div class="col-md-6 mb-3">
-    <label>Bank Name:</label>
-    <input type="text" name="bankname" placeholder="Bank Name" class="form-control">
-  </div>
-
-  <!-- Bank Account No -->
-  <div class="col-md-6 mb-3">
-    <label>Bank Account No:</label>
-    <input type="text" name="bankaccno" placeholder="Bank Account No" class="form-control">
-  </div>
-
-  <!-- IFSC Code -->
-  <div class="col-md-6 mb-3">
-    <label>IFSC Code:</label>
-    <input type="text" name="ifscno" placeholder="IFSC Code" class="form-control">
-  </div>
-
-  <!-- Agent Name -->
-  <div class="col-md-6 mb-3">
-    <label>Agent Name:</label>
-    <input type="text" name="agentname" placeholder="Agent Name" class="form-control">
-  </div>
-
-  <!-- Agent Address -->
-  <div class="col-md-6 mb-3">
-    <label>Agent Address:</label>
-    <textarea name="agentaddress" placeholder="Agent Address" class="form-control"></textarea>
-  </div>
-
-  <!-- Name of Director -->
-  <div class="col-md-6 mb-3">
-    <label>Name of Director:</label>
-    <input type="text" name="nameofdirector" placeholder="Name of Director" class="form-control">
-  </div>
-
-    <!-- Aadhar Front Image -->
-  <div class="col-md-6 mb-3">
-    <label>Depositor Aadhar Front Image:</label>
-    <input type="file" name="aadhar_front_image" placeholder="Aadhar Front Image" accept="image/*" class="form-control">
+    <label>Depositor Aadhar Front Image:<strong style="color: red;">*</strong></label>
+    <input type="file" name="aadhar_front_image" placeholder="Aadhar Front Image" accept="image/*" class="form-control" required>
   </div>
 
   <!-- Aadhar Back Image -->
   <div class="col-md-6 mb-3">
-    <label>Depositor Aadhar Back Image:</label>
-    <input type="file" name="aadhar_back_image" placeholder="Aadhar Back Image" accept="image/*" class="form-control">
+    <label>Depositor Aadhar Back Image:<strong style="color: red;">*</strong></label>
+    <input type="file" name="aadhar_back_image" placeholder="Aadhar Back Image" accept="image/*" class="form-control" required>
   </div>
 
   <!-- Passport Photo -->
-  <div class="col-md-6 mb-3">
+  <!-- <div class="col-md-6 mb-3">
     <label>Depositor Passport Photo:</label>
     <input type="file" name="passportphoto" placeholder="Depositor Passport Photo" accept="image/*" class="form-control">
+  </div> -->
+
+  <!-- Bank Name -->
+  <div class="col-md-6 mb-3">
+    <label>Bank Name:<strong style="color: red;">*</strong></label>
+    <input type="text" name="bankname" placeholder="Bank Name" class="form-control" required>
   </div>
+
+  <!-- Bank Account No -->
+  <div class="col-md-6 mb-3">
+    <label>Bank Account No:<strong style="color: red;">*</strong></label>
+    <input type="text" name="bankaccno" placeholder="Bank Account No" class="form-control" required>
+  </div>
+
+  <!-- IFSC Code -->
+  <div class="col-md-6 mb-3">
+    <label>IFSC Code:<strong style="color: red;">*</strong></label>
+    <input type="text" name="ifscno" placeholder="IFSC Code" class="form-control" required>
+  </div>
+
+  <!-- Agent Name -->
+  <div class="col-md-6 mb-3">
+    <label>Agent Name:<strong style="color: red;">*</strong></label>
+    <input type="text" name="agentname" placeholder="Agent Name" class="form-control" required>
+  </div>
+
+  <!-- Agent Mobile Number -->
+   <div class="col-md-6 mb-3">
+    <label>Agent Mobile Number:<strong style="color: red;">*</strong></label>
+    <input type="number" name="agentmobnum" placeholder="Agent Mobile Number" class="form-control" required>
+   </div>
+
+   <!-- Agent Mail ID -->
+  <div class="col-md-6 mb-3">
+    <label>Agent Email ID:<strong style="color: red;">*</strong></label>
+    <input type="email" name="agentmailid" placeholder="Agent Mail ID" class="form-control" required>
+  </div>
+
+  <!-- Agent Address -->
+  <div class="col-md-6 mb-3">
+    <label>Agent Address:<strong style="color: red;">*</strong></label>
+    <textarea name="agentaddress" placeholder="Agent Address" class="form-control" required></textarea>
+  </div>
+
+  <!-- Name of Director -->
+  <div class="col-md-6 mb-3">
+    <label>Name of Director:<strong style="color: red;">*</strong></label>
+    <input type="text" name="nameofdirector" placeholder="Name of Director" class="form-control" required>
+  </div>
+
 
   <!-- Bond Details -->
   <div class="col-md-12 mb-3">
@@ -103,40 +122,56 @@
       <div class="bond-input-group bg-muted rounded text-black border p-3 mb-3" style="background-color: #CFDAC8;">
         <div class="row">
           <div class="col-lg-6 col-md-6 col-sm-12">
-            <h6>Bond Holder Name:</h6>
+            <h6>Bond Holder Name:<strong style="color: red;">*</strong></h6>
             <input type="text" name="bondholdername_0" placeholder="Bond Holder Name" class="form-control mb-2" required>
           </div>
           <div class="col-lg-6 col-md-6 col-sm-12">
-            <h6>Bond Image:</h6>
+            <h6>Bond Image:<strong style="color: red;">*</strong></h6>
             <input type="file" name="bonds" accept="image/*" class="form-control mb-2" required>
           </div>
           <div class="col-lg-6 col-md-6 col-sm-12">
-            <h6>Company Name:</h6>
+            <h6>Company Name:<strong style="color: red;">*</strong></h6>
             <input type="text" name="companyname_0" placeholder="Company Name" class="form-control mb-2" required>
           </div>
           <div class="col-lg-6 col-md-6 col-sm-12">
-            <h6>Project Name:</h6>
+            <h6>Project Name:<strong style="color: red;">*</strong></h6>
             <input type="text" name="projectname_0" placeholder="Project Name" class="form-control mb-2" required>
           </div>
           <div class="col-lg-6 col-md-6 col-sm-12">
-            <h6>Deposit Amount:</h6>
+            <h6>Deposit Amount:<strong style="color: red;">*</strong></h6>
             <input type="number" step="0.01" placeholder="Amount" name="amount_0" class="form-control mb-2" required>
           </div>
           <div class="col-lg-6 col-md-6 col-sm-12">
-            <h6>Interest Refund Amount:</h6>
-            <input type="number" name="refundamount_0" placeholder="Interest Refund Amount" class="form-control mb-2" required>
+            <h6>Investment Date:<strong style="color: red;">*</strong></h6>
+            <input type="text" name="investment_date_0" placeholder="dd-mm-yyyy or dd/mm/yyyy or dd.mm.yyyy" class="form-control mb-2" required>
           </div>
           <div class="col-lg-6 col-md-6 col-sm-12">
-            <h6>Balance / Default Amount:</h6>
-            <input type="number" name="balanceamount_0" placeholder="Default Amount" class="form-control mb-2" required>
+            <h6>Date of Resale:</h6>
+            <input type="text" name="dateofresale_0" placeholder="dd-mm-yyyy or dd/mm/yyyy or dd.mm.yyyy" class="form-control mb-2">
           </div>
           <div class="col-lg-6 col-md-6 col-sm-12">
-            <h6>Investment Date:</h6>
-            <input type="date" name="investment_date_0" placeholder="Investment Date" class="form-control mb-2" required>
-          </div>
-          <div class="col-lg-6 col-md-6 col-sm-12">
-            <h6>Customer ID:</h6>
+            <h6>Customer ID:<strong style="color: red;">*</strong></h6>
             <input type="text" name="customer_id_0" placeholder="Customer ID" class="form-control mb-2" required>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12">
+            <h6>Agent ID:<strong style="color: red;">*</strong></h6>
+            <input type="number" name="agentid_0" placeholder="Agent ID" class="form-control mb-2" required>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12">
+            <h6>Token No:<strong style="color: red;">*</strong></h6>
+            <input type="number" name="tokennum_0" placeholder="Token Number" class="form-control mb-2" required>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12">
+            <h6>Remarks:</h6>
+            <input type="text" name="remarks_0" placeholder="Remarks" class="form-control mb-2">
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+            <label>Bond in Hand Original or Xerox:<strong style="color: red;">*</strong></label>
+            <select name="bondimagetype_0" class="form-select" required>
+              <option value="" disabled selected>Bond in Hand Original or Xerox</option>
+              <option value="Original">Original</option>
+              <option value="Xerox">Xerox</option>
+            </select>
           </div>
         </div>
       </div>
@@ -203,41 +238,57 @@ function addBondInput() {
   group.innerHTML = `
     <div class="row rounded">
       <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
-        <label><strong>Bond Holder Name:</strong></label>
+        <label>Bond Holder Name:<strong style="color: red;">*</strong></label>
         <input type="text" name="bondholdername${bondIndex}" placeholder="Bond Holder Name" class="form-control" required>
       </div>
       <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
-        <label><strong>Bond Image:</strong></label>
+        <label>Bond Image:<strong style="color: red;">*</strong></label>
         <input type="file" name="bonds" accept="image/*" class="form-control" required>
       </div>
       <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
-        <label><strong>Company Name:</strong></label>
+        <label>Company Name:<strong style="color: red;">*</strong></label>
         <input type="text" name="companyname_${bondIndex}" placeholder="Company Name" class="form-control" required>
       </div>
       <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
-        <label><strong>Project Name:</strong></label>
+        <label>Project Name:<strong style="color: red;">*</strong></label>
         <input type="text" name="projectname_${bondIndex}" placeholder="Project Name" class="form-control" required>
       </div>
       <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
-        <label><strong>Deposit Amount:</strong></label>
+        <label>Deposit Amount:<strong style="color: red;">*</strong></label>
         <input type="number" step="0.01" name="amount_${bondIndex}" placeholder="Amount" class="form-control" required>
       </div>
       <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
-        <label><strong>Interest Refund Amount:</strong></label>
-        <input type="number" step="0.01" name="refundamount_${bondIndex}" placeholder="Interest Refund Amount" class="form-control" required>
+        <label>Investment Date:<strong style="color: red;">*</strong></label>
+        <input type="text" name="investment_date_${bondIndex}" placeholder="dd-mm-yyyy or dd/mm/yyyy or dd.mm.yyyy" class="form-control" required>
       </div>
       <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
-        <label><strong>Balance / Default Amount:</strong></label>
-        <input type="number" step="0.01" name="balanceamount_${bondIndex}" placeholder="Default Amount" class="form-control" required>
+        <h6>Date of Resale:</h6>
+        <input type="text" name="dateofresale_${bondIndex}" placeholder="dd-mm-yyyy or dd/mm/yyyy or dd.mm.yyyy" class="form-control mb-2">
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+          <label>Customer ID:<strong style="color: red;">*</strong></label>
+          <input type="text" name="customer_id_${bondIndex}" placeholder="Customer ID" class="form-control" required>
+        </div>
+      <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+        <h6>Agent ID:<strong style="color: red;">*</strong></h6>
+        <input type="number" name="agentid_${bondIndex}" placeholder="Agent ID" class="form-control mb-2" required>
       </div>
       <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
-        <label><strong>Investment Date:</strong></label>
-        <input type="date" name="investment_date_${bondIndex}" class="form-control" placeholder="Investment Date" required>
+        <h6>Token No:<strong style="color: red;">*</strong></h6>
+        <input type="number" name="tokennum_${bondIndex}" placeholder="Token Number" class="form-control mb-2" required>
       </div>
       <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
-        <label><strong>Customer ID:</strong></label>
-        <input type="text" name="customer_id_${bondIndex}" placeholder="Customer ID" class="form-control" required>
+        <h6>Remarks:</h6>
+        <input type="text" name="remarks_${bondIndex}" placeholder="Remarks" class="form-control mb-2">
       </div>
+      <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+            <label>Bond in Hand Original or Xerox:<strong style="color: red;">*</strong></label>
+            <select name="bondimagetype_${bondIndex}" class="form-select" required>
+              <option value="" disabled selected>Bond in Hand Original or Xerox</option>
+              <option value="Original">Original</option>
+              <option value="Xerox">Xerox</option>
+            </select>
+          </div>
     </div>
   `;
 

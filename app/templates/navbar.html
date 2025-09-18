@@ -201,7 +201,7 @@
       </a>
     </li>
 
-    {% if is_main_user or is_sub_mainuser %}
+    <!-- {% if is_main_user or is_sub_mainuser %}
           <div class="mt-4 px-3">
             <h5 class="text-center">🙍🏻Users</h5>
             <ul class="list-unstyled text-black">
@@ -214,7 +214,27 @@
               {% endfor %}
             </ul>
           </div>
-          {% endif %}
+          {% endif %} -->
+
+          {% if is_main_user or is_sub_mainuser %}
+  <div class="mt-4 px-3">
+    <h5 class="text-center">🙍🏻 Users</h5>
+
+    <!-- Scrollable user list -->
+    <div style="max-height: 400px; overflow-y: auto; padding-right: 5px;">
+      <ul class="list-unstyled text-black mb-0">
+        {% for u in users %}
+          <li class="mb-2">
+            <a href="{% url 'formpage' %}?user_id={{ u.id }}" style="color: black; text-decoration: none;">
+              📌 {{ u.username }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endif %}
+
 
         <li>
         <a href="{% url 'login' %}" onclick="logoutUser()"><button>Logout</button></a>

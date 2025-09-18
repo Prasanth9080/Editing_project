@@ -118,13 +118,30 @@
   <div class="px-3 mt-4">
     <h2 class="text-center">🙍🏻‍♂️</h2>
     <ul class="list-unstyled text-white">
-      {% for u in users %}
+
+      <!-- All Data option -->
+      <li><a href="{% url 'formpage' %}?all=true" style="color:white;">📂 All Data</a></li>
+
+
+      <!-- {% for u in users %}
         <li>
           <a href="{% url 'formpage' %}?user_id={{ u.id }}" style="color: white;">
             📌 {{ u.username }}
           </a>
         </li>
-      {% endfor %}
+      {% endfor %} -->
+      <div style="max-height: 500px; overflow-y: auto; padding-right: 5px;">
+  <ul style="list-style: none; margin: 0; padding: 0;">
+    {% for u in users %}
+      <li style="margin-bottom: 8px;">
+        <a href="{% url 'formpage' %}?user_id={{ u.id }}" style="color: white; text-decoration: none;">
+          📌 {{ u.username }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+
     </ul>
   </div>
 {% endif %}

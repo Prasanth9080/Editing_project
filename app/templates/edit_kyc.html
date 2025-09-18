@@ -18,115 +18,143 @@
             <div class="row g-3">
 
 <!-- Membership No -->
-<div class="col-lg-6 col-md-3 sol-cm-12 mb-3">
-  <label>Membership No:</label>
-  <input type="number" name="membershipno" placeholder="Membership No." value="{{ kyc.membershipno }}" class="form-control">
+<div class="col-lg-3 col-md-3 sol-cm-12 mb-3">
+  <label>Membership No:<strong style="color: red;">*</strong></label>
+  <input type="number" name="membershipno" placeholder="Membership No." value="{{ kyc.membershipno }}" class="form-control" required>
 </div>
 
 <!-- Depositor Name -->
-<div class="col-lg-6 col-md-3 sol-cm-12 mb-3">
-  <label>Depositor's Name:</label>
-  <input type="text" name="depositorsname" placeholder="Depositor's Name" value="{{ kyc.depositorsname }}" class="form-control">
+<div class="col-lg-3 col-md-3 sol-cm-12 mb-3">
+  <label>Depositor's Head of the Family Name:<strong style="color: red;">*</strong></label>
+  <input type="text" name="depositorsname" placeholder="Depositor's Head of the Family Name" value="{{ kyc.depositorsname }}" class="form-control" required>
 </div>
 
+<!-- Depositor Mail ID -->
+  <div class="col-lg-3 col-md-3 col-sm-12 mb-3">
+    <label>Depositor's Email ID:<strong style="color: red;">*</strong></label>
+    <input type="email" name="depositorsmailid" placeholder="Depositor Mail ID" value="{{ kyc.depositorsmailid }}" class="form-control" required>
+  </div>
+
 <!-- Depositor Address -->
-<div class="col-lg-6 col-md-3 sol-cm-12 mb-3">
-  <label>Depositor's Address:</label>
-  <textarea name="depositorsaddress" placeholder="Depositor's Address" class="form-control">{{ kyc.depositorsaddress }}</textarea>
+<div class="col-lg-3 col-md-3 sol-cm-12 mb-3">
+  <label>Depositor's Address:<strong style="color: red;">*</strong></label>
+  <textarea name="depositorsaddress" placeholder="Depositor's Address" class="form-control" required>{{ kyc.depositorsaddress }}</textarea>
 </div>
 
 <!-- Project Name -->
-<!-- <div class="col-lg-6 col-md-3 sol-cm-12 mb-3">
+<!-- <div class="col-lg-3 col-md-3 sol-cm-12 mb-3">
   <label>Project Name:</label>
   <input type="text" name="projectname" placeholder="Project Name" value="{{ kyc.projectname }}" class="form-control">
 </div> -->
 
 <!-- Depositor Mobile Number -->
-<div class="col-lg-6 col-md-3 sol-cm-12 mb-3">
-  <label>Depositor Mobile Number:</label>
-  <input type="text" name="depositormobile_number" placeholder="Depositor Mobile Number" value="{{ kyc.depositormobile_number }}" maxlength="12" class="form-control">
+<div class="col-lg-3 col-md-3 sol-cm-12 mb-3">
+  <label>Depositor Mobile Number:<strong style="color: red;">*</strong></label>
+  <input type="text" name="depositormobile_number" placeholder="Depositor Mobile Number" value="{{ kyc.depositormobile_number }}" maxlength="12" class="form-control" required>
 </div>
 
 <!-- Aadhar Number -->
-<div class="col-lg-6 col-md-3 sol-cm-12 mb-3">
-  <label>Aadhar Number:</label>
-  <input type="text" name="aadhar_number" placeholder="Aadhar Number" maxlength="14" id="aadharInput" value="{{ kyc.aadhar_number }}" class="form-control">
+<div class="col-lg-3 col-md-3 sol-cm-12 mb-3">
+  <label>Aadhar Number:<strong style="color: red;">*</strong></label>
+  <input type="text" name="aadhar_number" placeholder="Aadhar Number" maxlength="14" id="aadharInput" value="{{ kyc.aadhar_number }}" class="form-control" required>
 </div>
 
 <!-- PAN Number -->
-<div class="col-lg-6 col-md-3 sol-cm-12 mb-3">
+<div class="col-lg-3 col-md-3 sol-cm-12 mb-3">
   <label>PAN Number:</label>
   <input type="text" name="pan_number" placeholder="PAN Number" value="{{ kyc.pan_number }}" class="form-control">
 </div>
 
 <!-- Ration Number -->
-<div class="col-lg-6 col-md-3 sol-cm-12 mb-3">
-  <label>Ration Number:</label>
-  <input type="text" name="ration_number" placeholder="Ration Number" value="{{ kyc.ration_number }}" class="form-control">
-</div>
-
-<!-- Bank Name -->
-<div class="col-lg-6 col-md-3 col-sm-12 mb-3">
-  <label>Bank Name:</label>
-  <input type="text" name="bankname" placeholder="Bank Name" value="{{ kyc.bankname }}" class="form-control">
-</div>
-
-<!-- Bank Account No -->
-<div class="col-lg-6 col-md-3 col-sm-12 mb-3">
-  <label>Bank Account No:</label>
-  <input type="text" name="bankaccno" placeholder="Bank Account No" value="{{ kyc.bankaccno }}" class="form-control">
-</div>
-
-<!-- IFSC Code -->
-<div class="col-lg-6 col-md-3 col-sm-12 mb-3">
-  <label>IFSC Code:</label>
-  <input type="text" name="ifscno" placeholder="IFSC Code" value="{{ kyc.ifscno }}" class="form-control">
-</div>
-
-<!-- Agent Name -->
-<div class="col-lg-6 col-md-3 sol-cm-12 mb-3">
-  <label>Agent Name:</label>
-  <input type="text" name="agentname" placeholder="Agent Name" value="{{ kyc.agentname }}" class="form-control">
-</div>
-
-<!-- Agent Address -->
-<div class="col-lg-6 col-md-3 sol-cm-12 mb-3">
-  <label>Agent Address:</label>
-  <textarea name="agentaddress" placeholder="Agent Address" class="form-control">{{ kyc.agentaddress }}</textarea>
-</div>
-
-<!-- Name of Director -->
-<div class="col-lg-6 col-md-3 sol-cm-12 mb-3">
-  <label>Name of Director:</label>
-  <input type="text" name="nameofdirector" placeholder="Name of Director" value="{{ kyc.nameofdirector }}" class="form-control">
+<div class="col-lg-3 col-md-3 sol-cm-12 mb-3">
+  <label>Ration Number:<strong style="color: red;">*</strong></label>
+  <input type="text" name="ration_number" placeholder="Ration Number" value="{{ kyc.ration_number }}" class="form-control" required>
 </div>
 
 <!-- Aadhar Front Image -->
-<div class="col-lg-6 col-md-3 sol-cm-12 mb-3">
-  <label>Aadhar Front Image:</label>
+<div class="col-lg-3 col-md-3 sol-cm-12 mb-3">
+  <label>Aadhar Front Image:<strong style="color: red;">*</strong></label>
   {% if kyc.aadhar_front_image %}
     <img src="{{ kyc.aadhar_front_image.url }}" alt="Aadhar Front" class="img-fluid mb-2" style="max-height:50px;">
+    <!-- If image exists, make file input optional -->
+    <input type="file" name="aadhar_front_image" class="form-control" accept="image/*">
+  {% else %}
+  <!-- If no image exists, make it required -->
+   <input type="file" name="aadhar_front_image" class="form-control" accept="image/*" required>
   {% endif %}
-  <input type="file" name="aadhar_front_image" placeholder="Aadhar Front Image" accept="image/*" class="form-control">
 </div>
 
 <!-- Aadhar Back Image -->
-<div class="col-lg-6 col-md-3 sol-cm-12 mb-3">
-  <label>Aadhar Back Image:</label>
+<div class="col-lg-3 col-md-3 sol-cm-12 mb-3">
+  <label>Aadhar Back Image:<strong style="color: red;">*</strong></label>
   {% if kyc.aadhar_back_image %}
     <img src="{{ kyc.aadhar_back_image.url }}" alt="Aadhar Back" class="img-fluid mb-2" style="max-height:50px;">
+    <!-- If image exists, make file input optional -->
+     <input type="file" name="aadhar_back_image" class="form-control" accept="image/*">
+  {% else %}
+  <!-- If no image exists, make it required -->
+   <input type="file" name="aadhar_back_image" class="form-control" accept="image/*" required>
   {% endif %}
-  <input type="file" name="aadhar_back_image" placeholder="Aadhar Back Image" accept="image/*" class="form-control">
 </div>
 
 <!-- Passport Photo -->
-<div class="col-lg-6 col-md-3 sol-cm-12 mb-3">
+<!-- <div class="col-lg-3 col-md-3 sol-cm-12 mb-3">
   <label>Passport Photo:</label>
   {% if kyc.passportphoto %}
     <img src="{{ kyc.passportphoto.url }}" alt="Passport Photo" class="img-fluid mb-2" style="max-height:50px;">
   {% endif %}
   <input type="file" name="passportphoto" placeholder="Passport Photo" accept="image/*" class="form-control">
+</div> -->
+
+
+<!-- Bank Name -->
+<div class="col-lg-3 col-md-3 col-sm-12 mb-3">
+  <label>Bank Name:<strong style="color: red;">*</strong></label>
+  <input type="text" name="bankname" placeholder="Bank Name" value="{{ kyc.bankname }}" class="form-control" required>
 </div>
+
+<!-- Bank Account No -->
+<div class="col-lg-3 col-md-3 col-sm-12 mb-3">
+  <label>Bank Account No:<strong style="color: red;">*</strong></label>
+  <input type="text" name="bankaccno" placeholder="Bank Account No" value="{{ kyc.bankaccno }}" class="form-control" required>
+</div>
+
+<!-- IFSC Code -->
+<div class="col-lg-3 col-md-3 col-sm-12 mb-3">
+  <label>IFSC Code:<strong style="color: red;">*</strong></label>
+  <input type="text" name="ifscno" placeholder="IFSC Code" value="{{ kyc.ifscno }}" class="form-control" required>
+</div>
+
+<!-- Agent Name -->
+<div class="col-lg-3 col-md-3 sol-cm-12 mb-3">
+  <label>Agent Name:<strong style="color: red;">*</strong></label>
+  <input type="text" name="agentname" placeholder="Agent Name" value="{{ kyc.agentname }}" class="form-control" required>
+</div>
+
+<!-- Agent Mobile Number -->
+   <div class="col-lg-3 col-md-3 col-sm-12 mb-3">
+    <label>Agent Mobile Number:<strong style="color: red;">*</strong></label>
+    <input type="number" name="agentmobnum" placeholder="Agent Mobile Number" class="form-control" value="{{ kyc.agentmobnum }}" required>
+   </div>
+
+<!-- Agent Mail ID -->
+ <div class="col-lg-3 col-md-4 col-sm-12 mb-3">
+  <label>Agent Mail ID:<strong style="color: red;">*</strong></label>
+  <input type="email" name="agentmailid" placeholder="Agent Mail ID" value="{{ kyc.agentmailid }}" class="form-control" required>
+ </div>
+
+<!-- Agent Address -->
+<div class="col-lg-3 col-md-3 sol-cm-12 mb-3">
+  <label>Agent Address:<strong style="color: red;">*</strong></label>
+  <textarea name="agentaddress" placeholder="Agent Address" class="form-control" required>{{ kyc.agentaddress }}</textarea>
+</div>
+
+<!-- Name of Director -->
+<div class="col-lg-3 col-md-3 sol-cm-12 mb-3">
+  <label>Name of Director:<strong style="color: red;">*</strong></label>
+  <input type="text" name="nameofdirector" placeholder="Name of Director" value="{{ kyc.nameofdirector }}" class="form-control" required>
+</div>
+
 
 <!-- Replace passport photo -->
 <!-- <div class="mb-3">
@@ -138,7 +166,7 @@
 </div> -->
 
     <!-- Show existing bond images -->
-<div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+<div class="col-lg-3 col-md-6 col-sm-12 mb-3">
     <label>Existing Bond Images:</label><br>
     {% for bond in kyc.bonds.all %}
         <div class="d-inline-block me-3 text-center">
@@ -155,7 +183,7 @@
 
 
 <!-- Upload new bond images -->
-<!-- <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+<!-- <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
     <label for="bondImages">Add New Bond Images</label>
     <div id="bondInputs">
         <input type="file" name="bonds" accept="image/*" class="form-control mb-2">
@@ -171,43 +199,63 @@
         <input type="hidden" name="bond_id" value="{{ bond.id }}">
         <div class="row g-2">
           <div class="col-lg-3 col-md-3 col-sm-12">
-            <label class="form-label">Bond Holder Name:</label>
-            <input type="text" name="bondholdername_{{ bond.id }}" placeholder="Bond Holder Name" class="form-control" value="{{ bond.bondholdername }}">
+            <label class="form-label">Bond Holder Name:<strong style="color: red;">*</strong></label>
+            <input type="text" name="bondholdername_{{ bond.id }}" placeholder="Bond Holder Name" class="form-control" value="{{ bond.bondholdername }}" required>
           </div>
           <div class="col-lg-3 col-md-3 col-sm-12">
-            <label class="form-label">Bond Image:</label>
-            <input type="file" name="bond_image_{{ bond.id }}" class="form-control">
+            <label class="form-label">Bond Image:<strong style="color: red;">*</strong></label>
             {% if bond.image %}
+              <!-- If already has an image, make file input optional -->
+              <input type="file" name="bond_image_{{ bond.id }}" class="form-control" accept="image/*">
               <img src="{{ bond.image.url }}" class="img-fluid mt-2" style="max-height: 50px;">
+            {% else %}
+            <!-- If no image exists, make it required -->
+             <input type="file" name="bond_image_{{ bond.id }}" class="form-control" accept="image/*" required>
             {% endif %}
           </div>
           <div class="col-lg-3 col-md-3 col-sm-12">
-            <label class="form-label">Company Name:</label>
-            <input type="text" name="companyname_{{ bond.id }}" placeholder="Company Name" class="form-control" value="{{ bond.companyname }}">
+            <label class="form-label">Company Name:<strong style="color: red;">*</strong></label>
+            <input type="text" name="companyname_{{ bond.id }}" placeholder="Company Name" class="form-control" value="{{ bond.companyname }}" required>
           </div>
           <div class="col-lg-3 col-md-3 col-sm-12">
-            <label class="form-label">Project Name:</label>
-            <input type="text" name="projectname_{{ bond.id }}" placeholder="Project Name" class="form-control" value="{{ bond.projectname }}">
+            <label class="form-label">Project Name:<strong style="color: red;">*</strong></label>
+            <input type="text" name="projectname_{{ bond.id }}" placeholder="Project Name" class="form-control" value="{{ bond.projectname }}" required>
           </div>
           <div class="col-lg-3 col-md-3 col-sm-12 mt-2">
-            <label class="form-label">Deposit Amount:</label>
-            <input type="number" step="0.01" name="amount_{{ bond.id }}" placeholder="Deposit Amount" class="form-control" value="{{ bond.amount }}">
+            <label class="form-label">Deposit Amount:<strong style="color: red;">*</strong></label>
+            <input type="number" step="0.01" name="amount_{{ bond.id }}" placeholder="Deposit Amount" class="form-control" value="{{ bond.amount }}" required>
           </div>
           <div class="col-lg-3 col-md-3 col-sm-12 mt-2">
-            <label class="form-label">Interest Default Amount:</label>
-            <input type="number" step="0.01" name="refundamount_{{ bond.id }}" placeholder="Interest Default Amount" class="form-control" value="{{ bond.refundamount }}">
+            <label class="form-label">Investment Date:<strong style="color: red;">*</strong></label>
+            <input type="text" placeholder="dd-mm-yyyy or dd/mm/yyyy or dd.mm.yyyy" name="investment_date_{{ bond.id }}" class="form-control" value="{{ bond.investment_date|date:'d-m-Y' }}" required>
           </div>
           <div class="col-lg-3 col-md-3 col-sm-12 mt-2">
-            <label class="form-label">Balance / Default Amount:</label>
-            <input type="number" step="0.01" name="balanceamount_{{ bond.id }}" placeholder="Default Amount" class="form-control" value="{{ bond.balanceamount }}">
+            <label class="form-label">Date of Resale:</label>
+            <input type="text" placeholder="dd-mm-yyyy or dd/mm/yyyy or dd.mm.yyyy" name="dateofresale_{{ bond.id }}" placeholder="Date of Resale" class="form-control" value="{{ bond.dateofresale|date:'d-m-Y' }}">
           </div>
           <div class="col-lg-3 col-md-3 col-sm-12 mt-2">
-            <label class="form-label">Investment Date:</label>
-            <input type="date" name="investment_date_{{ bond.id }}" class="form-control" value="{{ bond.investment_date|date:'Y-m-d' }}">
+            <label class="form-label">Customer ID:<strong style="color: red;">*</strong></label>
+            <input type="text" name="customer_id_{{ bond.id }}" placeholder="Customer ID" class="form-control" value="{{ bond.customer_id }}" required>
           </div>
           <div class="col-lg-3 col-md-3 col-sm-12 mt-2">
-            <label class="form-label">Customer ID:</label>
-            <input type="text" name="customer_id_{{ bond.id }}" placeholder="Customer ID" class="form-control" value="{{ bond.customer_id }}">
+            <h6 class="form-label">Agent ID:<strong style="color: red;">*</strong></h6>
+            <input type="number" name="agentid_{{ bond.id }}" placeholder="Agent ID" class="form-control" value="{{ bond.agentid }}" required>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-12 mt-2">
+            <h6 class="form-label">Token No:<strong style="color: red;">*</strong></h6>
+            <input type="number" name="tokennum_{{ bond.id }}" placeholder="Token Number" class="form-control" value="{{ bond.tokennum }}" required>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-12 mt-2">
+            <h6 class="form-label">Remarks:</h6>
+            <input type="text" name="remarks_{{ bond.id }}" placeholder="Remarks" class="form-control" value="{{ bond.remarks }}">
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-12 mt-2">
+            <label>Bond in hand Original or Xerox:<strong style="color: red;">*</strong></label>
+            <select name="bondimagetype_{{ bond.id }}" class="form-select" required>
+              <option value="" disabled {% if not bond.bondimagetype %}selected{% endif %}>Bond in Hand Original or Xerox</option>
+              <option value="Original" {% if bond.bondimagetype == "Original" %}selected{% endif %}>Original</option>
+              <option value="Xerox" {% if bond.bondimagetype == "Xerox" %}selected{% endif %}>Xerox</option>
+            </select>
           </div>
         </div>
         
@@ -271,41 +319,57 @@ function addBondInput() {
   group.innerHTML = `
     <div class="row g-2">
       <div class="col-lg-3 col-md-3 col-sm-12">
-        <label class="form-label">Bond Holder Name:</label>
+        <label class="form-label">Bond Holder Name:<strong style="color: red;">*</strong></label>
         <input type="text" name="new_bondholdername" placeholder="Bond Holder Name" class="form-control" required>
       </div>
       <div class="col-lg-3 col-md-3 col-sm-12">
-        <label class="form-label">Bond Image:</label>
+        <label class="form-label">Bond Image:<strong style="color: red;">*</strong></label>
         <input type="file" name="new_bonds" accept="image/*" class="form-control" required>
       </div>
       <div class="col-lg-3 col-md-3 col-sm-12">
-        <label class="form-label">Company Name:</label>
+        <label class="form-label">Company Name:<strong style="color: red;">*</strong></label>
         <input type="text" name="new_companyname" placeholder="Company Name" class="form-control" required>
       </div>
       <div class="col-lg-3 col-md-3 col-sm-12">
-        <label class="form-label">Project Name:</label>
+        <label class="form-label">Project Name:<strong style="color: red;">*</strong></label>
         <input type="text" name="new_projectname" placeholder="Project Name" class="form-control" required>
       </div>
       <div class="col-lg-3 col-md-3 col-sm-12 mt-2">
-        <label class="form-label">Deposit Amount</label>
+        <label class="form-label">Deposit Amount:<strong style="color: red;">*</strong></label>
         <input type="number" step="0.01" name="new_amount" placeholder="Deposit Amount" class="form-control" required>
       </div>
       <div class="col-lg-3 col-md-3 col-sm-12 mt-2">
-        <label class="form-label">Interest Refund Amount:</label>
-        <input type="number" step="0.01" name="new_refundamount" placeholder="Interest Refund Amount" class="form-control" required>
+        <label class="form-label">Investment Date:<strong style="color: red;">*</strong></label>
+        <input type="text" placeholder="dd-mm-yyyy or dd/mm/yyyy or dd.mm.yyyy" name="new_investment_date" class="form-control" required>
       </div>
       <div class="col-lg-3 col-md-3 col-sm-12 mt-2">
-        <label class="form-label">Balance / Default Amount</label>
-        <input type="number" step="0.01" name="new_balanceamount" placeholder="Default Amount" class="form-control" required>
+        <label>Date of Resale:</label>
+        <input type="text" name="new_dateofresale" placeholder="dd-mm-yyyy or dd/mm/yyyy or dd.mm.yyyy" class="form-control">
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-12 mt-2">
+          <label class="form-label">Customer ID:<strong style="color: red;">*</strong></label>
+          <input type="text" name="new_customer_id" placeholder="Customer ID" class="form-control" required>
+        </div>
+      <div class="col-lg-3 col-md-3 col-sm-12 mt-2">
+        <h6 class="form-label">Agent ID:<strong style="color: red;">*</strong></h6>
+        <input type="number" name="new_agentid" placeholder="Agent ID" class="form-control mb-2" required>
       </div>
       <div class="col-lg-3 col-md-3 col-sm-12 mt-2">
-        <label class="form-label">Investment Date</label>
-        <input type="date" name="new_investment_date" class="form-control" required>
+        <h6>Token No:<strong style="color: red;">*</strong></h6>
+        <input type="number" name="new_tokennum" placeholder="Token Number" class="form-control mb-2" required>
       </div>
       <div class="col-lg-3 col-md-3 col-sm-12 mt-2">
-        <label class="form-label">Customer ID</label>
-        <input type="text" name="new_customer_id" placeholder="Customer ID" class="form-control" required>
+        <h6 class="form-label">Remarks:</h6>
+        <input type="text" name="new_remark" placeholder="Remarks" class="form-control mb-2">
       </div>
+      <div class="col-lg-3 col-md-3 col-sm-12 mb-3">
+            <label>Bond in Hand Original or Xerox:</label>
+            <select name="new_bondimagetype" class="form-select" required>
+              <option value="" disabled selected>Bond in Hand Original or Xerox</option>
+              <option value="Original">Original</option>
+              <option value="Xerox">Xerox</option>
+            </select>
+          </div>
     </div>
     <!-- Delete button (marks bond for deletion on save) -->
         <div class="col-lg-2 col-md-4 col-sm-12 mt-3 mx-auto">

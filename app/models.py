@@ -35,10 +35,13 @@ class MyKYC(models.Model):
 
     membershipno = models.IntegerField(null=True, blank=True)
     depositorsname = models.CharField(max_length=100, blank=True)
+    depositorsmailid = models.EmailField(max_length=100, blank=True)
     depositorsaddress = models.TextField(blank=True)
     bondholdername = models.CharField(max_length=100, blank=True, null=True)
     depositormobile_number = models.CharField(max_length=15, blank=True)
     agentname = models.CharField(max_length=100, blank=True)
+    agentmobnum = models.CharField(max_length=15, blank=True)  # good for international numbers
+    agentmailid = models.EmailField(max_length=100, blank=True)
     agentaddress = models.TextField(blank=True)
     nameofdirector = models.CharField(max_length=100, blank=True)
     aadhar_number = models.CharField(max_length=20, null=True, blank=True)
@@ -49,7 +52,7 @@ class MyKYC(models.Model):
     ifscno = models.CharField(max_length=50, blank=True)
     aadhar_front_image = models.ImageField(upload_to='kyc/aadhar/', null=True, blank=True)
     aadhar_back_image = models.ImageField(upload_to='kyc/aadhar/', null=True, blank=True)  # fixed path from 'pan/' to 'aadhar/'
-    passportphoto = models.ImageField(upload_to='kyc/passport/', null=True, blank=True)
+    
 
     def __str__(self):
         return f"MyKYC - {self.depositorsname}"  # fixed wrong attribute 'self.name'
@@ -87,17 +90,24 @@ import datetime
 from django.db import models
 
 class BondImage(models.Model):
+    BOND_IMAGE_TYPE_CHOICES = [
+        ('original', 'Original'),
+        ('xerox', 'Xerox'),
+    ]
     my_kyc = models.ForeignKey("MyKYC", on_delete=models.CASCADE, null=True, blank=True, related_name='bonds')
     sub_kyc = models.ForeignKey("SubKYC", on_delete=models.CASCADE, null=True, blank=True, related_name='bonds')
+    bondholdername = models.CharField(max_length=100, blank=True, null=True)
     image = models.ImageField(upload_to='bonds/')
     companyname = models.CharField(max_length=100,)
     projectname = models.CharField(max_length=100,)
     investment_date = models.DateField(default=datetime.date.today)  # ✅ CORRECT DEFAULT
     customer_id = models.CharField(max_length=10,)
     amount = models.IntegerField(null=True, blank=True, default=0)
-    refundamount = models.IntegerField(null=True, blank=True, default=0)
-    balanceamount = models.IntegerField(null=True, blank=True, default=0)
-    bondholdername = models.CharField(max_length=100, blank=True, null=True)
+    dateofresale = models.DateField(default=datetime.date.today)
+    agentid = models.IntegerField(max_length=10,blank=True, default=0)
+    tokennum = models.IntegerField(null=True, blank=True, default=0)
+    remarks = models.CharField(max_length=250, blank=True)
+    bondimagetype = models.CharField(max_length=50, choices=BOND_IMAGE_TYPE_CHOICES, null=True, blank=True)
 
     def __str__(self):
         return f"BondImage ({self.image.name})"
