@@ -7,22 +7,6 @@ class UserAdmin(admin.ModelAdmin):
     list_filter = ('is_main_user','is_sub_mainuser') 
     search_fields = ('username', 'phone_number', 'email')
 
-# from django.contrib import admin
-# from django.contrib.auth import get_user_model
-# from .models import MyKYC,BondImage,SubKYC
-
-# User = get_user_model()
-
-# try:
-#     admin.site.unregister(User)
-# except admin.sites.NotRegistered:
-#     pass
-
-# @admin.register(User)
-# class UserAdmin(admin.ModelAdmin):
-#     list_display = ('username', 'email', 'phone_number', 'is_main_user', 'date_joined', 'last_login', 'jwt_token')
-#     list_filter = ('is_main_user', 'is_sub_mainuser')
-#     search_fields = ('username', 'phone_number', 'email')
 
 # ----------------------------------------
 # Admin for MyKYC
@@ -82,3 +66,4 @@ class BondImageAdmin(admin.ModelAdmin):
         if obj.image:
             return format_html('<img src="{}" style="width: 100px; height: auto;" />', obj.image.url)
         return "-"
+

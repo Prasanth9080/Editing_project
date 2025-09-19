@@ -28,6 +28,45 @@
     background-color: #CFDAC8;
   }
 
+/* Fix table header on scroll */
+.sticky-header-1 th {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background-color: #212529;
+  color: #fff;
+  border: 0px solid transparent;
+}
+
+
+/* Ensure Bond Details header (first row) sticks above second row */
+.sticky-header-2 th {
+  position: sticky;
+  top: 41px; /* same as first row */
+  z-index: 19; /* keep above other headers */
+  background-color: #212529; /* darker shade for clarity */
+  border: 0px solid transparent;
+}
+
+.bond-entry {
+  border: 1px solid whtie !important;
+}
+
+/* Remove tbody column borders */
+.table tbody td {
+  border-left: 1px solid transparent !important;
+  border-right: 1px solid transparent !important;
+}
+
+/* Keep row separators visible */
+.table tbody tr {
+  border-bottom: 1px solid #dee2e6;
+}
+
+.sticky-header-1 .bond-header {
+  border: 1px solid white !important;
+}
+
 @media (max-width: 425px){
     h2 {
       font-size: 18px;
@@ -50,13 +89,6 @@
   </h2>
     <h4 class="text-center fw-bold mb-4">GOVT.REG.NO (SRG/karaikudi/104/2023)</h4>
 
-  <!-- <h2 class="text-center mb-4">
-    Welcome, {{ request.user.username }}
-    {% if selected_user and selected_user != request.user %}
-      - Viewing: {{ selected_user.username }}
-    {% endif %}
-  </h2> -->
-
  <div class="mb-3 row align-items-center gx-2 gy-2">
   <!-- Add My KYC Button -->
   <div class="col-lg-3 col-md-6 col-sm-12">
@@ -67,90 +99,25 @@
     </button>
   </div>
 
-  <!-- Add Sub-KYC Button -->
-  <!-- <div class="col-lg-3 col-md-6 col-sm-12">
-    <button class="btn btn-secondary w-100"
-            onclick="toggleModal('subKycModal')"
-            {% if is_sub_mainuser %}disabled{% endif %}>
-      Add Sub-KYC
-    </button>
-  </div> -->
 
   <!-- Empty Column (can be removed or used for spacing) -->
   <div class="col-lg-3 col-md-6 col-sm-12"></div>
 
-  <!-- Download Buttons (Disabled for sub_mainuser) -->
-  <!-- <div class="col-lg-3 col-md-6 col-sm-12 d-flex justify-content-end gap-2">
-    <a href="{% url 'download_kyc_excel' %}"
-       class="btn btn-success w-100 {% if is_sub_mainuser %}disabled{% endif %}"
-       {% if is_sub_mainuser %}onclick="return false;"{% endif %}>
-      Download Excel
-    </a>
-    <a href="{% url 'download_kyc_pdf' %}"
-       class="btn btn-danger w-100 {% if is_sub_mainuser %}disabled{% endif %}"
-       {% if is_sub_mainuser %}onclick="return false;"{% endif %}>
-      Download PDF
-    </a>
-  </div> -->
-
-<!-- {% if is_main_user or request.user == kyc.created_by %}
-  <a href="{% url 'download_kyc_excel' 'my' %}" class="btn btn-success w-100">My KYC Excel</a>
-  <a href="{% url 'download_kyc_excel' 'sub' %}" class="btn btn-secondary w-100">Sub-KYC Excel</a>
-  <a href="{% url 'download_kyc_pdf' 'my' %}" class="btn btn-danger w-100">My KYC PDF</a>
-  <a href="{% url 'download_kyc_pdf' 'sub' %}" class="btn btn-danger w-100">Sub-KYC PDF</a>
-{% elif is_sub_mainuser %}
-  <a class="btn btn-success w-100 disabled-link" {% if is_sub_mainuser %}disabled-link{% endif %}>My KYC Excel</a>
-  <a class="btn btn-secondary w-100 disabled-link" {% if is_sub_mainuser %}disabled-link{% endif %}>Sub-KYC Excel</a>
-  <a class="btn btn-danger w-100 disabled-link" {% if is_sub_mainuser %}disabled-link{% endif %}>My KYC PDF</a>
-  <a class="btn btn-danger w-100 disabled-link" {% if is_sub_mainuser %}disabled-link{% endif %}>Sub-KYC PDF</a>
-{% endif %} -->
 
 <div class="row my-3">
   <div class="col-lg-3 col-md-3 col-sm-12 m-1">
-    <!-- <a href="{% if not is_sub_mainuser %}{% url 'download_kyc_excel' 'my' %}{% endif %}"
-       class="btn btn-success w-100 {% if is_sub_mainuser %}disabled-link{% endif %}">
-      My KYC Excel
-    </a> -->
-    <!-- <a href="{% if is_main_user and selected_user %}{% url 'download_kyc_excel' 'my' %}?user_id={{ selected_user.id }}{% else %}#{% endif %}"
-   class="btn btn-success w-100 mt-2 {% if not is_main_user %}disabled disabled-link{% endif %}">
-  Download Excel
-    </a> -->
     <a href="{% url 'download_kyc_excel' 'my' %}{% if request.GET.all %}?all={{ request.GET.all }}{% elif request.GET.user_id %}?user_id={{ request.GET.user_id }}{% endif %}"
     class="btn btn-success w-100">
     My Details Excel
     </a>
   </div>
-  <!-- <div class="col-lg-3 col-md-3 col-sm-12">
-    <a href="{% url 'download_subkyc_excel' %}" 
-   class="btn btn-secondary w-100 {% if is_sub_mainuser %}disabled-link{% endif %}">
-   Sub-KYC Excel
-</a>
-  </div> -->
   <div class="col-lg-3 col-md-3 col-sm-12 m-1">
-    <!-- <a href="{% if not is_sub_mainuser %}{% url 'download_kyc_pdf' 'my' %}{% endif %}"
-       class="btn btn-danger w-100 {% if is_sub_mainuser %}disabled-link{% endif %}">
-      My KYC PDF
-    </a> -->
-    <!-- <a href="{% if is_main_user and selected_user %}{% url 'download_kyc_pdf' 'my' %}?user_id={{ selected_user.id }}{% else %}#{% endif %}"
-   class="btn btn-danger w-100 mt-2 {% if not is_main_user %}disabled disabled-link{% endif %}">
-  Download PDF
-</a> -->
-<!-- <a href="{% url 'download_kyc_pdf' 'my' %}{% if is_main_user %}?user_id={{ selected_user.id }}{% endif %}"
-    class="btn btn-danger w-100">
-    My Details PDF
-    </a> -->
     <a href="{% url 'download_kyc_pdf' 'my' %}{% if request.GET.all %}?all={{ request.GET.all }}{% elif request.GET.user_id %}?user_id={{ request.GET.user_id }}{% endif %}"
    class="btn btn-danger w-100">
    My Details PDF
 </a>
 
   </div>
-  <!-- <div class="col-lg-3 col-md-3 col-sm-12">
-    <a href="{% url 'download_subkyc_pdf' %}" 
-   class="btn btn-danger w-100 {% if is_sub_mainuser %}disabled-link{% endif %}">
-   Sub-KYC PDF
-</a>
-  </div> -->
 </div>
 
 </div>
@@ -159,11 +126,12 @@
   <!-- My KYC Entries -->
   <h4 class="mt-4">My Details Entries</h4>
   {% if my_kyc_list %}
-    <div class="table-responsive">
+    <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
   <table class="table table-bordered table-striped align-middle">
     <thead class="table-dark text-center">
-      <tr>
+      <tr class="sticky-header-1">
         <th rowspan="2">S.No</th>
+        <th rowspan="2">Username</th>
         <th rowspan="2">Membership No</th>
         <th rowspan="2">Depositor's Head of the family Name</th>
         <th rowspan="2">Depositor's Email</th>
@@ -183,10 +151,10 @@
         <th rowspan="2">Agent Mobile Number</th>
         <th rowspan="2">Agent Address</th>
         <th rowspan="2">Name of the Director</th>
-        <th colspan="12">Bond Details</th>
+        <th colspan="12" class="bond-header">Bond Details</th>
         <th rowspan="2">Actions</th>
       </tr>
-      <tr>
+      <tr class="sticky-header-2">
         <th>Bond Holder Name</th>
         <th>Bond Photo</th>
         <th>Company Name</th>
@@ -208,6 +176,7 @@
           <tr>
             {% if forloop.first %}
               <td rowspan="{{ kyc.bonds.count }}">{{ forloop.parentloop.counter }}</td>
+              <td rowspan="{{ kyc.bonds.count }}">{{ kyc.user }}</td>
               <td rowspan="{{ kyc.bonds.count }}">{{ kyc.membershipno }}</td>
               <td rowspan="{{ kyc.bonds.count }}">{{ kyc.depositorsname }}</td>
               <td rowspan="{{ kyc.bonds.count }}">{{ kyc.depositorsmailid }}</td>
@@ -227,11 +196,6 @@
                   <img src="{{ kyc.aadhar_back_image.url }}" class="img-fluid table-img" style="max-height: 80px;">
                 {% endif %}
               </td>
-              <!-- <td rowspan="{{ kyc.bonds.count }}">
-                {% if kyc.passportphoto %}
-                  <img src="{{ kyc.passportphoto.url }}" class="img-fluid table-img" style="max-height: 80px;">
-                {% endif %}
-              </td> -->
               <td rowspan="{{ kyc.bonds.count }}">{{ kyc.bankname }}</td>
               <td rowspan="{{ kyc.bonds.count }}">{{ kyc.bankaccno }}</td>
               <td rowspan="{{ kyc.bonds.count }}">{{ kyc.ifscno }}</td>
@@ -275,6 +239,7 @@
         {% empty %}
           <tr>
             <td>{{ forloop.counter }}</td>
+            <td>{{ kyc.user }}</td>
             <td>{{ kyc.membershipno }}</td>
             <!-- <td>{{ kyc.membershiptype }}</td> -->
             <td>{{ kyc.depositorsname }}</td>
@@ -325,59 +290,6 @@
   {% else %}
     <p>No personal KYC entries found.</p>
   {% endif %}
-
-  <!-- Sub KYC Entries -->
-  <!-- <h4 class="mt-5">Sub-KYC Entries</h4>
-  {% if sub_kyc_list %}
-    <div class="table-responsive">
-      <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-          <tr>
-            <th>#</th><th>Name</th><th>Age</th><th>Mobile</th><th>Father</th><th>Address</th>
-            <th>Aadhar #</th><th>Aadhar Img</th><th>PAN Img</th><th>Profession</th>
-            <th>SH/NH Contact</th><th>SH/NH Name</th><th>Investment</th><th>Passport</th><th>Bond Image</th><th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for kyc in sub_kyc_list %}
-            <tr>
-              <td>{{ forloop.counter }}</td>
-              <td>{{ kyc.name }}</td>
-              <td>{{ kyc.age }}</td>
-              <td>{{ kyc.mobile_number }}</td>
-              <td>{{ kyc.fathername }}</td>
-              <td>{{ kyc.address }}</td>
-              <td>{{ kyc.aadhar_number }}</td>
-              <td>{% if kyc.aadhar_front_image %}<img src="{{ kyc.aadhar_front_image.url }}" class="img-fluid table-img">{% endif %}</td>
-              <td>{% if kyc.aadhar_back_image %}<img src="{{ kyc.aadhar_back_image.url }}" class="img-fluid table-img">{% endif %}</td>
-              <td>{{ kyc.profession }}</td>
-              <td>{{ kyc.contactSH }}</td>
-              <td>{{ kyc.nameSH }}</td>
-              <td>{{ kyc.investmentamt }}</td>
-              <td>{% if kyc.passportphoto %}<img src="{{ kyc.passportphoto.url }}" class="img-fluid table-img">{% endif %}</td>
-              <td>
-  {% for bond in kyc.bonds.all %}
-    <img src="{{ bond.image.url }}" class="img-fluid table-img mb-1"><br>
-  {% empty %}
-    <span class="text-muted">No Bond Images</span>
-  {% endfor %}
-</td> 
-              <td>
-                {% if is_main_user or request.user == kyc.created_by %}
-                  <a href="{% url 'edit_kyc' kyc.id 'sub' %}" class="btn btn-sm btn-info">Edit</a>
-                  <a href="{% url 'delete_kyc' kyc.id 'sub' %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure to delete?');">Delete</a>
-                {% elif is_sub_mainuser %}
-                  <span class="text-muted">View Only</span>
-                {% endif %}
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  {% else %}
-    <p>No Sub-KYC entries found.</p>
-  {% endif %} -->
 </div>
 
 <!-- My KYC Modal -->
@@ -452,3 +364,5 @@
 
 
 {% endblock %}
+
+

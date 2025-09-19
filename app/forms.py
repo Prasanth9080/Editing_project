@@ -1,12 +1,4 @@
-# from django import forms
-# from .models import User
 
-# class SignupForm(forms.ModelForm):
-#     password = forms.CharField(widget=forms.PasswordInput)
-#     class Meta:
-#         model = User
-#         fields = ['username', 'email', 'phone_number', 'password']
-# forms.py
 from django import forms
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth import get_user_model
