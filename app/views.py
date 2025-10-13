@@ -299,8 +299,8 @@ def form_page(request):
             "depositormobile_number": request.POST.get("depositormobile_number"),
             "agentname": request.POST.get("agentname"),
             "agentmobnum": request.POST.get("agentmobnum"),
-            "agentmailid": request.POST.get("agentmailid"),
-            "agentaddress": request.POST.get("agentaddress"),
+            # "agentmailid": request.POST.get("agentmailid"),
+            # "agentaddress": request.POST.get("agentaddress"),
             "nameofdirector": request.POST.get("nameofdirector"),
             "aadhar_number": request.POST.get("aadhar_number"),
             "pan_number": request.POST.get("pan_number"),
@@ -450,8 +450,8 @@ def edit_kyc(request, kyc_id, kyc_type):
         kyc.ifscno = request.POST.get("ifscno")
         kyc.agentname = request.POST.get("agentname")
         kyc.agentmobnum = request.POST.get("agentmobnum")
-        kyc.agentmailid = request.POST.get("agentmailid")
-        kyc.agentaddress = request.POST.get("agentaddress")
+        # kyc.agentmailid = request.POST.get("agentmailid")
+        # kyc.agentaddress = request.POST.get("agentaddress")
         kyc.nameofdirector = request.POST.get("nameofdirector")
 
         # File fields — update only if a new file is uploaded
@@ -618,7 +618,7 @@ def download_kyc_excel(request, kyc_type):
         'S.No', 'Membership No', 'Depositor Head of the Family Name', 'Depositor Mail ID', 'Depositor Address',
         'Depositor Mobile Number', 'Aadhar Number',
         'PAN Number', 'Ration Number', 'Aadhar Front Image URL', 'Aadhar Back Image URL',
-        'Bank Name', 'Bank A/C No', 'IFSC No', 'Agent Name', 'Agent Mobile Number', 'Agent Address', 'Name of Director',
+        'Bank Name', 'Bank A/C No', 'IFSC No', 'Agent Name', 'Agent Mobile Number', 'Name of Director',
         'Bond S.No','Bond Holder Name', 'Image URL', 'Company Name', 'Project Name',
         'Deposit Amount',
         'Investment Date', 'Date of Resale', 'Customer ID', 'Agent ID', 'Token No.', 'Remarks', 'Bond in Hand Original or Xerox'
@@ -722,8 +722,8 @@ def download_kyc_excel(request, kyc_type):
             safe_attr(kyc, "ifscno", default=""),
             safe_attr(kyc, "agentname", default=""),
             safe_attr(kyc, "agentmobnum", default=""),
-            safe_attr(kyc, "agentmailid", default=""),
-            safe_attr(kyc, "agentaddress", default=""),
+            # safe_attr(kyc, "agentmailid", default=""),
+            # safe_attr(kyc, "agentaddress", default=""),
             safe_attr(kyc, "nameofdirector", default=""),
         ]
         sheet.append(base_row + [''] * 7)  # empty bond columns
@@ -915,8 +915,8 @@ def download_kyc_pdf(request, kyc_type):
             ["IFSC No", safe_attr(kyc, "ifscno")],
             ["Agent Name", safe_attr(kyc, "agentname")],
             ["Agent Mobile Number", safe_attr(kyc, "agentmobnum")],
-            ["Agent Mail ID", safe_attr(kyc, "agentmailid")],
-            ["Agent Address", safe_attr(kyc, "agentaddress")],
+            # ["Agent Mail ID", safe_attr(kyc, "agentmailid")],
+            # ["Agent Address", safe_attr(kyc, "agentaddress")],
             ["Name of Director", safe_attr(kyc, "nameofdirector")],
         ]
 
@@ -1199,8 +1199,8 @@ def add_my_kyc(request):
             depositormobile_number=request.POST.get('depositormobile_number'),
             agentname=request.POST.get('agentname'),
             agentmobnum=request.POST.get('agentmobnum'),
-            agentmailid=request.POST.get('agentmailid'),
-            agentaddress=request.POST.get('agentaddress'),
+            # agentmailid=request.POST.get('agentmailid'),
+            # agentaddress=request.POST.get('agentaddress'),
             nameofdirector=request.POST.get('nameofdirector'),
             aadhar_number=request.POST.get('aadhar_number'),
             pan_number=request.POST.get('pan_number'),

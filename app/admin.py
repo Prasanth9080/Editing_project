@@ -19,7 +19,7 @@ class MyKYCAdmin(admin.ModelAdmin):
     list_display = (
         'membershipno', 'depositorsname', 'depositorsmailid', 'depositorsaddress', 'depositormobile_number',
         'aadhar_number', 'pan_number', 'ration_number', 'bankname', 'bankaccno',
-        'ifscno', 'aadhar_front_image', 'aadhar_back_image', 'agentname', 'agentmobnum', 'agentmailid', 'agentaddress', 'nameofdirector', 'created_by'
+        'ifscno', 'aadhar_front_image', 'aadhar_back_image', 'agentname', 'agentmobnum', 'nameofdirector', 'created_by'
     )
     search_fields = (
         'depositorsname', 'bondholdername',
@@ -41,14 +41,17 @@ class SubKYCAdmin(admin.ModelAdmin):
 # ----------------------------------------
 # Admin for BondImage (optional, direct access)
 # ----------------------------------------
+from django.contrib import admin
 from django.utils.html import format_html
+from .models import BondImage  # make sure the import is correct
+
 
 @admin.register(BondImage)
 class BondImageAdmin(admin.ModelAdmin):
     list_display = (
-        'id','username', 'image_tag', 'my_kyc', 'sub_kyc',
-        'companyname', 'projectname', 'amount', 'dateofresale', 'tokennum','remarks',
-        'investment_date', 'customer_id', 'bondimagetype', 'bondholdername', 'agentid',
+        'username', 'image_tag',
+        'companyname', 'projectname', 'amount', 'dateofresale', 'tokennum', 'remarks',
+        'investment_date', 'customer_id', 'bondholdername', 'agentid',
     )
     search_fields = ('companyname', 'projectname', 'customer_id')
     list_filter = ('investment_date', 'companyname')
@@ -60,10 +63,13 @@ class BondImageAdmin(admin.ModelAdmin):
         elif obj.sub_kyc:
             return obj.sub_kyc.user.username
         return '-'
-    
+
     @admin.display(description='Image')
     def image_tag(self, obj):
-        if obj.image:
-            return format_html('<img src="{}" style="width: 100px; height: auto;" />', obj.image.url)
+        if obj.image and hasattr(obj.image, 'url'):
+            return format_html(
+                '<img src="{}" style="max-width: 120px; max-height: 120px; border: 1px solid #ccc; border-radius: 5px;" />',
+                obj.image.url
+            )
         return "-"
 

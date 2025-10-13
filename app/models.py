@@ -41,8 +41,8 @@ class MyKYC(models.Model):
     depositormobile_number = models.CharField(max_length=15, blank=True)
     agentname = models.CharField(max_length=100, blank=True)
     agentmobnum = models.CharField(max_length=15, blank=True)  # good for international numbers
-    agentmailid = models.EmailField(max_length=100, blank=True)
-    agentaddress = models.TextField(blank=True)
+    # agentmailid = models.EmailField(max_length=100, blank=True)
+    # agentaddress = models.TextField(blank=True)
     nameofdirector = models.CharField(max_length=100, blank=True)
     aadhar_number = models.CharField(max_length=20, null=True, blank=True)
     pan_number = models.CharField(max_length=20, blank=True)

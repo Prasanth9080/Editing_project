@@ -149,7 +149,8 @@
         <th rowspan="2">IFSC No</th>
         <th rowspan="2">Agent Name</th>
         <th rowspan="2">Agent Mobile Number</th>
-        <th rowspan="2">Agent Address</th>
+        <!-- <th rowspan="2">Agent EmailID</th>
+        <th rowspan="2">Agent Address</th> -->
         <th rowspan="2">Name of the Director</th>
         <th colspan="12" class="bond-header">Bond Details</th>
         <th rowspan="2">Actions</th>
@@ -201,7 +202,8 @@
               <td rowspan="{{ kyc.bonds.count }}">{{ kyc.ifscno }}</td>
               <td rowspan="{{ kyc.bonds.count }}">{{ kyc.agentname }}</td>
               <td rowspan="{{ kyc.bonds.count }}">{{ kyc.agentmobnum }}</td>
-              <td rowspan="{{ kyc.bonds.count }}">{{ kyc.agentaddress }}</td>
+              <!-- <td rowspan="{{ kyc.bonds.count }}">{{ kyc.agentmailid }}</td>
+              <td rowspan="{{ kyc.bonds.count }}">{{ kyc.agentaddress }}</td> -->
               <td rowspan="{{ kyc.bonds.count }}">{{ kyc.nameofdirector }}</td>
             {% endif %}
 
@@ -259,19 +261,15 @@
                 <img src="{{ kyc.aadhar_back_image.url }}" class="img-fluid table-img" style="max-height: 80px;">
               {% endif %}
             </td>
-            <td>
-              {% if kyc.passportphoto %}
-                <img src="{{ kyc.passportphoto.url }}" class="img-fluid table-img" style="max-height: 80px;">
-              {% endif %}
-            </td>
             <td>{{ kyc.bankname }}</td>
             <td>{{ kyc.bankaccno }}</td>
             <td>{{ kyc.ifscno }}</td>
             <td>{{ kyc.agentname }}</td>
             <td>{{ kyc.agentmobnum }}</td>
-            <td>{{ kyc.agentaddress }}</td>
+            <!-- <td>{{ kyc.agentmailid }}</td>
+            <td>{{ kyc.agentaddress }}</td> -->
             <td>{{ kyc.nameofdirector }}</td>
-            <td colspan="11" class="text-center text-muted">No Bond Info</td>
+            <td colspan="12" class="text-center text-muted">No Bond Info</td>
             <td>
               {% if is_main_user or request.user == kyc.created_by %}
                 <a href="{% url 'edit_kyc' kyc.id 'my' %}" class="btn btn-sm btn-info mb-1">Edit</a><br>
